@@ -1,48 +1,75 @@
 <template>
-    <section class="search-filter">
-        <div class="filter">
-            <select :value="selectedCity" @change="$emit('update:selectedCity', $event.target.value)">
-                <option disabled selected>시/도 선택</option>
-                <!-- 여기 옵션 추가 -->
-            </select>
-            <select :value="selectedDistrict" @change="$emit('update:selectedDistrict', $event.target.value)">
-                <option disabled selected>구/군 선택</option>
-                <!-- 여기 옵션 추가 -->
-            </select>
-            <select :value="selectedType" @change="$emit('update:selectedType', $event.target.value)">
-                <option disabled selected>관광지 유형 선택</option>
-                <!-- 여기 옵션 추가 -->
-            </select>
-            <input type="text" :value="searchQuery" @input="$emit('update:searchQuery', $event.target.value)"
-                placeholder="검색어 입력" />
-            <button @click="$emit('search')">검색</button>
-        </div>
-        <div class="sorting">
-            <button>Free cancellation</button>
-            <button>Price</button>
-            <button>Instant Book</button>
-            <button>기타 옵션</button>
-        </div>
-    </section>
+  <section class="search-filter">
+    <div class="filter">
+      <select :value="selectedCity" @change="updateSelectedCity($event.target.value)">
+        <option value="" disabled selected>시/도 선택</option>
+        <!-- 시/도 옵션 추가 -->
+      </select>
+      <select :value="selectedDistrict" @change="updateSelectedDistrict($event.target.value)">
+        <option value="" disabled selected>구/군 선택</option>
+        <!-- 구/군 옵션 추가 -->
+      </select>
+      <select :value="selectedType" @change="updateSelectedType($event.target.value)">
+        <option value="" disabled selected>관광지 유형 선택</option>
+        <!-- 관광지 유형 옵션 추가 -->
+      </select>
+    </div>
+    <div class="keyword">
+      <input
+        type="text"
+        :value="searchQuery"
+        @input="updateSearchQuery($event.target.value)"
+        placeholder="검색어 입력"
+      />
+      <button @click="emitSearch">검색</button>
+    </div>
+  </section>
 </template>
-  
-<script>
-export default {
-    props: {
-        selectedCity: String,
-        selectedDistrict: String,
-        selectedType: String,
-        searchQuery: String,
-    },
-};
+
+<script setup>
+import { defineProps, defineEmits } from "vue";
+
+const props = defineProps({
+  selectedCity: String,
+  selectedDistrict: String,
+  selectedType: String,
+  searchQuery: String,
+});
+
+const emit = defineEmits([
+  "update:selectedCity",
+  "update:selectedDistrict",
+  "update:selectedType",
+  "update:searchQuery",
+  "search",
+]);
+
+function updateSelectedCity(value) {
+  emit("update:selectedCity", value);
+}
+
+function updateSelectedDistrict(value) {
+  emit("update:selectedDistrict", value);
+}
+
+function updateSelectedType(value) {
+  emit("update:selectedType", value);
+}
+
+function updateSearchQuery(value) {
+  emit("update:searchQuery", value);
+}
+
+function emitSearch() {
+  emit("search");
+}
 </script>
-  
+
 <style scoped>
 .search-filter {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 </style>
-  

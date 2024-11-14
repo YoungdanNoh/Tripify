@@ -7,12 +7,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import HeaderNav from "./components/HeaderNav.vue";
-
-export default {
-  components: { HeaderNav },
-};
 </script>
 
 <style scoped>
@@ -38,7 +34,7 @@ export default {
 
 .main-content {
   flex: 1;
-  position: fixed; /* 화면 상단에 고정 */
+  position: fixed;
   top: 60px; /* header-nav 높이만큼 아래로 내림 */
   left: 0;
   width: 100%;

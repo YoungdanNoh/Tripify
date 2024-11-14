@@ -1,0 +1,8 @@
+package com.trip.place.util;
+
+public class SizeConstant {
+
+	public final static int LIST_SIZE = 6;
+	public final static int NAVIGATION_SIZE = 10;
+	
+}

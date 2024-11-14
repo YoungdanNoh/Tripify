@@ -6,8 +6,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/search", // 기본 경로를 '/search'로 설정
-      name: "search", // 라우트 이름도 'search'로 변경
+      path: "/place", // 기본 경로를 '/place'로 설정
+      name: "place", // 라우트 이름도 'place'로 변경
       component: SearchView,
     },
     {

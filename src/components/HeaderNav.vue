@@ -2,7 +2,7 @@
   <header class="header">
     <h1>Tripify</h1>
     <nav>
-      <router-link to="/search">여행지</router-link>
+      <router-link to="/place">여행지</router-link>
       <router-link to="/community">커뮤니티</router-link>
       <a href="#" class="login">Login</a>
     </nav>

@@ -6,22 +6,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps, defineEmits } from "vue";
 import PlaceItem from "./PlaceItem.vue";
 
-export default {
-  components: { PlaceItem },
-  props: ["places"],
-  methods: {
-    handleScroll(event) {
-      const bottom =
-        event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-      if (bottom) {
-        this.$emit("load-more");
-      }
-    },
-  },
-};
+const props = defineProps({
+  places: Array,
+});
+
+const emit = defineEmits(["load-more"]);
+
+function handleScroll(event) {
+  const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+  if (bottom) {
+    emit("load-more");
+  }
+}
 </script>
 
 <style scoped>
