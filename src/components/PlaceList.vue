@@ -1,25 +1,30 @@
 <template>
   <div class="places-list" @scroll="handleScroll">
     <ul>
-      <PlaceItem v-for="place in places" :key="place.id" :place="place" />
+      <PlaceItem v-for="place in getPlaces" :key="place.id" :place="place" />
     </ul>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
-import PlaceItem from "./PlaceItem.vue";
+import { defineProps, defineEmits } from 'vue';
+import PlaceItem from './PlaceItem.vue';
+import { usePlaceStore } from '@/stores/place';
+import { storeToRefs } from 'pinia';
+
+const store = usePlaceStore();
+const { getPlaces } = storeToRefs(store);
 
 const props = defineProps({
   places: Array,
 });
 
-const emit = defineEmits(["load-more"]);
+const emit = defineEmits(['load-more']);
 
 function handleScroll(event) {
   const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
   if (bottom) {
-    emit("load-more");
+    emit('load-more');
   }
 }
 </script>

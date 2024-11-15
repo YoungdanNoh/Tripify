@@ -8,15 +8,17 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.trip.place.vo.Places;
-import com.trip.place.vo.Siguns;
+import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
 
 @Mapper
 public interface placeMapper {
-	
-	public ArrayList<Siguns> sigunSelect() throws Exception;
 
 	public ArrayList<Type> typeSelect() throws Exception;
+	
+	List<SidoGugunCode> getSido() throws SQLException;
+	List<SidoGugunCode> getGugunInSido(String sido) throws SQLException;
+	
 
 	public List<Places> listAttr(Map<String, Object> param) throws Exception;
 

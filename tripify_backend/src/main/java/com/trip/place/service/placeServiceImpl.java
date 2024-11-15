@@ -13,7 +13,7 @@ import com.trip.place.util.PageNavigation;
 import com.trip.place.util.SizeConstant;
 import com.trip.place.vo.Places;
 import com.trip.place.vo.Search;
-import com.trip.place.vo.Siguns;
+import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
 
 @Service
@@ -21,15 +21,20 @@ public class placeServiceImpl implements placeService {
 
 	@Autowired
 	placeMapper mapper;
-	
-	@Override
-	public ArrayList<Siguns> sigunSelect() throws Exception {
-		return mapper.sigunSelect();
-	}
 
 	@Override
 	public ArrayList<Type> typeSelect() throws Exception {
 		return mapper.typeSelect();
+	}
+	
+	@Override
+	public List<SidoGugunCode> getSido() throws Exception {
+		return mapper.getSido();
+	}
+
+	@Override
+	public List<SidoGugunCode> getGugunInSido(String sido) throws Exception {
+		return mapper.getGugunInSido(sido);
 	}
 
 	@Override
