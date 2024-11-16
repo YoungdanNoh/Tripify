@@ -22,4 +22,6 @@ public interface UserService {
 	User checkIdDuplication(String id);
 	
 	String findPassword(String email);
+	
+	User getUserByEmail(String email);
 }

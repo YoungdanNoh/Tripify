@@ -1,7 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SearchView from '../views/SearchView.vue'; // SearchView로 변경
-import CommunityView from '../views/CommunityView.vue'; // SearchView로 변경
-import HomeView from '../views/HomeView.vue'; // HomeView로 변경
+
+// 메인 뷰
+import SearchView from '../views/SearchView.vue';
+import CommunityView from '../views/CommunityView.vue';
+import HomeView from '../views/HomeView.vue';
+
+// Member 관련 뷰
+import MemberView from '@/views/MemberView.vue';
+import LoginPage from '@/components/member/LoginPage.vue';
+import SignUpPage from '@/components/member/SignUpPage.vue';
+import PasswordRecoveryPage from '@/components/member/PasswordRecoveryPage.vue';
+import UserProfilePage from '@/components/member/UserProfilePage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,13 +22,41 @@ const router = createRouter({
     },
     {
       path: '/place', // 기본 경로를 '/place'로 설정
-      name: 'place', // 라우트 이름도 'place'로 변경
+      name: 'place',
       component: SearchView,
     },
     {
       path: '/community',
       name: 'community',
       component: CommunityView,
+    },
+    {
+      path: '/login', // 회원 관련 라우트
+      name: 'login',
+      component: MemberView,
+      children: [
+        {
+          path: '', // 기본 경로 '/login'
+          name: 'loginPage',
+          component: LoginPage,
+        },
+        {
+          path: 'signup', // '/login/signup'
+          name: 'signUpPage',
+          component: SignUpPage,
+        },
+        {
+          path: 'password-recovery', // '/login/password-recovery'
+          name: 'passwordRecoveryPage',
+          component: PasswordRecoveryPage,
+        },
+        
+      ],
+    },
+    {
+      path: '/profile', // '/profile'
+      name: 'userProfilePage',
+      component: UserProfilePage,
     },
   ],
 });

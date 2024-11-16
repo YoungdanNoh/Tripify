@@ -28,4 +28,6 @@ public interface UserMapper {
 	User checkIdDuplicate(String userId);
 	
 	String findPwdById(String email);
+	
+	User getUserByEmail(String email);
 }

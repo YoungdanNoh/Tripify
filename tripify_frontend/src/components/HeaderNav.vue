@@ -1,17 +1,47 @@
 <template>
   <header class="header">
-    <h1>Tripify</h1>
+    <router-link to="/" class="logo">
+      <img src="@/assets/zero-Tripify.png" alt="Tripify 로고" />
+    </router-link>
     <nav>
+      <!-- 기본 메뉴 -->
       <router-link to="/place">여행지</router-link>
       <router-link to="/community">커뮤니티</router-link>
-      <a href="#" class="login">Login</a>
+      <router-link v-if="!user" to="/login">로그인</router-link>
+
+      <!-- 로그인된 경우 드롭다운 -->
+      <div class="dropdown" v-if="user">
+        <span class="dropdown-trigger">
+          {{ user.userName }}님 안녕하세요!
+        </span>
+        <ul class="dropdown-menu">
+          <li><router-link to="/profile">회원정보 수정</router-link></li>
+          <li><button @click="logout">로그아웃</button></li>
+        </ul>
+      </div>
     </nav>
   </header>
 </template>
 
 <script>
+import { useUserStore } from "@/stores/user";
+import { computed } from "vue";
+
 export default {
-  name: "HeaderNav",
+  setup() {
+    const userStore = useUserStore();
+    const user = computed(() => userStore.user);
+
+    const logout = () => {
+      console.log("로그아웃 클릭!");
+      userStore.logoutUser();
+    };
+
+    return {
+      user,
+      logout,
+    };
+  },
 };
 </script>
 
@@ -20,15 +50,58 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+}
+nav {
+  display: flex;
+  gap: 1rem;
 }
 
-.header h1 {
+.logo img {
+  width: 140px; /* 로고 너비 고정 */
+  height: auto; /* 비율 유지 */
+}
+
+/* 드롭다운 스타일 */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* 트리거 아래에 표시 */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  list-style: none;
   margin: 0;
+  display: none; /* 기본적으로 숨김 */
 }
 
-.header nav a {
-  margin-left: 10px;
+.dropdown-menu li {
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.dropdown-menu a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 드롭다운 트리거에 마우스를 올리면 메뉴 표시 */
+.dropdown:hover .dropdown-menu {
+  display: block;
 }
 </style>

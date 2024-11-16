@@ -23,7 +23,7 @@ import com.trip.place.vo.Search;
 import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
 @RestController
 public class placeController {
 	

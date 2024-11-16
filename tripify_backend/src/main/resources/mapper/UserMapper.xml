@@ -9,7 +9,7 @@
 		<result property="userId" column="user_id" />
 		<result property="userName" column="username" />
 		<result property="email" column="email" />
-		<result property="passWord" column="password" />
+		<result property="password" column="password" />
 		<result property="createdAt" column="created_at" />
 		<result property="updatedAt" column="updated_at" />
 	</resultMap>
@@ -17,18 +17,18 @@
 	<!-- resultMap을 사용하면, resultType이 아니라 resultMap에 값을 넣어야 함.  -->
 	<select id="find" parameterType="java.util.Map" resultMap="userResultMap">
 		select  user_id, username, email, password, date(created_at) created_at, date(updated_at) updated_at
-		from users where email = #{email} and password = #{passWord};
+		from users where email = #{email} and password = #{password};
 	</select>
 		
 	<!-- 회원 가입 -->
 	<insert id="add" parameterType="User">
-        insert into users(username, email, password) values(#{userName},#{email},#{passWord});
+        insert into users(username, email, password) values(#{userName},#{email},#{password});
 	</insert>
 	
 	<!-- 회원 수정 -->
 	<update id="modify" parameterType="User">
-		update users set username = #{userName}, updated_at = now()
-        where user_id =#{userId};
+		update users set username = #{userName}, updated_at = now(), password= #{password}
+        where email =#{email};
 	</update>
 	
 	<!-- 회원 조회 -->
@@ -42,11 +42,17 @@
 
 	<!-- id 중복 검사 -->
 	<select id="checkIdDuplicate" resultType="User">
-		select * from users where email = #{userId};
+		select * from users where email = #{email};
 	</select>
 	
 	<!-- 비밀 번호 찾기  -->
 	<select id="findPwdById" parameterType="string" resultType="string">
 		select password from users where email = #{email}
 	</select>
+	
+	<!-- 사용자 조회 (이메일 기반) -->
+    <select id="getUserByEmail" parameterType="string" resultType="User">
+        SELECT * FROM users
+        WHERE email = #{email}
+    </select>
 </mapper>

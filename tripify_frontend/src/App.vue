@@ -9,6 +9,9 @@
 
 <script setup>
 import HeaderNav from "./components/HeaderNav.vue";
+
+import { useUserStore } from "@/stores/user";
+
 </script>
 
 <style scoped>

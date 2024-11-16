@@ -51,6 +51,9 @@ public class UserServiceImpl implements UserService{
 		return mapper.findPwdById(email);
 	}
 	
-	
+	@Override
+    public User getUserByEmail(String email) {
+        return mapper.getUserByEmail(email);
+    }
 	
 }
