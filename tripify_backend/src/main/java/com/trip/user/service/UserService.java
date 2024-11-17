@@ -17,7 +17,7 @@ public interface UserService {
 
 	int updateUser(User user);
 	
-	int deleteUser(String id);
+	int deleteUser(String eamil);
 	
 	User checkIdDuplication(String id);
 	

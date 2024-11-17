@@ -46,45 +46,6 @@ public class placeController {
 		return new ResponseEntity<List<Type>>(service.typeSelect(), HttpStatus.OK);
 	}
 	
-//	@GetMapping("/place")
-//	public Map<String, Object> place(){
-//		//(sidos, guguns), contenttypes 조회하기 -> 셀렉트 리스트에 넣어줌
-//		
-//		Map<String, Object> map = new HashMap<>();
-//		List<Siguns> sigunList = null;
-//		List<Type> typeList = null;
-//		
-//		try {
-//			sigunList = service.sigunSelect();
-//			typeList = service.typeSelect();
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		// `TreeMap`을 사용하여 `sido_code`로 자동 정렬되게 설정
-//		Map<String, Map<String, Object>> sigunMap = new TreeMap<>();
-//	    for (Siguns sigun : sigunList) {
-//	        String sidoCode = sigun.getSido_code();
-//	        
-//	        // `sido_code`가 없는 경우 초기화하여 데이터를 추가
-//	        sigunMap.putIfAbsent(sidoCode, new HashMap<String, Object>() {{
-//	            put("sido_name", sigun.getSido_name());
-//	            put("gugun_code", new ArrayList<String>());
-//	            put("gugun_name", new ArrayList<String>());
-//	        }});
-//	        
-//	        // `gugun_code`와 `gugun_name`을 각각 리스트에 추가
-//	        ((List<String>) sigunMap.get(sidoCode).get("gugun_code")).add(sigun.getGugun_code());
-//	        ((List<String>) sigunMap.get(sidoCode).get("gugun_name")).add(sigun.getGugun_name());
-//	    }
-//		
-//		map.put("sigun", sigunMap);
-//		map.put("contentType", typeList);
-//		
-//		return map;
-//	}
-	
 	@PostMapping("/place/search")
 	public Map<String, Object> search(@RequestBody Search search) throws Exception{
 		//시도, 구군, 관광지타입, 키워드를 받아 해당 내용으로 DB select 하기

@@ -77,7 +77,11 @@ public class userController {
     // 회원 수정
     @PutMapping
     public ResponseEntity<String> updateMember(@RequestBody User user, HttpServletRequest request) {
+        System.out.println(user);
         
+        if(user.getPassword() == null) {
+        	user.setPassWord(service.findPassword(user.getEmail()));
+        }
     	
     	if (user.getEmail() == null) {
             return ResponseEntity.status(401).body("인증 실패");
@@ -89,9 +93,7 @@ public class userController {
 
     // 회원 삭제
     @DeleteMapping
-    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
-        String email = getEmailFromCookies(request);
-
+    public ResponseEntity<String> deleteUser(@RequestParam String email) {
         if (email == null) {
             return ResponseEntity.status(401).body("인증 실패");
         }
@@ -99,6 +101,7 @@ public class userController {
         service.deleteUser(email);
         return ResponseEntity.ok("회원삭제 성공");
     }
+
 
     // ID 중복 검사
     @GetMapping("/check-id")

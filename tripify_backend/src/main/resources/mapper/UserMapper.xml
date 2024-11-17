@@ -37,7 +37,7 @@
 	</select>
 	
 	<delete id="delete" parameterType="string">
-		delete from users where user_id = #{userId};
+		delete from users where email = #{email};
 	</delete>
 
 	<!-- id 중복 검사 -->

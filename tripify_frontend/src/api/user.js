@@ -24,8 +24,8 @@ export const updateUser = (userName, email, password) => {
   return axios.put(API_URL, {userName, email, password });
 };
 
-export const deleteUser = (userId) => {
-  return axios.delete(API_URL, { data: { id: userId } });
+export const deleteUser = (email) => {
+  return axios.delete(`${API_URL}?email=${email}`);
 };
 
 export const checkIdAvailability = (id) => {

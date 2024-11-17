@@ -22,7 +22,7 @@ public interface UserMapper {
 	User findById(String userId);
 	
 	// 회원삭제 
-	int delete(String userId);
+	int delete(String email);
 		
 	// 아이디 중복
 	User checkIdDuplicate(String userId);
