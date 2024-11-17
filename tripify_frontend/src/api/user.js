@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '@/util/axios-common.js';
 
 const API_URL = "/member";
 
@@ -10,20 +10,22 @@ export const logout = () => {
   return axios.post(`${API_URL}/logout`);
 };
 
-export const signUp = (userId, userName, email, password) => {
-  return axios.post(API_URL, { userId, userName, email, password });
+export const signUp = ( userName, email, password) => {
+  console.log(userName, email, password);
+  
+  return axios.post(API_URL, { userName, email, password });
 };
 
 export const fetchUser = () => {
   return axios.get(API_URL);
 };
 
-export const updateUser = (userId, userName, email, password) => {
-  return axios.put(API_URL, { userId, userName, email, password });
+export const updateUser = (userName, email, password) => {
+  return axios.put(API_URL, {userName, email, password });
 };
 
-export const deleteUser = (userId) => {
-  return axios.delete(API_URL, { data: { id: userId } });
+export const deleteUser = (email) => {
+  return axios.delete(`${API_URL}?email=${email}`);
 };
 
 export const checkIdAvailability = (id) => {

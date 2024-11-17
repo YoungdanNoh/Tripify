@@ -3,7 +3,8 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost", //서버 URL
+  baseURL: "http://localhost:80", //서버 URL
+  withCredentials: true, // true or false to use with Cred credentials
   headers: {
     "Content-Type": "application/json", //요청 header
   },

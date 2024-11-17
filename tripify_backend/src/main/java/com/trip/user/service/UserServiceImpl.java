@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int deleteUser(String id) {
-		return mapper.delete(id);
+	public int deleteUser(String email) {
+		return mapper.delete(email);
 	}
 
 	@Override
@@ -51,6 +51,9 @@ public class UserServiceImpl implements UserService{
 		return mapper.findPwdById(email);
 	}
 	
-	
+	@Override
+    public User getUserByEmail(String email) {
+        return mapper.getUserByEmail(email);
+    }
 	
 }

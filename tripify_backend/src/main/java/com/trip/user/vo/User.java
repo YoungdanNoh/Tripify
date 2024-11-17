@@ -1,12 +1,15 @@
 package com.trip.user.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class User {
+public class User implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	long userId;
 	String userName;
 	String email;
-	String passWord;
+	String password;
 	LocalDate createdAt;
 	LocalDate updatedAt;
 	
@@ -48,13 +51,13 @@ public class User {
 	}
 
 
-	public String getPassWord() {
-		return passWord;
+	public String getPassword() {
+		return password;
 	}
 
 
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
+	public void setPassWord(String password) {
+		this.password = password;
 	}
 
 
@@ -80,7 +83,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + ", passWord=" + passWord
+		return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + ", password=" + password
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 	
