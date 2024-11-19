@@ -18,7 +18,7 @@
         <span class="dropdown-trigger"> {{ user.userName }}님 안녕하세요! </span>
         <ul class="dropdown-menu">
           <li><router-link to="/profile">회원정보 수정</router-link></li>
-          <li><button @click="logout">로그아웃</button></li>
+          <li @click="logout">로그아웃</li>
         </ul>
       </div>
     </nav>
