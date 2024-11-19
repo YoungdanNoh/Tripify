@@ -1,34 +1,45 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 
 // 메인 뷰
-import SearchView from '../views/SearchView.vue';
-import CommunityView from '../views/CommunityView.vue';
-import HomeView from '../views/HomeView.vue';
+import SearchView from "../views/SearchView.vue";
+import CommunityView from "../views/CommunityView.vue";
+import HomeView from "../views/HomeView.vue";
+import SpotifyView from "../views/SpotifyView.vue";
 
 // Member 관련 뷰
-import MemberView from '@/views/MemberView.vue';
-import LoginPage from '@/components/member/LoginPage.vue';
-import SignUpPage from '@/components/member/SignUpPage.vue';
-import PasswordRecoveryPage from '@/components/member/PasswordRecoveryPage.vue';
-import UserProfilePage from '@/components/member/UserProfilePage.vue';
-import WritePost from '@/components/WritePost.vue';
-import BoardShow from '@/components/BoardShow.vue';
+import MemberView from "@/views/MemberView.vue";
+import LoginPage from "@/components/member/LoginPage.vue";
+import SignUpPage from "@/components/member/SignUpPage.vue";
+import PasswordRecoveryPage from "@/components/member/PasswordRecoveryPage.vue";
+import UserProfilePage from "@/components/member/UserProfilePage.vue";
+import WritePost from "@/components/WritePost.vue";
+import BoardShow from "@/components/BoardShow.vue";
 
-import { useUserStore } from '@/stores/user';
-import PostDetail from '@/components/PostDetail.vue';
+import { useUserStore } from "@/stores/user";
+import { usePlaceStore } from "@/stores/place";
+import PostDetail from "@/components/PostDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/', // 홈페이지
-      name: 'home',
+      path: "/", // 홈페이지
+      name: "home",
       component: HomeView,
     },
     {
-      path: '/place', // 기본 경로를 '/place'로 설정
-      name: 'place',
+      path: "/place:keyword?", // 기본 경로를 '/place'로 설정
+      name: "place",
       component: SearchView,
+      beforeEnter: () => {
+        const placeStore = usePlaceStore();
+        placeStore.resetPlaces(); // places 초기화
+      },
+    },
+    {
+      path: "/spotify",
+      name: "spotify",
+      component: SpotifyView,
     },
     {
       path: "/community",
@@ -52,40 +63,39 @@ const router = createRouter({
           props: true, // 라우트 파라미터를 컴포넌트의 props로 전달
         },
         {
-          path : "posts/:postId/edit",
+          path: "posts/:postId/edit",
           name: "EditPost",
           component: WritePost,
-          props: route => ({ isEdit: true, postId: Number(route.params.postId) }),
-        }
+          props: (route) => ({ isEdit: true, postId: Number(route.params.postId) }),
+        },
       ],
     },
-    
+
     {
-      path: '/login', // 회원 관련 라우트
-      name: 'login',
+      path: "/login", // 회원 관련 라우트
+      name: "login",
       component: MemberView,
       children: [
         {
-          path: '', // 기본 경로 '/login'
-          name: 'loginPage',
+          path: "", // 기본 경로 '/login'
+          name: "loginPage",
           component: LoginPage,
         },
         {
-          path: 'signup', // '/login/signup'
-          name: 'signUpPage',
+          path: "signup", // '/login/signup'
+          name: "signUpPage",
           component: SignUpPage,
         },
         {
-          path: 'password-recovery', // '/login/password-recovery'
-          name: 'passwordRecoveryPage',
+          path: "password-recovery", // '/login/password-recovery'
+          name: "passwordRecoveryPage",
           component: PasswordRecoveryPage,
         },
-        
       ],
     },
     {
-      path: '/profile', // '/profile'
-      name: 'userProfilePage',
+      path: "/profile", // '/profile'
+      name: "userProfilePage",
       component: UserProfilePage,
     },
   ],

@@ -6,14 +6,15 @@
     <nav>
       <!-- 기본 메뉴 -->
       <router-link to="/place">여행지</router-link>
+      <button @click="spotify" class="image-button">
+        <img src="@/assets/spotify-logo.png" alt="Spotify 버튼" />
+      </button>
       <router-link to="/community">커뮤니티</router-link>
       <router-link v-if="!user" to="/login">로그인</router-link>
 
       <!-- 로그인된 경우 드롭다운 -->
       <div class="dropdown" v-if="user">
-        <span class="dropdown-trigger">
-          {{ user.userName }}님 안녕하세요!
-        </span>
+        <span class="dropdown-trigger"> {{ user.userName }}님 안녕하세요! </span>
         <ul class="dropdown-menu">
           <li><router-link to="/profile">회원정보 수정</router-link></li>
           <li><button @click="logout">로그아웃</button></li>
@@ -23,25 +24,22 @@
   </header>
 </template>
 
-<script>
+<script setup>
 import { useUserStore } from "@/stores/user";
 import { computed } from "vue";
+import { authorize } from "@/api/spotify";
 
-export default {
-  setup() {
-    const userStore = useUserStore();
-    const user = computed(() => userStore.user);
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
 
-    const logout = () => {
-      console.log("로그아웃 클릭!");
-      userStore.logoutUser();
-    };
+const logout = () => {
+  console.log("로그아웃 클릭!");
+  userStore.logoutUser();
+};
 
-    return {
-      user,
-      logout,
-    };
-  },
+const spotify = () => {
+  console.log("Spotify 인증 실행!");
+  authorize();
 };
 </script>
 
@@ -59,6 +57,17 @@ nav {
 .logo img {
   width: 140px; /* 로고 너비 고정 */
   height: auto; /* 비율 유지 */
+}
+
+.image-button {
+  background: none; /* 배경 제거 */
+  border: none; /* 테두리 제거 */
+  cursor: pointer;
+}
+
+.image-button img {
+  width: 70px; /* 버튼 크기 조정 */
+  height: auto; /* 이미지 비율 유지 */
 }
 
 /* 드롭다운 스타일 */

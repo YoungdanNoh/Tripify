@@ -30,10 +30,13 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted, ref, computed } from 'vue';
-import { usePlaceStore } from '@/stores/place';
-import { storeToRefs } from 'pinia';
-import VSelect from '@/components/common/VSelect.vue';
+import { defineProps, defineEmits, onMounted, ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { usePlaceStore } from "@/stores/place";
+import { storeToRefs } from "pinia";
+import VSelect from "@/components/common/VSelect.vue";
+
+const currentRoute = useRoute(); //경로정보 이용 표시
 
 const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
 
@@ -41,9 +44,9 @@ const store = usePlaceStore();
 const { getSidoList, getGugunList, getTypeList } = storeToRefs(store);
 const { listSigun, listGugun, listType } = store;
 
-const emit = defineEmits(['selectedSido', 'selectedGugun', 'selectedType', 'emitSearch']);
+const emit = defineEmits(["selectedSido", "selectedGugun", "selectedType", "emitSearch"]);
 
-const keyword = ref('');
+const keyword = ref(""); // 초기값 설정
 
 const param = ref({
   serviceKey: VITE_OPEN_API_SERVICE_KEY,
@@ -55,24 +58,28 @@ const param = ref({
 onMounted(async () => {
   await listSigun(); // 데이터 로드
   await listType(); // 데이터 로드
+  keyword.value = currentRoute.params.keyword || "";
+  if (keyword.value != "") {
+    emit("emitSearch", keyword.value);
+  }
   //console.log(sigun);
 });
 
 const onChangeSido = (val) => {
-  emit('selectedSido', val);
+  emit("selectedSido", val);
   listGugun({ sido: val });
 };
 
 const onChangeGugun = (val) => {
-  emit('selectedGugun', val);
+  emit("selectedGugun", val);
 };
 
 const onChangeType = (val) => {
-  emit('selectedType', val);
+  emit("selectedType", val);
 };
 
 const search = () => {
-  emit('emitSearch', keyword.value);
+  emit("emitSearch", keyword.value);
 };
 
 // // sigun 객체를 배열로 변환
@@ -96,7 +103,7 @@ const search = () => {
 
 // 값이 선택될 때마다 부모에게 전달하기
 function updateSelectedCity() {
-  emit('selectedCity', selectedCity.value);
+  emit("selectedCity", selectedCity.value);
 }
 </script>
 

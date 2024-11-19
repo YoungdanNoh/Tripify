@@ -27,36 +27,26 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import PopularDestinations from "@/components/PopularDestinations.vue";
 import MostViewed from "@/components/MostViewed.vue";
 import CommunityBoard from "@/components/CommunityBoard.vue";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
 
-export default {
-  components: {
-    PopularDestinations,
-    MostViewed,
-    CommunityBoard,
-  },
-  setup() {
-    const searchKeyword = ref("");
-    const router = useRouter();
+// 상태 변수 선언
+const searchKeyword = ref("");
 
-    const performSearch = () => {
-      if (searchKeyword.value.trim() === "") {
-        alert("검색어를 입력해주세요!");
-        return;
-      }
-      router.push({ path: "/search", query: { keyword: searchKeyword.value } });
-    };
+// Vue Router 훅 사용
+const router = useRouter();
 
-    return {
-      searchKeyword,
-      performSearch,
-    };
-  },
+// 검색 실행 함수
+const performSearch = () => {
+  if (searchKeyword.value.trim() === "") {
+    alert("검색어를 입력해주세요!");
+    return;
+  }
+  router.push({ name: "place", params: { keyword: searchKeyword.value } });
 };
 </script>
 
