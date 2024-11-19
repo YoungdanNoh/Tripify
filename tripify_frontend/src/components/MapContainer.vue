@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { usePlaceStore } from '@/stores/place';
-import { storeToRefs } from 'pinia';
+import { ref, watch, onMounted } from "vue";
+import { usePlaceStore } from "@/stores/place";
+import { storeToRefs } from "pinia";
 
 const store = usePlaceStore();
 const { getPlaces, pgno } = storeToRefs(store);
@@ -22,7 +22,7 @@ onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     initMap();
   } else {
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${
       import.meta.env.VITE_KAKAO_MAP_SERVICE_KEY
     }&libraries=services,clusterer`;
@@ -33,7 +33,7 @@ onMounted(() => {
 });
 
 const initMap = () => {
-  const container = document.getElementById('map');
+  const container = document.getElementById("map");
   const options = {
     center: new kakao.maps.LatLng(33.450701, 126.570667), // 초기 중심
     level: 3,
@@ -47,12 +47,13 @@ const initMap = () => {
 };
 
 const loadMarkers = (places) => {
-  // 현재 표시되어있는 marker들이 있다면 map에 등록된 marker를 제거한다.
+  // 현재 표시되어 있는 marker들이 있다면 map에 등록된 marker를 제거한다.
   deleteMarkers();
 
   // 마커를 생성합니다
   markers.value = [];
   places.forEach((place) => {
+    //console.log(place.title, place.latitude, place.longitude);
     const position = new kakao.maps.LatLng(place.latitude, place.longitude);
     const marker = new kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
@@ -71,11 +72,8 @@ const loadMarkers = (places) => {
     bounds.extend(marker.getPosition());
   });
 
-  // 첫 로드 시 setBounds()로 지도 자동 확대 및 중심 설정
-  //console.log('pgno.value:', pgno.value);
-  if (pgno.value == 1) {
-    map.setBounds(bounds); // 지도 영역을 자동으로 맞추고, 해당 영역을 중심으로 이동
-  }
+  // 지도 영역을 자동으로 맞추고, 해당 영역을 중심으로 이동
+  map.setBounds(bounds);
 };
 
 const deleteMarkers = () => {
