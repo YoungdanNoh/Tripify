@@ -37,8 +37,6 @@ public class PostController {
         List<PostWithAuthorVO> posts = postService.getPosts(page, pageSize);
         PaginationVO pagination = postService.getPagination(page, pageSize);
         
-        System.out.println(posts.get(0));
-        
         return Map.of(
                 "posts", posts,
                 "total", pagination.getTotalRecords(),  // 전체 게시물 수 반환

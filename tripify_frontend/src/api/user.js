@@ -16,12 +16,12 @@ export const signUp = ( userName, email, password) => {
   return axios.post(API_URL, { userName, email, password });
 };
 
-export const fetchUser = () => {
-  return axios.get(API_URL);
+export const fetchUserByEmail = (email) => {
+  return axios.get(API_URL, {email});
 };
 
-export const updateUser = (userName, email, password) => {
-  return axios.put(API_URL, {userName, email, password });
+export const updateUser = (userName, email, password, profileImage) => {
+  return axios.put(API_URL, {userName, email, password, profileImage });
 };
 
 export const deleteUser = (email) => {

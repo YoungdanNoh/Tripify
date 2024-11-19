@@ -7,28 +7,28 @@
       <!-- 기본 메뉴 -->
       <router-link to="/place">여행지</router-link>
       <router-link to="/plan">여행계획</router-link>
-      <!-- <button @click="spotify" class="image-button">
-        <img src="@/assets/spotify-logo.png" alt="Spotify 버튼" />
-      </button> -->
       <router-link to="/community">커뮤니티</router-link>
       <router-link v-if="!user" to="/login">로그인</router-link>
 
-      <!-- 로그인된 경우 드롭다운 -->
-      <div class="dropdown" v-if="user">
-        <span class="dropdown-trigger"> {{ user.userName }}님 안녕하세요! </span>
-        <ul class="dropdown-menu">
-          <li><router-link to="/profile">회원정보 수정</router-link></li>
-          <li @click="logout">로그아웃</li>
-        </ul>
+      <!-- 프로필 이미지 및 드롭다운 -->
+      <div class="profile-dropdown" v-if="user">
+        <div class="dropdown">
+          <span class="dropdown-trigger"> {{ user.userName }}님 안녕하세요! </span>
+          <ul class="dropdown-menu">
+            <li><router-link to="/profile">회원정보 수정</router-link></li>
+            <li @click="logout">로그아웃</li>
+          </ul>
+        </div>
+        <ProfileImage />
       </div>
     </nav>
   </header>
 </template>
 
 <script setup>
+import ProfileImage from "@/components/ProfileImage.vue";
 import { useUserStore } from "@/stores/user";
 import { computed } from "vue";
-import { authorize } from "@/api/spotify";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
@@ -36,11 +36,6 @@ const user = computed(() => userStore.user);
 const logout = () => {
   console.log("로그아웃 클릭!");
   userStore.logoutUser();
-};
-
-const spotify = () => {
-  console.log("Spotify 인증 실행!");
-  authorize();
 };
 </script>
 
@@ -50,25 +45,17 @@ const spotify = () => {
   justify-content: space-between;
   align-items: center;
 }
+
 nav {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
-.logo img {
-  width: 140px; /* 로고 너비 고정 */
-  height: auto; /* 비율 유지 */
-}
-
-.image-button {
-  background: none; /* 배경 제거 */
-  border: none; /* 테두리 제거 */
-  cursor: pointer;
-}
-
-.image-button img {
-  width: 70px; /* 버튼 크기 조정 */
-  height: auto; /* 이미지 비율 유지 */
+.profile-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* 드롭다운 스타일 */
@@ -113,5 +100,10 @@ nav {
 /* 드롭다운 트리거에 마우스를 올리면 메뉴 표시 */
 .dropdown:hover .dropdown-menu {
   display: block;
+}
+
+.logo img {
+  width: 140px; /* 로고 너비 고정 */
+  height: auto; /* 비율 유지 */
 }
 </style>

@@ -63,8 +63,8 @@ public class userController {
 
     // 회원 조회 (쿠키로 사용자 확인)
     @GetMapping
-    public ResponseEntity<User> getUser(HttpServletRequest request) {
-        String email = getEmailFromCookies(request);
+    public ResponseEntity<User> getUser(@RequestBody Map<String, String> map) {
+        String email = map.get("email");
 
         if (email == null) {
             return ResponseEntity.status(401).build(); // 인증 실패

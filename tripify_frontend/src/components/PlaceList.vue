@@ -1,19 +1,22 @@
 <template>
   <div class="places-list" @scroll="handleScroll">
     <ul>
-      <PlaceItem v-for="place in getPlaces" :key="place.id" :place="place" />
+      <PlaceItem v-for="place in getPlaces" :key="place.id" :place="place" @click="showPlaceDetails(place)" />
     </ul>
+    <PlaceModal v-if="selectedPlace" :place="selectedPlace" @close="closeModal" />
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import PlaceItem from './PlaceItem.vue';
 import { usePlaceStore } from '@/stores/place';
 import { storeToRefs } from 'pinia';
+import PlaceModal from './PlaceModal.vue';
 
 const store = usePlaceStore();
 const { getPlaces } = storeToRefs(store);
+const selectedPlace = ref(null);
 
 const props = defineProps({
   places: Array,
@@ -27,6 +30,15 @@ function handleScroll(event) {
     emit('load-more');
   }
 }
+
+function showPlaceDetails(place) {
+  selectedPlace.value = place;
+}
+
+function closeModal() {
+  selectedPlace.value = null;
+}
+
 </script>
 
 <style scoped>
