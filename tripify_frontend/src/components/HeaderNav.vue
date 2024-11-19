@@ -6,9 +6,10 @@
     <nav>
       <!-- 기본 메뉴 -->
       <router-link to="/place">여행지</router-link>
-      <button @click="spotify" class="image-button">
+      <router-link to="/plan">여행계획</router-link>
+      <!-- <button @click="spotify" class="image-button">
         <img src="@/assets/spotify-logo.png" alt="Spotify 버튼" />
-      </button>
+      </button> -->
       <router-link to="/community">커뮤니티</router-link>
       <router-link v-if="!user" to="/login">로그인</router-link>
 

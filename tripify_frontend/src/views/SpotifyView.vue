@@ -11,6 +11,10 @@
       <p>{{ user.email }}</p>
     </div>
 
+    <div>
+      <h1>Spotify Player</h1>
+      <div id="spotify-player-container"></div>
+    </div>
     <!-- 재생목록 -->
     <!-- <div class="playlists" v-if="playlists.length">
       <h2>내 재생목록</h2>
@@ -42,11 +46,53 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { authorize, handleRedirectCallback, getCurrentUser } from "@/api/spotify";
+import { ref, onMounted } from "vue";
+import { accessToken, authorize, handleRedirectCallback, getCurrentUser } from "@/api/spotify";
 
 // 상태 변수
 const user = ref(null);
+
+// Spotify 플레이어 초기화 함수
+function initializeSpotifyPlayer() {
+  if (!accessToken) {
+    console.error("Access token이 없습니다.");
+    return;
+  }
+
+  const player = new window.Spotify.Player({
+    name: "Vue Spotify Player",
+    getOAuthToken: (cb) => {
+      cb(accessToken); // 여기서 OAuth 토큰을 반환합니다.
+    },
+    volume: 0.5,
+  });
+
+  // 플레이어 이벤트 리스너
+  player.addListener("ready", ({ device_id }) => {
+    console.log("Spotify Player is ready with device ID", device_id);
+  });
+
+  player.addListener("not_ready", ({ device_id }) => {
+    console.log("Spotify Player is not ready", device_id);
+  });
+
+  // Spotify 플레이어 연결
+  player.connect().then((success) => {
+    if (success) {
+      console.log("Spotify Player 연결 성공");
+    } else {
+      console.error("Spotify Player 연결 실패");
+    }
+  });
+}
+
+// 컴포넌트가 마운트될 때 Spotify Player 초기화
+onMounted(() => {
+  window.vueApp = { initializeSpotifyPlayer };
+  if (window.location.hash.includes("access_token")) {
+    initialize();
+  }
+});
 
 // 사용자 초기화
 const initialize = async () => {
@@ -82,39 +128,6 @@ const logout = () => {
 if (window.location.hash.includes("access_token")) {
   initialize();
 }
-// import { ref } from "vue";
-// import { authorize, fetchPlaylists, fetchPlaylistTracks, searchTracks } from "@/api/spotify";
-// import { useUserStore } from "@/stores/user";
-// import { getCurrentUser } from "@/api/spotify";
-
-// const userStore = useUserStore();
-// const user = ref(null);
-// const playlists = ref([]);
-// const currentPlaylistTracks = ref([]);
-// const currentPlaylistName = ref("");
-
-// // 사용자 정보 및 재생목록을 초기화
-// const initialize = async () => {
-//   user.value = await getCurrentUser();
-//   playlists.value = await fetchPlaylists();
-// };
-
-// // 선택한 재생목록의 트랙을 가져오는 함수
-// const loadPlaylistTracks = async (playlistId) => {
-//   currentPlaylistTracks.value = await fetchPlaylistTracks(playlistId);
-//   const playlist = playlists.value.find((p) => p.id === playlistId);
-//   currentPlaylistName.value = playlist.name;
-// };
-
-// // 트랙을 클릭하면 재생하는 함수 (단순히 console에 로그를 남기는 예시)
-// const playTrack = (trackId) => {
-//   console.log("재생할 트랙 ID:", trackId);
-//   // 실제 재생 로직은 Spotify Web Playback SDK를 사용해야 합니다.
-// };
-
-// if (window.location.hash.includes("access_token")) {
-//   initialize();
-// }
 </script>
 
 <style scoped>
@@ -138,5 +151,11 @@ if (window.location.hash.includes("access_token")) {
 
 .playlists {
   margin-top: 20px;
+}
+
+#spotify-player-container {
+  width: 100%;
+  height: 300px;
+  background-color: #000;
 }
 </style>

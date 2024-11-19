@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="ko">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+
+    <!-- Spotify SDK 로드
+    <script>
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        if (window.vueApp && window.vueApp.initializeSpotifyPlayer) {
+          window.vueApp.initializeSpotifyPlayer();
+        } else {
+          console.error("Spotify Player 초기화 실패. Vue 앱이 준비되지 않았습니다.");
+        }
+      };
+    </script>
+    <script src="https://sdk.scdn.co/spotify-player.js" async></script> -->
   </head>
   <body>
     <div id="app"></div>

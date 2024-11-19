@@ -5,6 +5,8 @@ import SearchView from "../views/SearchView.vue";
 import CommunityView from "../views/CommunityView.vue";
 import HomeView from "../views/HomeView.vue";
 import SpotifyView from "../views/SpotifyView.vue";
+import PlanHomeView from "@/views/PlanHomeView.vue";
+import PlanDetailView from "@/views/PlanDetailView.vue";
 
 // Member 관련 뷰
 import MemberView from "@/views/MemberView.vue";
@@ -37,9 +39,19 @@ const router = createRouter({
       },
     },
     {
+      path: "/plan", // 여행계획 페이지
+      name: "plan",
+      component: PlanHomeView,
+      meta: { requiresAuth: true }, // 로그인 필요 설정
+    },
+    {
       path: "/spotify",
       name: "spotify",
       component: SpotifyView,
+    },
+    {
+      path: "/PlanDetail/:id",
+      component: PlanDetailView,
     },
     {
       path: "/community",
