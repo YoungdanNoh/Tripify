@@ -7,6 +7,7 @@
 	<resultMap id="PostResultMap" type="com.trip.board.vo.PostVO">
 		<result property="postId" column="post_id" />
 		<result property="userId" column="user_id" />
+		<result property="userName" column="username"/>
 		<result property="title" column="title" />
 		<result property="content" column="content" />
 		<result property="createdAt" column="created_at" />
@@ -15,31 +16,56 @@
 
 	<!-- 게시물 총 개수 -->
 	<select id="countPosts" resultType="int">
-		SELECT COUNT(*) FROM posts
+		SELECT
+		count(*)
+		FROM
+		posts p
+		INNER JOIN
+		users u
+		ON
+		p.user_id = u.user_id
 	</select>
 
 	<!-- 페이징된 게시물 리스트 -->
-	<select id="getPosts" resultType="com.trip.board.vo.PostVO"
-		resultMap="PostResultMap">
-		SELECT post_id, user_id, title, content, created_at,
-		updated_at
-		FROM posts
-		ORDER BY created_at DESC
+	<select id="getPosts"
+		resultType="com.trip.board.vo.PostWithAuthorVO">
+		SELECT
+		p.post_id AS postId,
+		p.user_id AS userId,
+		p.title AS
+		title,
+		p.content AS content,
+		p.created_at AS createdAt,
+		p.updated_at AS
+		updatedAt,
+		u.username AS userName
+		FROM
+		posts p
+		INNER JOIN
+		users u
+		ON
+		p.user_id = u.user_id
+		ORDER BY
+		p.created_at DESC
 		LIMIT #{offset},
 		#{pageSize}
 	</select>
 
+
 	<!-- 게시글 작성 -->
 	<insert id="insertPost">
-		INSERT INTO posts (user_id, title, content, created_at, updated_at)
-		VALUES (#{userId}, #{title}, #{content}, NOW(), NOW());
+		INSERT INTO posts (user_id, title, content,
+		created_at, updated_at)
+		VALUES (#{userId}, #{title}, #{content}, NOW(),
+		NOW());
 	</insert>
 
 	<!-- 게시글 수정 -->
 	<update id="updatePost">
 		UPDATE posts
 		SET title = #{title},
-		content = #{content},
+		content =
+		#{content},
 		updated_at = NOW()
 		WHERE post_id = #{postId};
 	</update>
@@ -50,11 +76,26 @@
 	</delete>
 
 	<!-- 게시글 상세 조회 -->
-	<select id="selectPost" resultType="com.trip.board.vo.PostVO" resultMap="PostResultMap">
-		SELECT post_id, user_id, title, content, created_at, updated_at
-		FROM posts
-		WHERE post_id = #{postId};
+	<select id="selectPost"
+		resultType="com.trip.board.vo.PostWithAuthorVO">
+		SELECT
+		p.post_id AS postId,
+		p.user_id AS userId,
+		p.title AS title,
+		p.content AS content,
+		p.created_at AS createdAt,
+		p.updated_at AS updatedAt,
+		u.username AS userName
+		FROM
+		posts p
+		INNER JOIN
+		users u
+		ON
+		p.user_id = u.user_id
+		WHERE
+		p.post_id = #{postId}
 	</select>
+
 
 
 </mapper>

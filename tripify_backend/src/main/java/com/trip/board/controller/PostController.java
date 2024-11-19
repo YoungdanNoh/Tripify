@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.trip.board.service.PostService;
 import com.trip.board.vo.PaginationVO;
 import com.trip.board.vo.PostVO;
+import com.trip.board.vo.PostWithAuthorVO;
 
 @RestController
 @RequestMapping("/posts")
@@ -33,11 +34,11 @@ public class PostController {
     @GetMapping
     public Map<String, Object> getPosts(@RequestParam(defaultValue = "1") int page,
                                         @RequestParam(defaultValue = "10") int pageSize) {
-        List<PostVO> posts = postService.getPosts(page, pageSize);
+        List<PostWithAuthorVO> posts = postService.getPosts(page, pageSize);
         PaginationVO pagination = postService.getPagination(page, pageSize);
         
-        System.out.println("size"+posts.size()+" pagination"+pagination.getCurrentPage());
-
+        System.out.println(posts.get(0));
+        
         return Map.of(
                 "posts", posts,
                 "total", pagination.getTotalRecords(),  // 전체 게시물 수 반환
@@ -69,8 +70,8 @@ public class PostController {
     
  // 게시글 상세 조회
     @GetMapping("/{postId}")
-    public ResponseEntity<PostVO> getPost(@PathVariable int postId) {
-        PostVO post = postService.getPost(postId);
+    public ResponseEntity<PostWithAuthorVO> getPost(@PathVariable int postId) {
+        PostWithAuthorVO post = postService.getPost(postId);
         if (post == null) {
             return ResponseEntity.notFound().build(); // 게시글이 없으면 404 반환
         }
