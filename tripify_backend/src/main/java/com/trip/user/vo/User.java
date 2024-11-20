@@ -10,6 +10,7 @@ public class User implements Serializable{
 	String userName;
 	String email;
 	String password;
+	String profileImage;
 	LocalDate createdAt;
 	LocalDate updatedAt;
 	
@@ -59,7 +60,17 @@ public class User implements Serializable{
 	public void setPassWord(String password) {
 		this.password = password;
 	}
+	
 
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+	
 
 	public LocalDate getCreatedAt() {
 		return createdAt;

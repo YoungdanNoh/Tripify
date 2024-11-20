@@ -2,6 +2,27 @@
   <div class="profile-page">
     <h2>프로필 정보</h2>
     <form @submit.prevent="handleUpdate">
+      <!-- 프로필 이미지 -->
+      <div class="form-group text-center">
+        <img
+          :src="formData.profileImage || defaultImage"
+          alt="프로필 이미지"
+          class="profile-img"
+        />
+      </div>
+
+      <!-- 이미지 URL 입력 -->
+      <div class="form-group">
+        <label for="profileImageUrl" class="form-label">프로필 이미지 URL</label>
+        <input
+          type="text"
+          id="profileImage"
+          placeholder="이미지 URL을 입력하세요"
+          :disabled="!isEditing"
+          v-model="formData.profileImage"
+        />
+      </div>
+
       <!-- 이름 -->
       <div class="form-group">
         <label for="userName">이름</label>
@@ -49,105 +70,87 @@
     />
 
     <!-- 일반 메시지 -->
-    <p v-if="message" :class="{'error': isError}">{{ message }}</p>
+    <p v-if="message" :class="{ error: isError }">{{ message }}</p>
   </div>
 </template>
 
-<script>
+<script setup>
+import { reactive, ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { updateUser, deleteUser } from "@/api/user";
-import { computed, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 import AlertMessage from "@/components/member/AlertMessage.vue";
+import defaultImage from "@/assets/noImage.png";
 
-export default {
-  components: {
-    AlertMessage,
-  },
-  setup() {
-    const userStore = useUserStore();
-    const router = useRouter(); // router 인스턴스 가져오기
+// Pinia 스토어 및 라우터
+const userStore = useUserStore();
+const router = useRouter();
 
-    // Pinia에서 유저 정보 가져오기
-    const user = computed(() => userStore.user);
+// Pinia에서 유저 정보 가져오기
+const user = computed(() => userStore.user);
 
-    // 수정 가능한 form 데이터
-    const formData = reactive({
-      userName: user.value?.userName || "",
-      email: user.value?.email || "",
-      password: "",
-    });
+// 수정 가능한 form 데이터
+const formData = reactive({
+  userName: user.value?.userName || "",
+  email: user.value?.email || "",
+  password: "",
+  profileImage: user.value?.profileImage || null, // 기본 이미지 설정
+});
 
-    const isEditing = ref(false); // 수정 모드 상태
-    const message = ref(""); // 일반 메시지
-    const showAlert = ref(false); // AlertMessage 표시 여부
-    const isError = ref(false); // 에러 상태
+// 상태 관리
+const isEditing = ref(false);
+const message = ref("");
+const showAlert = ref(false);
+const isError = ref(false);
 
-    const enableEditing = () => {
-      isEditing.value = true;
-    };
+// 정보 수정 활성화
+const enableEditing = () => {
+  isEditing.value = true;
+};
 
-    const handleUpdate = async () => {
-      try {
-        const { userName, email, password } = formData;
-        await updateUser(userName, email, password || null); // API 호출
-        userStore.user.userName = userName; // Pinia 상태 업데이트
-        message.value = "프로필 정보가 성공적으로 수정되었습니다.";
-        isEditing.value = false;
-        isError.value = false;
-      } catch (err) {
-        message.value = "프로필 정보 수정에 실패했습니다.";
-        isError.value = true;
-        console.error(err);
-      }
-    };
+// 정보 수정 처리
+const handleUpdate = async () => {
+  try {
+    const { userName, email, password, profileImage } = formData;
+    await updateUser(userName, email, password || null, profileImage || null); // API 호출
+    userStore.user = { ...userStore.user, userName, profileImage }; // Pinia 상태 업데이트
+    message.value = "프로필 정보가 성공적으로 수정되었습니다.";
+    isEditing.value = false;
+    isError.value = false;
+  } catch (err) {
+    message.value = "프로필 정보 수정에 실패했습니다.";
+    isError.value = true;
+    console.error(err);
+  }
+};
 
-    const handleDelete = async () => {
-      try {
-        // email 값을 가져오기 (예: Pinia 또는 상태에서)
-        const { email } = userStore.user;
+// 회원 탈퇴 처리
+const handleDelete = async () => {
+  try {
+    const { email } = userStore.user;
+    if (!email) {
+      message.value = "회원 정보를 확인할 수 없습니다.";
+      isError.value = true;
+      return;
+    }
 
-        if (!email) {
-          message.value = "회원 정보를 확인할 수 없습니다.";
-          isError.value = true;
-          return;
-        }
+    await deleteUser(email); // API 호출
+    userStore.user = null; // Pinia 상태 초기화
+    showAlert.value = true;
 
-        // API 호출
-        await deleteUser(email);
+    setTimeout(() => {
+      router.push("/"); // 3초 후 페이지 이동
+    }, 3000);
+  } catch (err) {
+    message.value = "회원 탈퇴에 실패했습니다.";
+    isError.value = true;
+    console.error(err);
+  }
+};
 
-        // 상태 초기화 및 탈퇴 후 처리
-        userStore.user = null; // Pinia 상태 초기화
-        showAlert.value = true; // AlertMessage 표시
-        message.value = ""; // 일반 메시지 초기화
-
-        // 3초 후 페이지 이동
-        setTimeout(() => {
-          router.push("/");
-        }, 3000);
-      } catch (err) {
-        message.value = "회원 탈퇴에 실패했습니다.";
-        isError.value = true;
-        console.error(err);
-      }
-    };
-
-    const handleAlertClose = () => {
-      showAlert.value = false; // AlertMessage 닫기
-    };
-
-    return {
-      formData,
-      isEditing,
-      enableEditing,
-      handleUpdate,
-      handleDelete,
-      message,
-      showAlert,
-      handleAlertClose,
-      isError,
-    };
-  },
+// AlertMessage 닫기
+const handleAlertClose = () => {
+  showAlert.value = false;
 };
 </script>
 
@@ -191,7 +194,7 @@ button {
   display: block;
   width: 100%;
   padding: 12px;
-  margin-top: 20px; /* 조정된 마진 */
+  margin-top: 20px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -210,7 +213,17 @@ p {
 }
 
 .error {
-  color: #d32f2f; /* 오류 메시지 색상 */
+  color: #d32f2f;
   font-weight: bold;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
 }
 </style>

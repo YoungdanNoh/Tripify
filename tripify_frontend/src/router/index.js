@@ -14,12 +14,12 @@ import LoginPage from "@/components/member/LoginPage.vue";
 import SignUpPage from "@/components/member/SignUpPage.vue";
 import PasswordRecoveryPage from "@/components/member/PasswordRecoveryPage.vue";
 import UserProfilePage from "@/components/member/UserProfilePage.vue";
-import WritePost from "@/components/WritePost.vue";
-import BoardShow from "@/components/BoardShow.vue";
+import WritePost from "@/components/Board/WritePost.vue";
+import BoardShow from "@/components/Board/BoardShow.vue";
 
 import { useUserStore } from "@/stores/user";
 import { usePlaceStore } from "@/stores/place";
-import PostDetail from "@/components/PostDetail.vue";
+import PostDetail from "@/components/Board/PostDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

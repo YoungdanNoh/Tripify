@@ -32,7 +32,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import PopularDestinations from "@/components/PopularDestinations.vue";
 import MostViewed from "@/components/MostViewed.vue";
-import CommunityBoard from "@/components/CommunityBoard.vue";
+import CommunityBoard from "@/components/Board/CommunityBoard.vue";
 
 // 상태 변수 선언
 const searchKeyword = ref("");

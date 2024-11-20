@@ -42,4 +42,5 @@ export const useUserStore = defineStore('user', {
       return this.user?.userId || null;
     }
   },
+  persist: true,
 });

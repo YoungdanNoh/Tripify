@@ -2,9 +2,10 @@
   <li class="place-item">
     <img :src="imageSrc" alt="place image" />
     <div class="place-info">
-      <h2>{{ place.title }}</h2>
-      <p>{{ place.addr1 }}</p>
-      <p>{{ place.addr2 }} ⭐</p>
+      <h5>{{ place.title }}</h5>
+      <hr>
+      <p>{{ place.addr1 }} {{ place.addr2 }}</p>
+      <p> ⭐</p>
     </div>
   </li>
 </template>
@@ -40,5 +41,9 @@ const imageSrc = computed(() => {
   width: 100px; /* 원하는 너비로 조정 */
   height: 100px; /* 원하는 높이로 조정 */
   object-fit: cover; /* 이미지 비율을 유지하며 크기 맞추기 */
+}
+
+.place-info h5 {
+  font-weight: bold; /* 글자 굵게 */
 }
 </style>

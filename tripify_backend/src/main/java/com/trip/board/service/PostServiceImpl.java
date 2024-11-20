@@ -4,6 +4,8 @@ import com.trip.board.mapper.PostMapper;
 import com.trip.board.util.PageNavigationUtil;
 import com.trip.board.vo.PaginationVO;
 import com.trip.board.vo.PostVO;
+import com.trip.board.vo.PostWithAuthorVO;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostVO> getPosts(int page, int pageSize) {
+    public List<PostWithAuthorVO> getPosts(int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         return postMapper.getPosts(offset, pageSize);
     }
@@ -45,7 +47,7 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public PostVO getPost(int postId) {
+    public PostWithAuthorVO getPost(int postId) {
         return postMapper.selectPost(postId);
     }
 
