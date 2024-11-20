@@ -50,7 +50,7 @@ const router = createRouter({
       component: SpotifyView,
     },
     {
-      path: "/PlanDetail/:id",
+      path: "/PlanDetail/:plan_id",
       component: PlanDetailView,
     },
     {

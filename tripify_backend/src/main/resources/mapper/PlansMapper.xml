@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.trip.plans.mapper.plansMapper">
+
+	<select id="plansSelect" parameterType="Integer" resultType="plans">
+		select *
+		from plans
+		where user_id = #{user_id}
+		order by start_date;
+	</select>
+	
+	<insert id="insertPlan" parameterType="plans">
+        INSERT INTO plans (user_id, title, location, start_date, end_date, img)
+        VALUES (#{user_id}, #{title}, #{location}, #{start_date}, #{end_date}, #{img})
+    </insert>
+    
+    <select id="getPlanDetails" parameterType="map" resultType="planDetail">
+        SELECT
+        	p.plan_id,
+		    p.title,
+		    p.location,
+		    p.start_date,
+		    p.end_date,
+		    p.img,
+		    tp.plan_place_id,
+		    tp.visit_date,
+		    tp.place_name,
+		    tp.description
+		FROM plans p, plan_places tp
+		where p.plan_id = tp.plan_id
+		and p.user_id = #{user_id} AND p.plan_id = #{plan_id}
+		ORDER BY tp.visit_date
+    </select>
+
+</mapper>

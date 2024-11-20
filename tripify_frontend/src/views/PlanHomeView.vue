@@ -6,43 +6,56 @@
     </div>
 
     <!-- 여행 추가 폼 -->
-    <PlanForm v-if="showForm" @save="addTrip" @cancel="showForm = false" />
+    <PlanForm v-if="showForm" @savePlan="addPlan" @cancel="showForm = false" />
 
     <!-- 여행 목록 -->
-    <PlanList :trips="trips" @delete="deleteTrip" />
+    <PlanList :plans="getPlanList" @view="viewPlan" @delete="deleteTrip" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { usePlanStore } from "@/stores/plans";
+import { storeToRefs } from "pinia";
 import PlanList from "@/components/plan/PlanList.vue";
 import PlanForm from "@/components/plan/PlanForm.vue";
 
-// 여행 목록 관리
-const trips = ref([
-  {
-    id: 1,
-    title: "파리 여행",
-    startDate: "2024-11-20",
-    endDate: "2024-11-25",
-    location: "파리, 프랑스",
-    image: "https://via.placeholder.com/400x200?text=Paris",
-    itinerary: [
-      {
-        title: "에펠탑 방문",
-        description: "파리의 상징 에펠탑에서 사진 촬영.",
-        locations: ["에펠탑", "샹드 마르스 공원"],
-      },
-    ],
-  },
-]);
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const store = usePlanStore();
+const { getPlanList } = storeToRefs(store);
+
+const router = useRouter();
+
+onMounted(async () => {
+  await store.listPlan(user.value.userId); // POST 요청으로 계획 목록 가져오기
+  //console.log("User:", getPlanList.value);
+});
+//console.log("User:", user.value.userId);
 
 const showForm = ref(false);
 
 // 여행 추가
-const addTrip = (newTrip) => {
-  trips.value.push({ ...newTrip, id: Date.now(), itinerary: [] });
+const addPlan = async (newPlan) => {
+  //console.log("New Plan:", newPlan.title);
+  //trips.value.push({ ...newTrip, id: Date.now(), itinerary: [] });
+  try {
+    // Pinia 스토어의 add 메서드 호출
+    await store.add(newPlan);
+    console.log("Plan added successfully");
+  } catch (error) {
+    console.error("Failed to add plan:", error);
+  }
+
   showForm.value = false;
+};
+
+// 여행 보기 라우팅 처리
+const viewPlan = (plan_id) => {
+  router.push(`/PlanDetail/${plan_id}`);
 };
 
 // 여행 삭제
