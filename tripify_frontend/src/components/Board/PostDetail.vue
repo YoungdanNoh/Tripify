@@ -87,13 +87,16 @@ export default {
   margin: 0 auto;
   padding: 20px;
 }
+
 .meta {
   font-size: 0.8em;
   color: #666;
 }
+
 .actions {
   margin-top: 20px;
 }
+
 .edit-button,
 .delete-button {
   margin-right: 10px;
@@ -102,17 +105,21 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .edit-button {
   background-color: #ffc107;
   color: white;
 }
+
 .edit-button:hover {
   background-color: #e0a800;
 }
+
 .delete-button {
   background-color: #dc3545;
   color: white;
 }
+
 .delete-button:hover {
   background-color: #c82333;
 }
