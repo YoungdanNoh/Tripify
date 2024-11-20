@@ -5,53 +5,88 @@
 
 <mapper namespace="com.trip.place.mapper.placeMapper">
 
-	<select id="getSido" resultType="sidoGugunCode">
-		select sido_code, sido_name
-		from sidos
-		order by sido_code
-	</select>
-	
-	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCode">
-		select gugun_code, gugun_name
-		from guguns
-		where guguns.sido_code = #{sido}
-		order by gugun_code
-	</select>
-	
-	<select id="typeSelect" resultType="Type">
-		select * 
-		from contenttypes;
-	</select>
-	
-	<sql id="search">
-		<if test="sido != null and sido != ''">
-			and area_code = #{sido}
-		</if>
-		<if test="gugun != null and gugun != ''">
-			and si_gun_gu_code = #{gugun}
-		</if>
-		<if test="type != null and type != ''">
-			and content_type_id = #{type}
-		</if>
-		<if test="word != null and word != ''">
-			and title like concat('%', #{word}, '%')
-		</if>
-	</sql>
-	
-	<select id="listAttr" parameterType="map" resultType="Places">
-		select no, content_id, title,content_type_id, area_code, si_gun_gu_code, latitude, longitude, addr1, addr2, first_image1, count
-		from places
-		where 1=1
-		<include refid="search"></include>
-		order by no
-		limit #{start}, #{listsize}
-	</select>
-	
-	<select id="getTotalAttrCount" parameterType="map" resultType="int">
-		select count(no)
-		from places
-		where 1=1
-		<include refid="search"></include>
-	</select>
-	
+    <!-- 시도 리스트 조회 -->
+    <select id="getSido" resultType="sidoGugunCode">
+        SELECT sido_code, sido_name
+        FROM sidos
+        ORDER BY sido_code
+    </select>
+
+    <!-- 구군 리스트 조회 -->
+    <select id="getGugunInSido" parameterType="string" resultType="sidoGugunCode">
+        SELECT gugun_code, gugun_name
+        FROM guguns
+        WHERE guguns.sido_code = #{sido}
+        ORDER BY gugun_code
+    </select>
+
+    <!-- 콘텐츠 타입 조회 -->
+    <select id="typeSelect" resultType="Type">
+        SELECT *
+        FROM contenttypes;
+    </select>
+
+    <!-- 검색 조건 -->
+    <sql id="search">
+        <if test="sido != null and sido != ''">
+            AND area_code = #{sido}
+        </if>
+        <if test="gugun != null and gugun != ''">
+            AND si_gun_gu_code = #{gugun}
+        </if>
+        <if test="type != null and type != ''">
+            AND content_type_id = #{type}
+        </if>
+        <if test="word != null and word != ''">
+            AND title LIKE CONCAT('%', #{word}, '%')
+        </if>
+    </sql>
+
+    <!-- 여행지 리스트 조회 -->
+    <select id="listAttr" parameterType="map" resultType="com.trip.place.vo.Places">
+        SELECT place_id AS placeId, content_id AS contentId, title, content_type_id AS contentTypeId,
+               area_code AS areaCode, si_gun_gu_code AS siGunGuCode, latitude, longitude,
+               addr1, addr2, first_image1, count
+        FROM places
+        WHERE 1=1
+        <include refid="search"></include>
+        ORDER BY place_id
+        LIMIT #{start}, #{listSize}
+    </select>
+
+    <!-- 총 여행지 수 조회 -->
+    <select id="getTotalAttrCount" parameterType="map" resultType="int">
+        SELECT COUNT(place_id)
+        FROM places
+        WHERE 1=1
+        <include refid="search"></include>
+    </select>
+
+    <!-- 여행지 조회 -->
+    <select id="selectPlaceById" resultType="com.trip.place.vo.Places">
+        SELECT place_id AS placeId, content_id AS contentId, title, content_type_id AS contentTypeId,
+               area_code AS areaCode, si_gun_gu_code AS siGunGuCode, latitude, longitude,
+               addr1, addr2, first_image1 AS firstImage1, count
+        FROM places
+        WHERE place_id = #{placeId}
+    </select>
+
+    <!-- 여행지 댓글 조회 -->
+    <select id="selectCommentsByPlaceId" resultType="com.trip.place.vo.PlaceCommentWithUserName">
+        SELECT comment_id AS commentId, place_id AS placeId, p.user_id AS userId, username AS userName, content, p.created_at AS createdAt, p.updated_at AS updatedAt
+        FROM place_comments as p JOIN users ON p.user_id = users.user_id
+        WHERE place_id = #{placeId}
+    </select>
+
+
+    <!-- 여행지 댓글 삽입 -->
+    <insert id="insertPlaceComment" parameterType="com.trip.place.vo.PlaceComment">
+        INSERT INTO place_comments (place_id, user_id, content, created_at, updated_at)
+        VALUES (#{placeId}, #{userId}, #{content}, NOW(), NOW());
+    </insert>
+    
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM place_comments WHERE comment_id = #{commentId}
+    </delete>
+
 </mapper>

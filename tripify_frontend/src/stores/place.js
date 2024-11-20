@@ -1,13 +1,13 @@
-import { ref, computed } from 'vue';
-import { defineStore } from 'pinia';
-import { sigun, gugun, type, place } from '@/api/place';
+import { ref, computed } from "vue";
+import { defineStore } from "pinia";
+import { sigun, gugun, type, place } from "@/api/place";
 
-export const usePlaceStore = defineStore('place', () => {
+export const usePlaceStore = defineStore("place", () => {
   //1. data
   // const sigun = ref([]); //시, 군 정보
   const typeList = ref([]); //관광지 타입 정보
   const sidoList = ref([]); //시도 목록
-  const gugunList = ref([{ text: '구군선택', value: '' }]); //구군 목록
+  const gugunList = ref([{ text: "구군선택", value: "" }]); //구군 목록
   const places = ref([]); //관광지 정보
   const navigation = ref([]);
   const pgno = ref(0); //새로운 지역을 탐색하는지의 여부
@@ -24,7 +24,7 @@ export const usePlaceStore = defineStore('place', () => {
     sigun(
       ({ data }) => {
         let options = [];
-        options.push({ text: '시도선택', value: '' });
+        options.push({ text: "시도선택", value: "" });
         data.forEach((sido) => {
           options.push({ text: sido.sido_name, value: sido.sido_code });
         });
@@ -42,7 +42,7 @@ export const usePlaceStore = defineStore('place', () => {
       { sido: val },
       ({ data }) => {
         let options = [];
-        options.push({ text: '구군선택', value: '' });
+        options.push({ text: "구군선택", value: "" });
         //console.log(data);
         data.forEach((gugun) => {
           options.push({ text: gugun.gugun_name, value: gugun.gugun_code });
@@ -59,7 +59,7 @@ export const usePlaceStore = defineStore('place', () => {
     type(
       ({ data }) => {
         let options = [];
-        options.push({ text: '관광지타입선택', value: '' });
+        options.push({ text: "관광지타입선택", value: "" });
         data.forEach((t) => {
           options.push({ text: t.content_type_name, value: t.content_type_id });
         });
@@ -81,7 +81,9 @@ export const usePlaceStore = defineStore('place', () => {
 
         let options = [];
         data.attrList.forEach((place) => {
+          console.log(place);
           options.push({
+            place_id: place.placeId,
             title: place.title,
             latitude: place.latitude,
             longitude: place.longitude,
@@ -94,7 +96,10 @@ export const usePlaceStore = defineStore('place', () => {
         places.value = [...places.value, ...options];
         //console.log('검색된 장소', places.value);
 
-        navigation.value = { currentPage: data.navigation.currentPage, totalPageCount: data.navigation.totalPageCount };
+        navigation.value = {
+          currentPage: data.navigation.currentPage,
+          totalPageCount: data.navigation.totalPageCount,
+        };
         //console.log('검색된 네비게이션', navigation.value);
       },
       (error) => {

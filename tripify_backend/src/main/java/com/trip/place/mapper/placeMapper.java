@@ -1,26 +1,38 @@
 package com.trip.place.mapper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.trip.place.vo.PlaceComment;
+import com.trip.place.vo.PlaceCommentWithUserName;
 import com.trip.place.vo.Places;
 import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
 
 @Mapper
 public interface placeMapper {
-
-	public ArrayList<Type> typeSelect() throws Exception;
 	
-	List<SidoGugunCode> getSido() throws SQLException;
-	List<SidoGugunCode> getGugunInSido(String sido) throws SQLException;
+	// 콘텐츠 타입 조회
+    ArrayList<Type> typeSelect();
+
+    // 시도 리스트 조회
+    List<SidoGugunCode> getSido();
+
+    // 특정 시도의 구군 리스트 조회
+    List<SidoGugunCode> getGugunInSido(String sido);
 	
+    List<Places> listAttr(Map<String, Object> params);
 
-	public List<Places> listAttr(Map<String, Object> param) throws Exception;
+    int getTotalAttrCount(Map<String, Object> params);
 
-	public int getTotalAttrCount(Map<String, Object> param) throws Exception;
+    List<PlaceCommentWithUserName> selectCommentsByPlaceId(int placeId);
+
+    Places selectPlaceById(int placeId);
+
+    Integer insertPlaceComment(PlaceComment placeComment);
+    
+    int deleteComment(int commentId);
 }

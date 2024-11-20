@@ -1,16 +1,16 @@
 package com.trip.place.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trip.place.service.placeService;
 import com.trip.place.util.PageNavigation;
+import com.trip.place.vo.PlaceComment;
+import com.trip.place.vo.PlaceCommentRequest;
+import com.trip.place.vo.PlaceCommentWithUserName;
 import com.trip.place.vo.Places;
 import com.trip.place.vo.Search;
 import com.trip.place.vo.SidoGugunCode;
@@ -62,4 +65,51 @@ public class placeController {
 		map.put("word", search.getWord()); //검색어
 		return map;
 	}
+	
+	// 여행지 가져오기
+    @GetMapping("/place/{placeId}")
+    public ResponseEntity<Places> getPlaceById(@PathVariable Integer placeId) {
+        Places place = service.getPlaceById(placeId);
+        return ResponseEntity.ok(place);
+    }
+	
+	// 여행지 댓글 가져오기
+    @GetMapping("/place/{placeId}/comments")
+    public ResponseEntity<List<PlaceCommentWithUserName>> getCommentsByPlaceId(@PathVariable Integer placeId) {
+        List<PlaceCommentWithUserName> comments = service.getCommentsByPlaceId(placeId);
+        System.out.println(comments.get(0).getCommentId());
+        return ResponseEntity.ok(comments);
+    }
+    
+    @PostMapping("place/{placeId}/comments")
+    public ResponseEntity<String> addComment(
+            @PathVariable Integer placeId,
+            @RequestBody PlaceCommentRequest commentRequest) {
+
+        // `commentRequest`로 userId와 content를 받음
+        PlaceComment placeComment = new PlaceComment();
+        placeComment.setPlaceId(placeId);
+        placeComment.setUserId(commentRequest.getUserId());
+        placeComment.setContent(commentRequest.getContent());
+
+        // Service를 통해 댓글 저장
+        Integer isAdded = service.addPlaceComment(placeComment);
+
+        if (isAdded>0) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("댓글이 성공적으로 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가에 실패했습니다.");
+        }
+    }
+    
+    @DeleteMapping("place/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable int commentId) {
+        try {
+            service.deleteComment(commentId);
+            return ResponseEntity.ok("댓글이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("댓글 삭제 중 오류가 발생했습니다.");
+        }
+    }
 }

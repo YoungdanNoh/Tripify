@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trip.board.service.PostService;
 import com.trip.board.vo.PaginationVO;
+import com.trip.board.vo.PostComment;
 import com.trip.board.vo.PostVO;
 import com.trip.board.vo.PostWithAuthorVO;
 
@@ -74,6 +75,13 @@ public class PostController {
             return ResponseEntity.notFound().build(); // 게시글이 없으면 404 반환
         }
         return ResponseEntity.ok(post); // 게시글 반환
+    }
+    
+ // 게시글 댓글 가져오기
+    @GetMapping("/comments/{postId}")
+    public ResponseEntity<List<PostComment>> getCommentsByPostId(@PathVariable Integer postId) {
+        List<PostComment> comments = postService.getCommentsByPostId(postId);
+        return ResponseEntity.ok(comments);
     }
 
 }

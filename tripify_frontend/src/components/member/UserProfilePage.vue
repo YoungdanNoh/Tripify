@@ -4,35 +4,20 @@
     <form @submit.prevent="handleUpdate">
       <!-- 프로필 이미지 -->
       <div class="form-group text-center">
-        <img
-          :src="formData.profileImage || defaultImage"
-          alt="프로필 이미지"
-          class="profile-img"
-        />
+        <img :src="formData.profileImage || defaultImage" alt="프로필 이미지" class="profile-img" />
       </div>
 
       <!-- 이미지 URL 입력 -->
       <div class="form-group">
-        <label for="profileImageUrl" class="form-label">프로필 이미지 URL</label>
-        <input
-          type="text"
-          id="profileImage"
-          placeholder="이미지 URL을 입력하세요"
-          :disabled="!isEditing"
-          v-model="formData.profileImage"
-        />
+        <label for="profileImage" class="form-label">프로필 이미지 URL</label>
+        <input type="text" id="profileImage" placeholder="이미지 URL을 입력하세요" :disabled="!isEditing"
+          v-model="formData.profileImage" />
       </div>
 
       <!-- 이름 -->
       <div class="form-group">
         <label for="userName">이름</label>
-        <input
-          id="userName"
-          type="text"
-          v-model="formData.userName"
-          :disabled="!isEditing"
-          required
-        />
+        <input id="userName" type="text" v-model="formData.userName" :disabled="!isEditing" required />
       </div>
 
       <!-- 이메일 (비활성화) -->
@@ -44,12 +29,7 @@
       <!-- 비밀번호 (정보 수정 중에만 표시) -->
       <div class="form-group" v-if="isEditing">
         <label for="password">비밀번호</label>
-        <input
-          id="password"
-          type="password"
-          v-model="formData.password"
-          placeholder="새 비밀번호를 입력하세요"
-        />
+        <input id="password" type="password" v-model="formData.password" placeholder="새 비밀번호를 입력하세요" />
       </div>
 
       <!-- 정보 수정 버튼 -->
@@ -63,11 +43,7 @@
     <button @click="handleDelete">회원 탈퇴</button>
 
     <!-- 탈퇴 완료 메시지 -->
-    <AlertMessage
-      v-if="showAlert"
-      message="회원 탈퇴가 완료되었습니다."
-      @closed="handleAlertClose"
-    />
+    <AlertMessage v-if="showAlert" message="회원 탈퇴가 완료되었습니다." @closed="handleAlertClose" />
 
     <!-- 일반 메시지 -->
     <p v-if="message" :class="{ error: isError }">{{ message }}</p>
