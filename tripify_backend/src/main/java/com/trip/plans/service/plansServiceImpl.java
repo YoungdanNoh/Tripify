@@ -22,12 +22,43 @@ public class plansServiceImpl implements plansService {
 	}
 
 	@Override
-	public void insertPlan(Plans plan) throws Exception {
-		mapper.insertPlan(plan);
+	public void addPlan(Plans p) throws Exception {
+		mapper.addPlan(p);
+	}
+	
+	@Override
+	public void deletePlan(Plans p) throws Exception {
+		mapper.deletePlan(p);
 	}
 
 	@Override
 	public ArrayList<PlanDetail> getPlanDetails(Map<String, Object> params) {
 		return mapper.getPlanDetails(params);
 	}
+
+	@Override
+	public void addDetailPlan(PlanDetail p) throws Exception {
+		mapper.addDetailPlan(p);
+	}
+
+	@Override
+	public void addOrder(PlanDetail p) throws Exception {
+		mapper.addOrder(p);
+	}
+
+	@Override
+	public void addNewActivity(PlanDetail p) throws Exception {
+		mapper.addNewActivity(p);
+	}
+	
+	@Override
+	public void updateActivity(PlanDetail p) {
+		mapper.updateActivity(p);
+	}
+	
+	@Override
+	public void deleteActivity(PlanDetail p) throws Exception {
+		mapper.deleteActivity(p);
+	}
+
 }

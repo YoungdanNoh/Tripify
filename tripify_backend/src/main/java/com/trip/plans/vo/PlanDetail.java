@@ -11,7 +11,7 @@ public class PlanDetail {
 	String visit_date;
 	String place_name;
 	String description;
-	//int order_in_day;
+	int order_in_day;
 	
 	public int getPlan_id() {
 		return plan_id;
@@ -67,12 +67,12 @@ public class PlanDetail {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-//	public int getOrder_in_day() {
-//		return order_in_day;
-//	}
-//	public void setOrder_in_day(int order_in_day) {
-//		this.order_in_day = order_in_day;
-//	}
+	public int getOrder_in_day() {
+		return order_in_day;
+	}
+	public void setOrder_in_day(int order_in_day) {
+		this.order_in_day = order_in_day;
+	}
 	public int getPlan_place_id() {
 		return plan_place_id;
 	}

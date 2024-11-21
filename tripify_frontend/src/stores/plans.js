@@ -1,14 +1,25 @@
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { defineStore } from "pinia";
-import { plans, addPlan, getPlanDetail } from "@/api/plans";
+import {
+  plans,
+  addPlan,
+  deletePlan,
+  getPlanDetail,
+  addPlanDetail,
+  addNewActivity,
+  updateActivity,
+  deletePlanDetail,
+} from "@/api/plans";
 
 export const usePlanStore = defineStore("plan", () => {
   // 1. data
-  const plansList = ref([]); // 여행 계획 목록
+  const planList = ref([]); // 여행 계획 목록
+  const planId = ref(localStorage.getItem("planId") || null);
   const planDetailList = ref(null); // 여행 계획 상세
 
   //2. getters
-  const getPlanList = computed(() => plansList.value);
+  const getPlanList = computed(() => planList.value);
+  const getPlanId = computed(() => planId.value); // planId getter 추가
   const getPlanDetailList = computed(() => planDetailList.value);
 
   //3. actions
@@ -16,9 +27,9 @@ export const usePlanStore = defineStore("plan", () => {
     plans(
       user_id,
       (response) => {
-        plansList.value = []; // 초기화
-        plansList.value = response.data.plans; // 응답 데이터에서 plans를 추출
-        console.log("여행 계획: ", plansList.value);
+        planList.value = []; // 초기화
+        planList.value = response.data.plans; // 응답 데이터에서 plans를 추출
+        //console.log("여행 계획: ", planList.value);
       },
       (error) => {
         console.error(error);
@@ -30,11 +41,23 @@ export const usePlanStore = defineStore("plan", () => {
     addPlan(
       plan,
       async (response) => {
-        console.log(response.data);
+        //console.log(response.data);
         await listPlan(plan.user_id); // 목록 다시 가져오기
         //console.log("plansList: ", plansList.value);
         //console.log("plan: ", plan);
         //plansList.value.push(plan);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
+  const deleteP = async (plan) => {
+    deletePlan(
+      plan,
+      async (response) => {
+        await listPlan(plan.user_id); // 목록 다시 가져오기
       },
       (error) => {
         console.error(error);
@@ -47,7 +70,9 @@ export const usePlanStore = defineStore("plan", () => {
       await getPlanDetail(
         plan,
         (response) => {
+          planDetailList.value = []; // 초기화
           planDetailList.value = response.data; // 백엔드에서 응답 받은 데이터를 저장
+          //console.log(planDetailList.value);
           console.log("Fetched Plan Detail");
         },
         (error) => {
@@ -59,13 +84,90 @@ export const usePlanStore = defineStore("plan", () => {
     }
   };
 
+  // planId 변경 시 localStorage에 저장
+  watchEffect(() => {
+    if (planId.value) {
+      localStorage.setItem("planId", planId.value);
+    }
+  });
+
+  const addDetail = async (planDetail, plan) => {
+    addPlanDetail(
+      planDetail,
+      async (response) => {
+        // 성공 시, 응답 데이터 처리
+        console.log("Plan Detail Added:");
+        //planDetailList.value.push(response.data); // 상세 정보 목록에 추가
+        await fetchPlanDetail(plan); // 목록 다시 가져오기
+      },
+      (error) => {
+        // 실패 시, 에러 처리
+        console.error("Failed to add plan detail:", error);
+      }
+    );
+  };
+
+  const addActivity = async (planDetail, plan) => {
+    addNewActivity(
+      planDetail,
+      async (response) => {
+        // 성공 시, 응답 데이터 처리
+        console.log("Plan Activity Added:");
+        //planDetailList.value.push(response.data); // 상세 정보 목록에 추가
+        await fetchPlanDetail(plan); // 목록 다시 가져오기
+      },
+      (error) => {
+        // 실패 시, 에러 처리
+        console.error("Failed to add plan detail:", error);
+      }
+    );
+  };
+
+  const updateDetail = async (planDetail, plan) => {
+    updateActivity(
+      planDetail,
+      async (response) => {
+        // 성공 시, 응답 데이터 처리
+        console.log("Plan Activity Updated:");
+        await fetchPlanDetail(plan); // 목록 다시 가져오기
+      },
+      (error) => {
+        // 실패 시, 에러 처리
+        console.error("Failed to update plan detail:", error);
+      }
+    );
+  };
+
+  const deleteDetail = async (planDetail, plan) => {
+    deletePlanDetail(
+      planDetail,
+      async (response) => {
+        // 성공 시, 응답 데이터 처리
+        console.log("Plan Detail Deleted:");
+        //planDetailList.value.push(response.data); // 상세 정보 목록에 추가
+        await fetchPlanDetail(plan); // 목록 다시 가져오기
+      },
+      (error) => {
+        // 실패 시, 에러 처리
+        console.error("Failed to add plan detail:", error);
+      }
+    );
+  };
+
   return {
-    plansList,
+    planList,
+    planId,
     planDetailList,
     getPlanList,
+    getPlanId,
     getPlanDetailList,
     listPlan,
     add,
+    deleteP,
     fetchPlanDetail,
+    addDetail,
+    addActivity,
+    updateDetail,
+    deleteDetail,
   };
 });

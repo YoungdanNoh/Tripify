@@ -9,7 +9,7 @@
     <PlanForm v-if="showForm" @savePlan="addPlan" @cancel="showForm = false" />
 
     <!-- 여행 목록 -->
-    <PlanList :plans="getPlanList" @view="viewPlan" @delete="deleteTrip" />
+    <PlanList :plans="getPlanList" @view="viewPlan" @delete="deletePlan" />
   </div>
 </template>
 
@@ -55,11 +55,18 @@ const addPlan = async (newPlan) => {
 
 // 여행 보기 라우팅 처리
 const viewPlan = (plan_id) => {
-  router.push(`/PlanDetail/${plan_id}`);
+  store.planId = plan_id;
+  router.push({ name: "PlanDetail", state: { plan_id } });
 };
 
 // 여행 삭제
-const deleteTrip = (id) => {
-  trips.value = trips.value.filter((trip) => trip.id !== id);
+const deletePlan = async (plan_id) => {
+  const plan = ref({
+    plan_id: plan_id,
+    user_id: user.value.userId,
+  });
+
+  await store.deleteP(plan.value);
+  //console.log("Delete Plan:", plan.value);
 };
 </script>

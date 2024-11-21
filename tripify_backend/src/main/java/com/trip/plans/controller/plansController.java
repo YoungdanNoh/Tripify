@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,15 +43,28 @@ public class plansController {
 	}
 	
 	@PostMapping("/plans/add")
-	public ResponseEntity<String> insertPlan(
+	public ResponseEntity<String> addPlan(
 			@RequestBody Plans p){
 		
 		try {
-			service.insertPlan(p);
+			service.addPlan(p);
 			return new ResponseEntity<>("새 여행 계획 추가 성공", HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("여행 계획 추가 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+	@DeleteMapping("/plans/delete")
+	public ResponseEntity<String> deletePlan(
+			@RequestBody Plans p){
+		try {
+			service.deletePlan(p);
+			return new ResponseEntity<>("여행 계획 삭제 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("여행 계획 삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
@@ -78,23 +93,27 @@ public class plansController {
 	     // Itinerary를 생성
 	        Map<String, Map<String, Object>> itineraryMap = new LinkedHashMap<>();
 	        for (PlanDetail detail : plan) {
-	            String visitDate = detail.getVisit_date().toString();
+	        	if (detail.getVisit_date() != null) {
+	        		String visitDate = detail.getVisit_date().toString();
 
-	            // Itinerary에 visit_date별로 그룹화
-	            if (!itineraryMap.containsKey(visitDate)) {
-	                Map<String, Object> dayDetails = new HashMap<>();
-	                dayDetails.put("visit_date", visitDate);
-	                dayDetails.put("activities", new ArrayList<>());
-	                itineraryMap.put(visitDate, dayDetails);
-	            }
-
-	            // 활동 추가
-	            List<Map<String, Object>> activities = (List<Map<String, Object>>) itineraryMap.get(visitDate).get("activities");
-	            Map<String, Object> activity = new HashMap<>();
-	            activity.put("plan_place_id", detail.getPlan_place_id());
-	            activity.put("place_name", detail.getPlace_name());
-	            activity.put("description", detail.getDescription());
-	            activities.add(activity);
+		            // Itinerary에 visit_date별로 그룹화
+		            if (!itineraryMap.containsKey(visitDate)) {
+		                Map<String, Object> dayDetails = new HashMap<>();
+		                dayDetails.put("visit_date", visitDate);
+		                dayDetails.put("activities", new ArrayList<>());
+		                itineraryMap.put(visitDate, dayDetails);
+		            }
+	
+		            // 활동 추가
+		            List<Map<String, Object>> activities = (List<Map<String, Object>>) itineraryMap.get(visitDate).get("activities");
+		            Map<String, Object> activity = new HashMap<>();
+		            activity.put("plan_place_id", detail.getPlan_place_id());
+		            activity.put("place_name", detail.getPlace_name());
+		            activity.put("description", detail.getDescription());
+		            activity.put("order_in_day", detail.getOrder_in_day());
+		            activities.add(activity);
+	        	}
+	            
 	        }
 
 	        // Itinerary를 응답에 추가
@@ -103,4 +122,62 @@ public class plansController {
 		
 		return map;
     }
+	
+	@PostMapping("/plans/detail/add")
+	public ResponseEntity<String> addDetailPlan(
+			@RequestBody PlanDetail p) {
+		
+		try {
+			service.addDetailPlan(p);
+			return new ResponseEntity<>("새로운 세부 여행 계획 추가 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>("새로운 세부 여행 계획 추가 실패", HttpStatus.CREATED);
+		}
+		
+	}
+	
+	@PostMapping("/plans/detail/addNewActivity")
+	public ResponseEntity<String> addNewActivity(
+			@RequestBody PlanDetail p) {
+		
+		try {
+			service.addOrder(p);
+			service.addNewActivity(p);
+			return new ResponseEntity<>("새로운 세부 여행 계획 추가 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("새로운 세부 여행 계획 추가 실패", HttpStatus.CREATED);
+		}
+		
+	}
+	
+	@PutMapping("/plans/detail/updateActivity")
+	public ResponseEntity<String> updateActivity(
+			@RequestBody PlanDetail p) {
+		
+		try {
+			service.updateActivity(p);
+			return new ResponseEntity<>("세부 여행 계획 수정 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("세부 여행 계획 수정 실패", HttpStatus.CREATED);
+		}
+		
+	}
+	
+	@DeleteMapping("/plans/detail/delete")
+	public ResponseEntity<String> deleteActivity(
+			@RequestBody PlanDetail p) {
+		
+		try {
+			service.deleteActivity(p);
+			return new ResponseEntity<>("새로운 세부 여행 계획 삭제 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("새로운 세부 여행 계획 삭제 실패", HttpStatus.CREATED);
+		}
+		
+	}
 }
