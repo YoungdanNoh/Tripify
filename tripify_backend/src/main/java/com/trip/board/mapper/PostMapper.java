@@ -1,12 +1,13 @@
 package com.trip.board.mapper;
 
-import com.trip.board.vo.PostVO;
-import com.trip.board.vo.PostWithAuthorVO;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.trip.board.vo.PostComment;
+import com.trip.board.vo.PostVO;
+import com.trip.board.vo.PostWithAuthorVO;
 
 @Mapper
 public interface PostMapper {
@@ -22,4 +23,11 @@ public interface PostMapper {
     
     PostWithAuthorVO selectPost(int postId); // 게시글 상세 조회 메서드
 
+ // 게시글 댓글 조회
+    List<PostComment> selectCommentsByPostId(@Param("postId") Integer postId);
+    
+ // 게시글 댓글 삽입
+    int insertPostComment(PostComment postComment);
+
+	int deleteComment(int commentId);
 }

@@ -2,7 +2,7 @@ package com.trip.place.vo;
 
 public class Places {
 
-	String no;
+	String place_id;
 	String content_id;
 	String title;
 	String content_type_id;
@@ -15,11 +15,11 @@ public class Places {
 	String first_image1;
 	String count;
 	
-	public String getNo() {
-		return no;
+	public String getPlaceId() {
+		return place_id;
 	}
-	public void setNo(String no) {
-		this.no = no;
+	public void setPlaceId(String place_id) {
+		this.place_id = place_id;
 	}
 	public String getContent_id() {
 		return content_id;

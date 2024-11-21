@@ -3,6 +3,7 @@ package com.trip.board.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trip.board.service.PostService;
 import com.trip.board.vo.PaginationVO;
+import com.trip.board.vo.PostComment;
 import com.trip.board.vo.PostVO;
 import com.trip.board.vo.PostWithAuthorVO;
+import com.trip.place.vo.PlaceComment;
+import com.trip.place.vo.PlaceCommentRequest;
 
 @RestController
 @RequestMapping("/posts")
@@ -75,5 +79,43 @@ public class PostController {
         }
         return ResponseEntity.ok(post); // 게시글 반환
     }
+    
+ // 게시글 댓글 가져오기
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<List<PostComment>> getCommentsByPostId(@PathVariable int postId) {
+        List<PostComment> comments = postService.getCommentsByPostId(postId);
+        return ResponseEntity.ok(comments);
+    }
+    
+    @PostMapping("{postId}/comments")
+    public ResponseEntity<String> addComment(
+            @PathVariable Integer postId,
+            @RequestBody PlaceCommentRequest commentRequest) {
 
+        // `commentRequest`로 userId와 content를 받음
+        PostComment postComment = new PostComment();
+        postComment.setPostId(postId);
+        postComment.setUserId(commentRequest.getUserId());
+        postComment.setContent(commentRequest.getContent());
+
+        // Service를 통해 댓글 저장
+        int isAdded = postService.addPostComment(postComment);
+
+        if (isAdded>0) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("댓글이 성공적으로 추가되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 추가에 실패했습니다.");
+        }
+    }
+    
+    @DeleteMapping("comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable int commentId) {
+        try {
+            postService.deleteComment(commentId);
+            return ResponseEntity.ok("댓글이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("댓글 삭제 중 오류가 발생했습니다.");
+        }
+    }
 }
