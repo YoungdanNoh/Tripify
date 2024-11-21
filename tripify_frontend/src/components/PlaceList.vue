@@ -11,6 +11,7 @@
 import { ref, defineProps, defineEmits } from 'vue';
 import PlaceItem from './PlaceItem.vue';
 import { usePlaceStore } from '@/stores/place';
+import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import PlaceModal from './PlaceModal.vue';
 

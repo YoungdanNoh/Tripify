@@ -42,8 +42,7 @@ const props = defineProps({
 const userStore = useUserStore();
 const commentStore = useCommentStore();
 
-const currentUserId = userStore.user.userId;
-const currentUserName = userStore.user.userName;
+const currentUserId = userStore.user?.userId || null;
 
 const loading = ref(false);
 const error = ref("");

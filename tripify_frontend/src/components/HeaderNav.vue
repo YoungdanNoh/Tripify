@@ -27,6 +27,7 @@
 
 <script setup>
 import ProfileImage from "@/components/ProfileImage.vue";
+import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { computed } from "vue";
 
@@ -36,6 +37,7 @@ const user = computed(() => userStore.user);
 const logout = () => {
   console.log("로그아웃 클릭!");
   userStore.logoutUser();
+  router.push("/");
 };
 </script>
 
@@ -70,7 +72,8 @@ nav {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* 트리거 아래에 표시 */
+  top: 100%;
+  /* 트리거 아래에 표시 */
   left: 0;
   background-color: white;
   border: 1px solid #ddd;
@@ -79,7 +82,8 @@ nav {
   padding: 0.5rem 0;
   list-style: none;
   margin: 0;
-  display: none; /* 기본적으로 숨김 */
+  display: none;
+  /* 기본적으로 숨김 */
 }
 
 .dropdown-menu li {
@@ -103,7 +107,9 @@ nav {
 }
 
 .logo img {
-  width: 140px; /* 로고 너비 고정 */
-  height: auto; /* 비율 유지 */
+  width: 140px;
+  /* 로고 너비 고정 */
+  height: auto;
+  /* 비율 유지 */
 }
 </style>
