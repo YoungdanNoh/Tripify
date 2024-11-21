@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.trip.plans.mapper.plansMapper">
+
+	<select id="plansSelect" parameterType="Integer" resultType="plans">
+		select *
+		from plans
+		where user_id = #{user_id}
+		order by start_date;
+	</select>
+	
+	<insert id="addPlan" parameterType="plans">
+        insert into plans (user_id, title, location, start_date, end_date, img)
+        values (#{user_id}, #{title}, #{location}, #{start_date}, #{end_date}, #{img})
+    </insert>
+    
+    <delete id="deletePlan" parameterType="plans">
+    	delete from plans
+    	where plan_id = #{plan_id}
+    	and user_id = #{user_id}
+    </delete>
+    
+    <select id="getPlanDetails" parameterType="map" resultType="planDetail">
+        select
+		    p.plan_id,
+		    p.title,
+		    p.location,
+		    p.start_date,
+		    p.end_date,
+		    p.img,
+		    tp.plan_place_id,
+		    tp.visit_date,
+		    tp.place_name,
+		    tp.description,
+		    tp.order_in_day
+		from plans p
+		left join plan_places tp ON p.plan_id = tp.plan_id
+		where p.user_id = #{user_id} AND p.plan_id = #{plan_id}
+		order by tp.visit_date, order_in_day;
+    </select>
+    
+    <insert id="addDetailPlan" parameterType="planDetail">
+	    insert into plan_places(plan_id, visit_date, place_name, description, order_in_day)
+		values(#{plan_id}, #{visit_date}, #{place_name}, #{description}, #{order_in_day});
+    </insert>
+    
+    <update id="addOrder" parameterType="planDetail">
+    	update plan_places
+		set order_in_day = order_in_day + 1
+		where visit_date = #{visit_date} AND order_in_day >= #{order_in_day};
+    </update>
+    
+    <insert id="addNewActivity" parameterType="planDetail">
+	    insert into plan_places (plan_id, visit_date, place_name, description, order_in_day)
+		values (#{plan_id}, #{visit_date}, #{place_name}, #{description}, #{order_in_day});
+    </insert>
+    
+    <update id="updateActivity" parameterType="planDetail">
+    	update plan_places
+		set visit_date = #{visit_date},
+			place_name = #{place_name},
+			description = #{description}
+		where plan_place_id = #{plan_place_id}
+    </update>
+    
+    <delete id="deleteActivity" parameterType="planDetail">
+    	delete from plan_places
+    	where plan_place_id = #{plan_place_id}
+    </delete>
+</mapper>
