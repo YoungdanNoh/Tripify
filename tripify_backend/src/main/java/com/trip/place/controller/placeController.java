@@ -77,7 +77,6 @@ public class placeController {
     @GetMapping("/place/{placeId}/comments")
     public ResponseEntity<List<PlaceCommentWithUserName>> getCommentsByPlaceId(@PathVariable Integer placeId) {
         List<PlaceCommentWithUserName> comments = service.getCommentsByPlaceId(placeId);
-        System.out.println(comments.get(0).getCommentId());
         return ResponseEntity.ok(comments);
     }
     

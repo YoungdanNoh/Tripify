@@ -15,79 +15,50 @@
           <CommentForm @submit="handleCommentSubmit" />
         </div>
         <!-- 댓글 리스트 -->
-        <CommentList :comments="comments" :loading="loading" :error="error" />
+        <CommentList :itemId="place.place_id" :type="'place'" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted, ref, computed } from "vue";
-import { useCommentStore } from "@/stores/placeComment";
+import { defineProps, defineEmits, onMounted, ref } from "vue";
+import { useCommentStore } from "@/stores/comment";
 import { useUserStore } from "@/stores/user";
 import defaultImage from "@/assets/noImage.png";
 import CommentForm from "./common/CommentForm.vue";
 import CommentList from "./common/CommentList.vue";
 
-// Props 정의
 const props = defineProps({
   place: Object,
 });
 
 const emit = defineEmits(["close"]);
-
-// Pinia 스토어
 const commentStore = useCommentStore();
 const userStore = useUserStore();
+
+// 댓글 로드 및 에러 상태
 const loading = ref(false);
 const error = ref(null);
 
-// 댓글 상태 가져오기
-const comments = computed(() => commentStore.comments);
-const place = ref({});
-
-// 댓글 로드 함수
-async function loadComments() {
-  loading.value = true;
-  error.value = null;
-  try {
-    await commentStore.fetchComments(place.value.place_id);
-    loadComments();
-  } catch (err) {
-    error.value = commentStore.error || "댓글을 불러오는 데 실패했습니다.";
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-}
-
 // 댓글 추가 핸들러
 async function handleCommentSubmit(content) {
-  const newComment = {
-    userId: userStore.user.userId,
-    content: content,
-  };
-
   try {
-    await commentStore.addComment(place.value.place_id, newComment);
+    await commentStore.addComment('place', props.place.place_id, userStore.user.userId, userStore.user.userName, content);
     alert("댓글이 성공적으로 추가되었습니다.");
+    commentStore.fetchComments('place', props.place.place_id); // 새로고침
   } catch (error) {
     console.error("댓글 추가 실패:", error);
     alert(commentStore.error || "댓글 추가에 실패했습니다.");
   }
 }
 
-// 컴포넌트 로드 시 댓글 가져오기
-onMounted(() => {
-  place.value = props.place;
-  loadComments();
-});
-
 // 닫기 함수
 function close() {
   emit("close");
 }
 </script>
+
 
 <style scoped>
 .modal-backdrop1 {

@@ -101,9 +101,10 @@
 	<!-- 게시글 댓글 조회 -->
 	<select id="selectCommentsByPostId"
 		resultType="com.trip.board.vo.PostComment">
-		SELECT comment_id, post_id, user_id, content, created_at, updated_at
-		FROM post_comments
+		SELECT comment_id as commentId, post_id as postId, p.user_id as userId, username as userName, content, p.created_at as createdAt, p.updated_at as updatedAt 
+		FROM post_comments as p JOIN users ON p.user_id = users.user_id
 		WHERE post_id = #{postId}
+		ORDER BY createdAt DESC;
 	</select>
 	
 	<!-- 게시글 댓글 삽입 -->
@@ -111,5 +112,9 @@
         INSERT INTO post_comments (post_id, user_id, content, created_at, updated_at)
         VALUES (#{postId}, #{userId}, #{content}, NOW(), NOW());
     </insert>
+    
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM post_comments WHERE comment_id = #{commentId}
+    </delete>
 
 </mapper>

@@ -27,5 +27,7 @@ public interface PostMapper {
     List<PostComment> selectCommentsByPostId(@Param("postId") Integer postId);
     
  // 게시글 댓글 삽입
-    void insertPostComment(PostComment postComment);
+    int insertPostComment(PostComment postComment);
+
+	int deleteComment(int commentId);
 }

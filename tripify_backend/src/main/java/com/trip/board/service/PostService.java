@@ -25,5 +25,7 @@ public interface PostService {
     List<PostComment> getCommentsByPostId(Integer postId);
     
  // 게시글 댓글 작성
-    PostComment addPostComment(PostComment postComment);
+    int addPostComment(PostComment postComment);
+
+	void deleteComment(int commentId) throws Exception;
 }

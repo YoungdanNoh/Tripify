@@ -1,13 +1,14 @@
 <template>
     <div class="comment-list">
-        <div v-if="loading">댓글을 불러오는 중입니다...</div>
-        <div v-else-if="error">{{ error }}</div>
+        <div v-if="commentStore.loading">댓글을 불러오는 중입니다...</div>
+        <div v-else-if="commentStore.error">{{ commentStore.error }}</div>
+        <div v-else-if="commentStore.comments.length === 0">아직 댓글이 없습니다.</div>
         <ul v-else>
-            <li v-for="comment in comments" :key="comment.commentId || comment.createdAt" class="comment-item">
+            <li v-for="comment in commentStore.comments" :key="comment.commentId || comment.createdAt" class="comment-item">
                 <div class="comment-header">
                     <div class="comment-info">
                         <div>
-                            <strong>{{ comment.userName || "익명" }}</strong>
+                            <strong>{{ comment.userName }}</strong>
                             <small>{{ formatDate(comment.createdAt) }}</small>
                         </div>
                         <button v-if="comment.userId === currentUserId" class="delete-button"
@@ -21,32 +22,31 @@
         </ul>
     </div>
 </template>
-  
-<script setup>
-import { defineProps, computed } from "vue";
-import { useUserStore } from "@/stores/user"; // userStore 가져오기
-import { useCommentStore } from "@/stores/placeComment";
 
-// Pinia store
+<script setup>
+import { defineProps, onMounted, ref } from "vue";
+import { useUserStore } from "@/stores/user"; // 사용자 스토어 가져오기
+import { useCommentStore } from "@/stores/comment"; // 댓글 스토어 가져오기
+
+const props = defineProps({
+    itemId: {
+        type: Number,
+        required: true
+    },
+    type: {
+        type: String,
+        required: true
+    }
+});
+
 const userStore = useUserStore();
 const commentStore = useCommentStore();
-const currentUserId = userStore.user.userId; // 현재 로그인된 유저 ID 가져오기
 
-// Props 정의
-defineProps({
-    comments: {
-        type: Array,
-        required: true,
-    },
-    loading: {
-        type: Boolean,
-        default: false,
-    },
-    error: {
-        type: String,
-        default: null,
-    },
-});
+const currentUserId = userStore.user.userId;
+const currentUserName = userStore.user.userName;
+
+const loading = ref(false);
+const error = ref("");
 
 // 날짜 포맷팅 함수
 function formatDate(dateString) {
@@ -57,13 +57,31 @@ function formatDate(dateString) {
 async function handleDelete(commentId) {
     if (confirm("이 댓글을 삭제하시겠습니까?")) {
         try {
-            await commentStore.deleteComment(commentId); // 스토어의 deleteComment 호출
+            await commentStore.deleteComment(props.type, commentId);
             alert("댓글이 삭제되었습니다.");
         } catch (error) {
             alert(commentStore.error || "댓글 삭제에 실패했습니다.");
         }
     }
 }
+
+// 댓글 로드 함수
+async function loadComments() {
+    loading.value = true;
+    try {
+        await commentStore.fetchComments(props.type, props.itemId); // type과 itemId로 변경
+    } catch (err) {
+        error.value = commentStore.error || "댓글을 불러오는 데 실패했습니다.";
+        console.error(err);
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(() => {
+    loadComments();
+});
+
 </script>
   
 <style scoped>

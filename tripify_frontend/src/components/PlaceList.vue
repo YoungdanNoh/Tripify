@@ -1,7 +1,7 @@
 <template>
   <div class="places-list" @scroll="handleScroll">
     <ul>
-      <PlaceItem v-for="place in getPlaces" :key="place.id" :place="place" @click="showPlaceDetails(place)" />
+      <PlaceItem v-for="place in getPlaces" :key="place.place_id" :place="place" @click="showPlaceDetails(place)" />
     </ul>
     <PlaceModal v-if="selectedPlace" :place="selectedPlace" @close="closeModal" />
   </div>

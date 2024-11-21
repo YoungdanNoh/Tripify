@@ -19,16 +19,4 @@ function place(location, success, fail) {
   myaxios.post("/place/search", JSON.stringify(location)).then(success).catch(fail);
 }
 
-function getComments(placeId) {
-  return myaxios.get(`/place/${placeId}/comments`);
-}
-
-function addComment(placeId, commentData) {
-  return myaxios.post(`/place/${placeId}/comments`, commentData);
-}
-
-function deleteComment(commentId) {
-  return myaxios.delete(`/place/comments/${commentId}`);
-}
-
-export { sigun, gugun, type, place, getComments, addComment, deleteComment };
+export { sigun, gugun, type, place };

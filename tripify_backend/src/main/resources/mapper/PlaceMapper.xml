@@ -76,6 +76,7 @@
         SELECT comment_id AS commentId, place_id AS placeId, p.user_id AS userId, username AS userName, content, p.created_at AS createdAt, p.updated_at AS updatedAt
         FROM place_comments as p JOIN users ON p.user_id = users.user_id
         WHERE place_id = #{placeId}
+        ORDER BY createdAt DESC;
     </select>
 
 

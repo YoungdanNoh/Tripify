@@ -58,9 +58,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostComment addPostComment(PostComment postComment) {
-		postMapper.insertPostComment(postComment);
-		return postComment;
+	public int addPostComment(PostComment postComment) {
+		return postMapper.insertPostComment(postComment);
 	}
-
+	@Override
+    public void deleteComment(int commentId) throws Exception {
+        int rowsAffected = postMapper.deleteComment(commentId);
+        if (rowsAffected == 0) {
+            throw new Exception("해당 댓글을 찾을 수 없습니다.");
+        }
+    }
 }

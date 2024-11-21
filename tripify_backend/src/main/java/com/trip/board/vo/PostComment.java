@@ -7,6 +7,7 @@ public class PostComment {
 	private Integer postId;
 	private Integer userId;
 	private String content;
+	private String userName;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	public Integer getCommentId() {
@@ -23,6 +24,13 @@ public class PostComment {
 	}
 	public Integer getUserId() {
 		return userId;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;
