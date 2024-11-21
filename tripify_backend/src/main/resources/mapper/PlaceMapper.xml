@@ -42,17 +42,6 @@
         </if>
     </sql>
 
-    <!-- 여행지 리스트 조회 -->
-    <select id="listAttr" parameterType="map" resultType="com.trip.place.vo.Places">
-        SELECT place_id AS placeId, content_id AS contentId, title, content_type_id AS contentTypeId,
-               area_code AS areaCode, si_gun_gu_code AS siGunGuCode, latitude, longitude,
-               addr1, addr2, first_image1, count
-        FROM places
-        WHERE 1=1
-        <include refid="search"></include>
-        ORDER BY place_id
-        LIMIT #{start}, #{listSize}
-    </select>
 
     <!-- 총 여행지 수 조회 -->
     <select id="getTotalAttrCount" parameterType="map" resultType="int">
@@ -89,5 +78,92 @@
     <delete id="deleteComment" parameterType="int">
         DELETE FROM place_comments WHERE comment_id = #{commentId}
     </delete>
+    
+    <!-- 여행지 리스트 조회 -->
+    <select id="listAttr" parameterType="map" resultType="com.trip.place.vo.Places">
+        SELECT place_id AS placeId, content_id AS contentId, title, content_type_id AS contentTypeId,
+               area_code AS areaCode, si_gun_gu_code AS siGunGuCode, latitude, longitude,
+               addr1, addr2, first_image1, count
+        FROM places
+        WHERE 1=1
+        <include refid="search"></include>
+        ORDER BY place_id
+        LIMIT #{start}, #{listSize}
+    </select>
+    
+    <select id="getPlacesWithOptionalLikeStatus"
+		parameterType="map" resultType="PlaceWithLikeStatus">
+		SELECT a.place_id AS placeId,
+		a.title,
+		a.area_code AS areaCode,
+		a.si_gun_gu_code AS siGunGuCode,
+		a.content_type_id AS contentTypeId,
+		a.addr1 AS addr1,
+		a.addr2 AS addr2,
+		a.latitude AS latitude,
+		a.longitude
+		AS longitude,
+		a.first_image1 AS firstImage1,
+		a.count,
+		a.like_count AS likeCount,
+		CASE WHEN #{userId} IS NOT NULL AND l.user_id IS NOT NULL THEN
+		'true'
+		ELSE 'false' END AS likeStatus
+		FROM places a
+		LEFT JOIN likes_places l
+		ON a.place_id = l.place_id AND l.user_id = #{userId}
+		WHERE 1=1
+		<include refid="search"></include>
+	</select>
+
+	<!-- 좋아요 추가 -->
+	<insert id="addLike" parameterType="map">
+		INSERT INTO likes_places (user_id,
+		place_id) VALUES (#{userId}, #{placeId})
+	</insert>
+
+	<update id="updateLikeCount" parameterType="int">
+		UPDATE places
+		SET like_count = like_count + 1
+		WHERE place_id = #{placeId}
+	</update>
+
+	<!-- 좋아요 삭제 -->
+	<delete id="removeLike" parameterType="map">
+		DELETE FROM likes_places WHERE
+		user_id = #{userId} AND place_id = #{placeId};
+	</delete>
+
+	<update id="decrementLikeCount" parameterType="int">
+		UPDATE places
+		SET like_count = like_count - 1 WHERE place_id = #{placeId};
+	</update>
+
+	<!-- 좋아요 개수 조회 -->
+	<select id="getLikeCount" parameterType="int" resultType="int">
+		SELECT
+		like_count
+		FROM places
+		WHERE place_id = #{placeId}
+	</select>
+
+	<select id="getLikedPlaces" parameterType="int"
+		resultType="PlaceWithLikeStatus">
+		SELECT a.place_id AS placeId,
+		a.title,
+		a.area_code AS areaCode,
+		a.si_gun_gu_code AS siGunGuCode,
+		a.content_type_id AS contentTypeId,
+		a.addr1,
+		a.addr2,
+		a.latitude,
+		a.longitude,
+		a.first_image1 AS firstImage1,
+		a.like_count AS likeCount,
+		'true' AS likeStatus
+		FROM places a
+		INNER JOIN likes_places l ON a.place_id = l.place_id
+		WHERE l.user_id = #{userId}
+	</select>
 
 </mapper>

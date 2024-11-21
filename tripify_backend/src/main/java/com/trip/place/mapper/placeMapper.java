@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.trip.place.vo.PlaceComment;
 import com.trip.place.vo.PlaceCommentWithUserName;
+import com.trip.place.vo.PlaceWithLikeStatus;
 import com.trip.place.vo.Places;
 import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
@@ -35,4 +36,20 @@ public interface placeMapper {
     Integer insertPlaceComment(PlaceComment placeComment);
     
     int deleteComment(int commentId);
+    
+ // 좋아요 추가
+    void addLike(Map<String, Object> params);
+
+    void updateLikeCount(int placeId);
+    // 좋아요 삭제
+    void removeLike(Map<String, Object> params);
+
+    void decrementLikeCount(int placeId);
+    
+    // 좋아요 개수 조회
+    int getLikeCount(int placeId);
+
+	List<PlaceWithLikeStatus> getPlacesWithOptionalLikeStatus(Map<String, Object> params);
+	
+	List<PlaceWithLikeStatus> getLikedPlaces(int userId);
 }
