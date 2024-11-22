@@ -107,6 +107,7 @@ public class plansController {
 		            // 활동 추가
 		            List<Map<String, Object>> activities = (List<Map<String, Object>>) itineraryMap.get(visitDate).get("activities");
 		            Map<String, Object> activity = new HashMap<>();
+		            activity.put("visit_time", detail.getVisit_time());
 		            activity.put("plan_place_id", detail.getPlan_place_id());
 		            activity.put("place_name", detail.getPlace_name());
 		            activity.put("description", detail.getDescription());
@@ -143,7 +144,6 @@ public class plansController {
 			@RequestBody PlanDetail p) {
 		
 		try {
-			service.addOrder(p);
 			service.addNewActivity(p);
 			return new ResponseEntity<>("새로운 세부 여행 계획 추가 성공", HttpStatus.CREATED);
 		} catch (Exception e) {

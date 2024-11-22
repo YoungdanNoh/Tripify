@@ -40,12 +40,7 @@ public class plansServiceImpl implements plansService {
 	public void addDetailPlan(PlanDetail p) throws Exception {
 		mapper.addDetailPlan(p);
 	}
-
-	@Override
-	public void addOrder(PlanDetail p) throws Exception {
-		mapper.addOrder(p);
-	}
-
+	
 	@Override
 	public void addNewActivity(PlanDetail p) throws Exception {
 		mapper.addNewActivity(p);

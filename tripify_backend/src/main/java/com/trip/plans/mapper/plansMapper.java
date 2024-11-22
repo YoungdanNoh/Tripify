@@ -21,8 +21,6 @@ public interface plansMapper {
 
 	public void addDetailPlan(PlanDetail p) throws Exception;
 
-	public void addOrder(PlanDetail p) throws Exception;
-
 	public void addNewActivity(PlanDetail p) throws Exception;
 	
 	public void updateActivity(PlanDetail p);
