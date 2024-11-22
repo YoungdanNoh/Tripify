@@ -5,6 +5,7 @@
     </router-link>
     <nav>
       <!-- 기본 메뉴 -->
+      <router-link to="/musicRecommend">음악이 필요한가요?</router-link>
       <router-link to="/place">여행지</router-link>
       <router-link to="/plan">여행계획</router-link>
       <router-link to="/community">커뮤니티</router-link>

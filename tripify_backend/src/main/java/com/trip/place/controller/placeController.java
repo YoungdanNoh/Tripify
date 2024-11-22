@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trip.common.vo.ItemAndUserId;
 import com.trip.place.service.placeService;
 import com.trip.place.util.PageNavigation;
 import com.trip.place.vo.PlaceComment;
@@ -26,6 +27,7 @@ import com.trip.place.vo.Places;
 import com.trip.place.vo.Search;
 import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
+import com.trip.user.vo.User;
 
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
 @RestController
@@ -129,4 +131,32 @@ public class placeController {
 		map.put("word", search.getWord()); //검색어
 		return map;
 	}
+    
+ // 좋아요 추가
+    @PostMapping("/place/like")
+    public ResponseEntity<Void> addLike(@RequestBody ItemAndUserId request) {
+        service.addLike(request.getUserId(), request.getPlaceId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    // 좋아요 삭제
+    @DeleteMapping("/place/like")
+    public ResponseEntity<Void> removeLike(@RequestBody ItemAndUserId request) {
+        service.removeLike(request.getUserId(), request.getPlaceId());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // 좋아요 개수 조회
+    @GetMapping("/place/likecount/{placeId}")
+    public ResponseEntity<Integer> getLikeCount(@PathVariable int placeId) {
+        int likeCount = service.getLikeCount(placeId);
+        return ResponseEntity.ok(likeCount);
+    }
+
+    // 좋아요한 장소 리스트 조회
+    @GetMapping("place/likedplaces")
+    public ResponseEntity<List<PlaceWithLikeStatus>> getLikedPlaces(@RequestBody User userId) {
+        List<PlaceWithLikeStatus> likedPlaces = service.getLikedPlaces((int) userId.getUserId());
+        return ResponseEntity.ok(likedPlaces);
+    }
 }
