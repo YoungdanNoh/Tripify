@@ -127,65 +127,6 @@
         </form>
       </div>
     </div>
-
-    <!-- 
-    <div v-if="isEditing" class="card p-4 my-4 shadow-sm">
-      <div v-if="editOrAdd == 1"><h4>새 활동 추가</h4></div>
-      <div v-if="editOrAdd == 2">
-        <h4>{{ editingActivity.visit_date }} 새 활동 추가</h4>
-      </div>
-      <div v-if="editOrAdd == 3"><h4>활동 수정</h4></div>
-      <form @submit.prevent="save">
-        <div class="mb-3">
-          <label for="date" class="form-label">방문 날짜</label>
-          <input
-            id="date"
-            type="date"
-            class="form-control"
-            v-model="editingActivity.visit_date"
-            :readonly="editOrAdd === 2"
-            :class="{ 'bg-light text-muted': editOrAdd === 2 }"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label for="time" class="form-label">방문 시각</label>
-          <input
-            id="time"
-            type="time"
-            class="form-control"
-            v-model="editingActivity.visit_time"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label for="title" class="form-label">방문지</label>
-          <input
-            id="title"
-            type="text"
-            class="form-control"
-            v-model="editingActivity.place_name"
-            placeholder="활동 제목을 입력하세요"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">설명</label>
-          <textarea
-            id="description"
-            class="form-control"
-            v-model="editingActivity.description"
-            placeholder="활동 설명을 입력하세요"
-            required
-          ></textarea>
-        </div>
-        <div class="d-flex justify-content-end gap-2">
-          <button type="submit" class="btn btn-success">저장</button>
-          <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">취소</button>
-        </div>
-      </form>
-    </div>
-     -->
   </div>
 </template>
 
@@ -381,6 +322,24 @@ const deleteActivity = async (plan_place_id) => {
   padding: 0; /* 불필요한 내부 여백 제거 */
   border-radius: 5px; /* 모서리를 둥글게 */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+/* 스크롤바 스타일 */
+.card::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 설정 */
+}
+
+.card::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 모서리를 둥글게 */
+}
+
+.card::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4); /* 스크롤바 hover 시 색상 */
+}
+
+.card::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤 트랙 (배경) 투명하게 */
 }
 
 .card-body {
