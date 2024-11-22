@@ -6,6 +6,7 @@ import java.util.List;
 import com.trip.place.util.PageNavigation;
 import com.trip.place.vo.PlaceComment;
 import com.trip.place.vo.PlaceCommentWithUserName;
+import com.trip.place.vo.PlaceWithLikeStatus;
 import com.trip.place.vo.Places;
 import com.trip.place.vo.Search;
 import com.trip.place.vo.SidoGugunCode;
@@ -30,4 +31,17 @@ public interface placeService {
     Integer addPlaceComment(PlaceComment placeComment);
     
     void deleteComment(int commentId) throws Exception;
+    
+    // 좋아요 추가
+    void addLike(int userId, int placeId);
+
+    // 좋아요 삭제
+    void removeLike(int userId, int placeId);
+
+    // 좋아요 개수 조회
+    int getLikeCount(int placeId);
+
+	List<PlaceWithLikeStatus> getPlaceListWithLikeStatus(Search search, Integer userId);
+	
+	List<PlaceWithLikeStatus> getLikedPlaces(int userId);
 }

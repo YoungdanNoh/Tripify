@@ -14,8 +14,13 @@ import LoginPage from "@/components/member/LoginPage.vue";
 import SignUpPage from "@/components/member/SignUpPage.vue";
 import PasswordRecoveryPage from "@/components/member/PasswordRecoveryPage.vue";
 import UserProfilePage from "@/components/member/UserProfilePage.vue";
+
+//Board 관련 뷰
 import WritePost from "@/components/Board/WritePost.vue";
 import BoardShow from "@/components/Board/BoardShow.vue";
+
+//음악추천 관련 뷰
+import MusicRecommendView from "@/views/MusicRecommendView.vue";
 
 import { useUserStore } from "@/stores/user";
 import { usePlaceStore } from "@/stores/place";
@@ -48,6 +53,11 @@ const router = createRouter({
       path: "/spotify",
       name: "spotify",
       component: SpotifyView,
+    },
+    {
+      path: "/musicRecommend",
+      name: "musicRecommend",
+      component: MusicRecommendView,
     },
     {
       path: "/PlanDetail",
