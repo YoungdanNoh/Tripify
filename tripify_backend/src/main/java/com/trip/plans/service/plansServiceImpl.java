@@ -1,6 +1,7 @@
 package com.trip.plans.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,18 @@ import org.springframework.stereotype.Service;
 import com.trip.plans.mapper.plansMapper;
 import com.trip.plans.vo.PlanDetail;
 import com.trip.plans.vo.Plans;
+import com.trip.plans.vo.Today;
 
 @Service
 public class plansServiceImpl implements plansService {
 
 	@Autowired
 	plansMapper mapper;
+	
+	@Override
+	public List<Today> todaySchedule(Plans p) throws Exception {
+		return mapper.todaySchedule(p);
+	}
 	
 	@Override
 	public ArrayList<Plans> plansSelect(int userId) throws Exception {
@@ -32,7 +39,7 @@ public class plansServiceImpl implements plansService {
 	}
 
 	@Override
-	public ArrayList<PlanDetail> getPlanDetails(Map<String, Object> params) {
+	public ArrayList<PlanDetail> getPlanDetails(Map<String, Object> params) throws Exception {
 		return mapper.getPlanDetails(params);
 	}
 
@@ -47,7 +54,7 @@ public class plansServiceImpl implements plansService {
 	}
 	
 	@Override
-	public void updateActivity(PlanDetail p) {
+	public void updateActivity(PlanDetail p) throws Exception {
 		mapper.updateActivity(p);
 	}
 	

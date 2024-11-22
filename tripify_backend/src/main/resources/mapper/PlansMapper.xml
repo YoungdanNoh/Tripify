@@ -5,6 +5,15 @@
 
 <mapper namespace="com.trip.plans.mapper.plansMapper">
 
+	<select id="todaySchedule" parameterType="plans" resultType="today">
+		select p.location, pp.visit_time, pp.place_name
+		FROM plans p, plan_places pp
+		where p.plan_id = pp.plan_id
+		and p.user_id = #{user_id}
+		and pp.visit_date = #{start_date}
+		order by pp.visit_date ASC;
+	</select>
+
 	<select id="plansSelect" parameterType="Integer" resultType="plans">
 		select *
 		from plans

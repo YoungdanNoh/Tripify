@@ -1,5 +1,7 @@
 package com.trip.plans.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.trip.plans.service.plansService;
 import com.trip.plans.vo.PlanDetail;
 import com.trip.plans.vo.Plans;
+import com.trip.plans.vo.Today;
 
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
 @RestController
@@ -28,11 +31,30 @@ public class plansController {
 	@Autowired
 	plansService service;
 	
+	@PostMapping("/today")
+	public Map<String, Object> today(
+			@RequestBody Plans p) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		
+		// 오늘 날짜 가져오기
+        LocalDate today = LocalDate.now();
+
+        // 날짜를 원하는 형식으로 포맷
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = today.format(formatter);
+        
+        p.setStart_date(formattedDate);
+        
+		List<Today> ts = service.todaySchedule(p);
+		
+		map.put("today", ts); //오늘의 일정
+		
+		return map;
+	}
+	
 	@PostMapping("/plans")
 	public Map<String, Object> plans(
 			@RequestBody Plans p) throws Exception {
-		//int uId = Integer.parseInt(userId);
-		//System.out.println(user.getUser_id());
 		Map<String, Object> map = new HashMap<>();
 		
 		List<Plans> plans = service.plansSelect(p.getUser_id());
@@ -70,7 +92,7 @@ public class plansController {
 	}
 	
 	@PostMapping("/plans/detail")
-    public Map<String, Object> getPlanDetails(@RequestBody Plans p) {
+    public Map<String, Object> getPlanDetails(@RequestBody Plans p) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		
 		Map<String, Object> params = new HashMap<>();

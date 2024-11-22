@@ -1,6 +1,7 @@
 import { ref, computed, watchEffect } from "vue";
 import { defineStore } from "pinia";
 import {
+  todaySchedule,
   plans,
   addPlan,
   deletePlan,
@@ -13,16 +14,30 @@ import {
 
 export const usePlanStore = defineStore("plan", () => {
   // 1. data
+  const todayS = ref([]); // 오�� ����
   const planList = ref([]); // 여행 계획 목록
   const planId = ref(localStorage.getItem("planId") || null);
   const planDetailList = ref(null); // 여행 계획 상세
 
   //2. getters
+  const getTodayS = computed(() => todayS.value);
   const getPlanList = computed(() => planList.value);
   const getPlanId = computed(() => planId.value); // planId getter 추가
   const getPlanDetailList = computed(() => planDetailList.value);
 
   //3. actions
+  const today = async (user_id) => {
+    todaySchedule(
+      user_id,
+      (response) => {
+        todayS.value = response.data.today;
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
   const listPlan = async (user_id) => {
     plans(
       user_id,
@@ -155,12 +170,15 @@ export const usePlanStore = defineStore("plan", () => {
   };
 
   return {
+    todayS,
     planList,
     planId,
     planDetailList,
+    getTodayS,
     getPlanList,
     getPlanId,
     getPlanDetailList,
+    today,
     listPlan,
     add,
     deleteP,

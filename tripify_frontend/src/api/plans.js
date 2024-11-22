@@ -1,5 +1,9 @@
 import myaxios from "@/util/axios-common.js";
 
+function todaySchedule(user_id, success, fail) {
+  myaxios.post("/today", { user_id: user_id }).then(success).catch(fail);
+}
+
 function plans(user_id, success, fail) {
   myaxios.post("/plans", { user_id: user_id }).then(success).catch(fail);
 }
@@ -35,6 +39,7 @@ function deletePlanDetail(plan, success, fail) {
 }
 
 export {
+  todaySchedule,
   plans,
   addPlan,
   deletePlan,
