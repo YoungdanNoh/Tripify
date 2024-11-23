@@ -62,7 +62,6 @@ onMounted(async () => {
   if (keyword.value != "") {
     emit("emitSearch", keyword.value);
   }
-  //console.log(sigun);
 });
 
 const onChangeSido = (val) => {
@@ -81,25 +80,6 @@ const onChangeType = (val) => {
 const search = () => {
   emit("emitSearch", keyword.value);
 };
-
-// // sigun 객체를 배열로 변환
-// const sigunArray = computed(() => {
-//   return Object.entries(sigun.value).map(([sigun_code, item]) => ({
-//     sigun_code, // sigun_code를 키로 그대로 사용
-//     sido_name: item.sido_name,
-//   }));
-// });
-
-// // 구/군 리스트 필터링 (computed로 바로 처리)
-// const filteredDistricts = computed(() => {
-//   //console.log("Selected City:", selectedCity.value); // selectedCity 값 확인
-//   if (!selectedCity.value || !sigun.value) return []; // selectedCity가 없거나 sigun 데이터가 없다면 빈 배열 반환
-
-//   const selected = sigun.value[selectedCity.value]; // selectedCity에 해당하는 sigun 데이터 찾기
-//   //console.log("Selected:", selected); // selected 객체 확인
-
-//   return selected ? selected.gugun_name : [];
-// });
 
 // 값이 선택될 때마다 부모에게 전달하기
 function updateSelectedCity() {

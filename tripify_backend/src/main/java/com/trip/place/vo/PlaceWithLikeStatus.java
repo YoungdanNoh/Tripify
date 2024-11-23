@@ -38,11 +38,11 @@ public class PlaceWithLikeStatus {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getAttractionId() {
+	public int getPlaceId() {
 		return placeId;
 	}
 
-	public void setAttractionId(int placeId) {
+	public void setPlaceId(int placeId) {
 		this.placeId = placeId;
 	}
 
@@ -132,6 +132,14 @@ public class PlaceWithLikeStatus {
 
 	public void setLikeStatus(String likeStatus) {
 		this.likeStatus = likeStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "PlaceWithLikeStatus [placeId=" + placeId + ", title=" + title + ", areaCode=" + areaCode
+				+ ", siGunGuCode=" + siGunGuCode + ", contentTypeId=" + contentTypeId + ", addr1=" + addr1 + ", addr2="
+				+ addr2 + ", latitude=" + latitude + ", longitude=" + longitude + ", firstImage1=" + firstImage1
+				+ ", likeCount=" + likeCount + ", likeStatus=" + likeStatus + "]";
 	}
     
     

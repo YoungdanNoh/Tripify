@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['load-more']);
 
 function handleScroll(event) {
-  const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+  const bottom = event.target.scrollHeight - event.target.scrollTop - event.target.clientHeight < 300;
   if (bottom) {
     emit('load-more');
   }

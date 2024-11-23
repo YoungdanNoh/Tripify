@@ -23,9 +23,11 @@ import PlaceList from '../components/PlaceList.vue';
 import MapContainer from '../components/MapContainer.vue';
 
 import { usePlaceStore } from '@/stores/place';
+import {useUserStore} from '@/stores/user';
 import { storeToRefs } from 'pinia';
 
 const store = usePlaceStore();
+const userStore = useUserStore();
 const { getPlaces } = storeToRefs(store);
 const { listPlaces, resetPlaces } = store;
 
@@ -68,8 +70,11 @@ function loadMorePlaces() {
       type: type.value,
       word: keyword.value,
       pgno: pgno.value,
+      userId: userStore.getUserId(),
     };
 
+    //console.log(location.userId);
+    
     listPlaces(location);
 
     loading.value = false;

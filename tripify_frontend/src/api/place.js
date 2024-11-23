@@ -16,7 +16,37 @@ function type(success, fail) {
 }
 
 function place(location, success, fail) {
-  myaxios.post("/place/search", JSON.stringify(location)).then(success).catch(fail);
+  myaxios
+    .post("/place/search", JSON.stringify(location))
+    .then(success)
+    .catch(fail);
+}
+function addLike(itemAndUserId, success, fail) {
+  myaxios.post("/place/like", itemAndUserId).then(success).catch(fail);
 }
 
-export { sigun, gugun, type, place };
+function removeLike(itemAndUserId, success, fail) {
+  myaxios
+    .delete("/place/like", { data: itemAndUserId })
+    .then(success)
+    .catch(fail);
+}
+
+function getLikeCount(placeId, success, fail) {
+  myaxios.get(`/place/likecount/${placeId}`).then(success).catch(fail);
+}
+
+function getLikedPlaces(user, success, fail) {
+  myaxios.get("/place/likedplaces", { data: user }).then(success).catch(fail);
+}
+
+export {
+  sigun,
+  gugun,
+  type,
+  place,
+  addLike,
+  removeLike,
+  getLikeCount,
+  getLikedPlaces,
+};

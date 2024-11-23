@@ -26,6 +26,9 @@ public interface placeMapper {
     List<SidoGugunCode> getGugunInSido(String sido);
 	
     List<Places> listAttr(Map<String, Object> params);
+    
+    //test
+    List<Places> listAttrWithOptionalLikeStatus(Map<String, Object> params);
 
     int getTotalAttrCount(Map<String, Object> params);
 
@@ -40,11 +43,11 @@ public interface placeMapper {
  // 좋아요 추가
     void addLike(Map<String, Object> params);
 
-    void updateLikeCount(int placeId);
+    int updateLikeCount(int placeId);
     // 좋아요 삭제
     void removeLike(Map<String, Object> params);
 
-    void decrementLikeCount(int placeId);
+    int decrementLikeCount(int placeId);
     
     // 좋아요 개수 조회
     int getLikeCount(int placeId);
