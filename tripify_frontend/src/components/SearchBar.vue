@@ -29,7 +29,7 @@ const user = computed(() => userStore.user); // 로그인 상태 확인
 const store = usePlanStore(); //현재 일정 확인
 
 onMounted(async () => {
-  await store.today(user.value.userId);
+  await store.today(user.value?.userId);
 });
 
 // Vue Router 훅 사용

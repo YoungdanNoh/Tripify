@@ -54,7 +54,7 @@ const changeImage = () => {
 };
 
 onMounted(() => {
-  store.today(user.value.userId);
+  store.today(user.value?.userId);
   setInterval(changeImage, 8000); // 8초마다 이미지 변경
 });
 

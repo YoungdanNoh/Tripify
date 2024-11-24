@@ -30,7 +30,7 @@
     <div class="profile-image-container">
       <ProfileImage />
       <router-link to="/login" class="btn btn-primary">
-        로그인 / 가입
+        로그인
       </router-link>
     </div>
     <h3>방문자님, 환영합니다!</h3>
@@ -62,7 +62,7 @@ const hideScrollbar = (e) => {
 };
 
 onMounted(async () => {
-  await store.today(user.value.userId);
+  await store.today(user.value?.userId);
 });
 
 // 시간 포맷 함수
