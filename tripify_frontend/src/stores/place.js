@@ -9,6 +9,7 @@ import {
   removeLike,
   getLikeCount,
   getLikedPlaces,
+  getPlaceByPlaceId,
 } from "@/api/place";
 
 export const usePlaceStore = defineStore("place", () => {
@@ -21,6 +22,7 @@ export const usePlaceStore = defineStore("place", () => {
   const navigation = ref([]);
   const pgno = ref(0); //새로운 지역을 탐색하는지의 여부
   const highlightedPlaceId = ref(null); // 강조된 placeId
+  const selectedPlace = ref(null); // 현재 선택된 장소 정보
 
   //2. getters
   const getSigun = computed(() => sigun.value);
@@ -28,7 +30,7 @@ export const usePlaceStore = defineStore("place", () => {
   const getSidoList = computed(() => sidoList.value);
   const getGugunList = computed(() => gugunList.value);
   const getPlaces = computed(() => places.value);
-  
+
   const setPlaces = (places) => {
     getPlaces.value = places;
   };
@@ -37,8 +39,21 @@ export const usePlaceStore = defineStore("place", () => {
     highlightedPlaceId.value = placeId;
   };
 
+  const setSelectedPlace = async (placeId) => {
+    try {
+      const place = await getPlaceByPlaceId(placeId); // `place_id`로 장소 정보를 가져옴
+      selectedPlace.value = place;
+    } catch (error) {
+      console.error("Failed to fetch place details:", error);
+    }
+  };
+
+  const clearSelectedPlace = () => {
+    selectedPlace.value = null;
+  };
+
   //3. actions
-  
+
   const listSigun = async () => {
     sigun(
       ({ data }) => {
@@ -214,5 +229,7 @@ export const usePlaceStore = defineStore("place", () => {
     getLikedPlacesOfUserId,
     setPlaces,
     setHighlightedPlaceId,
+    setSelectedPlace,
+    clearSelectedPlace,
   };
 });

@@ -1,43 +1,85 @@
 <template>
-    <div class="community-board">
-      <div class="container">
-        <h2>커뮤니티 공유 게시판</h2>
-        <div class="row">
-          <div class="col-md-6" v-for="post in posts" :key="post.title">
-            <div class="board-item">
-              <h5>{{ post.title }}</h5>
-              <p>{{ post.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
+  <div>
+    <h2>실시간 커뮤니티</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>작성시간</th>
+          <th>글제목</th>
+          <th>작성자</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="post in posts.slice(0, 6)" :key="post.postId || post.tempKey" @click="() => viewPost(post.postId)" class="post-row">
+          <td>{{ post.createdAt ? new Date(post.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : '-' }}</td>
+          <td>{{ post.title }}</td>
+          <td>{{ post.userName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { fetchPosts } from '@/api/posts';
+import { useRouter } from 'vue-router';
+
+const posts = ref([]);
+const currentPage = ref(1);
+const limit = ref(6);
+const router = useRouter();
+
+onMounted(async () => {
+  const response = await fetchPosts(currentPage.value, limit.value);
+  posts.value = response.data.posts;
   
-  <script>
-  export default {
-    data() {
-      return {
-        posts: [
-          { title: "최신 글 제목 1", description: "최신 글 내용 요약..." },
-          { title: "최신 글 제목 2", description: "최신 글 내용 요약..." },
-          { title: "최신 글 제목 3", description: "최신 글 내용 요약..." },
-          { title: "최신 글 제목 4", description: "최신 글 내용 요약..." },
-          { title: "최신 글 제목 5", description: "최신 글 내용 요약..." },
-          { title: "최신 글 제목 6", description: "최신 글 내용 요약..." },
-        ],
-      };
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .community-board {
-    padding: 50px 0;
+  // 배열을 6개의 항목으로 채우기
+  while (posts.value.length < 6) {
+    posts.value.push({ 
+      postId: null,
+      userName: '-', 
+      title: '-', 
+      createdAt: null,
+      tempKey: `temp-${posts.value.length}`
+    });
   }
-  .board-item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
+});
+
+const filledPosts = computed(() => {
+  return posts.value.map((post, index) => ({
+    ...post,
+    postId: post.postId || null,
+    userName: post.userName || null,
+    title: post.title || null,
+    createdAt: post.createdAt || null
+  }));
+});
+
+const viewPost = (postId) => {
+  if (postId) {
+    router.push({ name: 'PostDetail', params: { postId } });
   }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+table {
+  width: 100%; 
+  table-layout: fixed;
+  border-collapse: collapse; /* 테이블의 경계선을 합쳐 행 간격을 없앱니다. */
+  border-spacing: 0; /* 경계 사이의 공간을 0으로 설정 */
+}
+
+.post-row {
+  cursor: pointer;
+  height: 40px; /* 필요에 따라 각 행의 높이 조정 */
+  padding: 5px 10px; /* 각 셀의 내부 여백 조정 */
+}
+
+td {
+  padding: 8px; /* 각 셀의 내부 여백을 줄임 */
+}
+</style>

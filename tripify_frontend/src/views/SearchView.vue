@@ -13,7 +13,10 @@
 
       <MapContainer />
     </section>
+
   </div>
+  <PlaceModal v-if="selectedPlace" :place="selectedPlace" @close="closeModal" />
+
 </template>
 
 <script setup>

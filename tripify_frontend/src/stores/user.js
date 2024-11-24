@@ -41,5 +41,8 @@ export const useUserStore = defineStore("user", {
       return this.user?.userId || null;
     },
   },
-  persist: true,
+  persist: {
+    storage: window.sessionStorage, // localStorage를 사용
+    key: "user", // 로�� 스토리지에 'user' ���로 저장
+  },
 });

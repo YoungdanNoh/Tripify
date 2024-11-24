@@ -53,7 +53,7 @@ const initMap = () => {
 };
 
 const loadMarkers = (places) => {
-  deleteMarkers(); // 기존 마커 삭제
+  deleteMarkers();
   markers.value = [];
 
   places.forEach((place) => {
@@ -65,25 +65,16 @@ const loadMarkers = (places) => {
       clickable: true,
     });
 
-    // 마커 클릭 이벤트 추가
-    kakao.maps.event.addListener(marker, "click", () => {
-      highlightMarker(place.place_id); // 마커 클릭 시 강조
+    kakao.maps.event.addListener(marker, "click", async () => {
+      await store.setSelectedPlace(place.place_id); // 장소 정보 로드
     });
 
-    // 마커와 placeId를 연결하여 저장
     markers.value.push({ marker, placeId: place.place_id });
-    
   });
 
   const bounds = new kakao.maps.LatLngBounds();
   markers.value.forEach(({ marker }) => bounds.extend(marker.getPosition()));
   map.setBounds(bounds);
-};
-
-const deleteMarkers = () => {
-  if (markers.value.length > 0) {
-    markers.value.forEach(({ marker }) => marker.setMap(null));
-  }
 };
 
 // 특정 마커 강조

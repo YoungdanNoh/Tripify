@@ -40,6 +40,10 @@ function getLikedPlaces(user, success, fail) {
   myaxios.get("/place/likedplaces", { data: user }).then(success).catch(fail);
 }
 
+function getPlaceByPlaceId(placeId, success, fail) {
+  myaxios.get(`/place/${placeId}`).then(success).catch(fail);
+}
+
 export {
   sigun,
   gugun,
@@ -49,4 +53,5 @@ export {
   removeLike,
   getLikeCount,
   getLikedPlaces,
+  getPlaceByPlaceId
 };
