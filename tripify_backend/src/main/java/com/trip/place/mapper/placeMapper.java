@@ -34,7 +34,7 @@ public interface placeMapper {
 
     List<PlaceCommentWithUserName> selectCommentsByPlaceId(int placeId);
 
-    Places selectPlaceById(int placeId);
+    PlaceWithLikeStatus selectPlaceById(int placeId);
 
     Integer insertPlaceComment(PlaceComment placeComment);
     

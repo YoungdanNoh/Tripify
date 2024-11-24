@@ -25,7 +25,7 @@ public interface placeService {
 	// 여행지 댓글 가져오기
     List<PlaceCommentWithUserName> getCommentsByPlaceId(Integer placeId);
 
-	public Places getPlaceById(Integer placeId);
+	public PlaceWithLikeStatus getPlaceById(Integer placeId);
 	
 	// 여행지 댓글 작성
     Integer addPlaceComment(PlaceComment placeComment);

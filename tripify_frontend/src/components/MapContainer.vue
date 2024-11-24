@@ -53,7 +53,7 @@ const initMap = () => {
 };
 
 const loadMarkers = (places) => {
-  deleteMarkers();
+  //deleteMarkers();
   markers.value = [];
 
   places.forEach((place) => {
@@ -66,7 +66,11 @@ const loadMarkers = (places) => {
     });
 
     kakao.maps.event.addListener(marker, "click", async () => {
+      console.log("is..",place.place_id);
+      
       await store.setSelectedPlace(place.place_id); // 장소 정보 로드
+      console.log("are...",store.selectedPlace);
+      
     });
 
     markers.value.push({ marker, placeId: place.place_id });

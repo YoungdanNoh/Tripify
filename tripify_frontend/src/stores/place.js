@@ -39,10 +39,24 @@ export const usePlaceStore = defineStore("place", () => {
     highlightedPlaceId.value = placeId;
   };
 
-  const setSelectedPlace = async (placeId) => {
+  const setSelectedPlace = (placeId) => {
     try {
-      const place = await getPlaceByPlaceId(placeId); // `place_id`로 장소 정보를 가져옴
-      selectedPlace.value = place;
+      getPlaceByPlaceId(
+        placeId,
+        (response) => {
+          console.log("loadig...");
+          
+          console.log("successfully fetched place details");
+          console.log(response.data);
+          
+          selectedPlace.value = response.data;
+          console.log(selectedPlace.value);
+          
+        },
+        () => {
+          console.log("err");
+        }
+      ); // `place_id`로 장소 정보를 가져옴
     } catch (error) {
       console.error("Failed to fetch place details:", error);
     }
@@ -218,6 +232,7 @@ export const usePlaceStore = defineStore("place", () => {
     getGugunList,
     getPlaces,
     highlightedPlaceId,
+    selectedPlace,
     listSigun,
     listGugun,
     listType,

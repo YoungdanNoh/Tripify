@@ -41,6 +41,8 @@ function getLikedPlaces(user, success, fail) {
 }
 
 function getPlaceByPlaceId(placeId, success, fail) {
+  console.log("placeid..",placeId);
+  
   myaxios.get(`/place/${placeId}`).then(success).catch(fail);
 }
 

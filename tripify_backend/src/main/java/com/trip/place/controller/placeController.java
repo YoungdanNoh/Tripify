@@ -71,8 +71,8 @@ public class placeController {
 	
 	// 여행지 가져오기
     @GetMapping("/place/{placeId}")
-    public ResponseEntity<Places> getPlaceById(@PathVariable Integer placeId) {
-        Places place = service.getPlaceById(placeId);
+    public ResponseEntity<PlaceWithLikeStatus> getPlaceById(@PathVariable Integer placeId) {
+        PlaceWithLikeStatus place = service.getPlaceById(placeId);
         return ResponseEntity.ok(place);
     }
 	

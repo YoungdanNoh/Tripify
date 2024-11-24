@@ -113,7 +113,7 @@ public class placeServiceImpl implements placeService {
 	}
 
 	@Override
-	public Places getPlaceById(Integer placeId) {
+	public PlaceWithLikeStatus getPlaceById(Integer placeId) {
 		return mapper.selectPlaceById(placeId);
 	}
 
