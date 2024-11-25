@@ -12,6 +12,10 @@ function addPlan(plan, success, fail) {
   myaxios.post("/plans/add", plan).then(success).catch(fail);
 }
 
+function modifyPlan(plan, success, fail) {
+  myaxios.put("/plans/modify", plan).then(success).catch(fail);
+}
+
 function deletePlan(plan, success, fail) {
   //console.log("delete plan", plan);
   myaxios.delete("/plans/delete", { data: plan }).then(success).catch(fail);
@@ -42,6 +46,7 @@ export {
   todaySchedule,
   plans,
   addPlan,
+  modifyPlan,
   deletePlan,
   getPlanDetail,
   addPlanDetail,

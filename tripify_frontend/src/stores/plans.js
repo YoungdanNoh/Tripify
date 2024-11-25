@@ -4,6 +4,7 @@ import {
   todaySchedule,
   plans,
   addPlan,
+  modifyPlan,
   deletePlan,
   getPlanDetail,
   addPlanDetail,
@@ -54,6 +55,22 @@ export const usePlanStore = defineStore("plan", () => {
 
   const add = async (plan) => {
     addPlan(
+      plan,
+      async (response) => {
+        //console.log(response.data);
+        await listPlan(plan.user_id); // 목록 다시 가져오기
+        //console.log("plansList: ", plansList.value);
+        //console.log("plan: ", plan);
+        //plansList.value.push(plan);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  };
+
+  const modify = async (plan) => {
+    modifyPlan(
       plan,
       async (response) => {
         //console.log(response.data);
@@ -181,6 +198,7 @@ export const usePlanStore = defineStore("plan", () => {
     today,
     listPlan,
     add,
+    modify,
     deleteP,
     fetchPlanDetail,
     addDetail,

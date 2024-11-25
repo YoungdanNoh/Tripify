@@ -28,6 +28,11 @@ export const useMusicStore = defineStore("music", () => {
     }
   };
 
+  const resetKeywords = () => {
+    keywords.value = [];
+    gptRecommends.value = [];
+  };
+
   const removeKeyword = (index) => {
     keywords.value.splice(index, 1);
   };
@@ -94,6 +99,7 @@ export const useMusicStore = defineStore("music", () => {
     getResults,
     getGptRecommends,
     addKeyword,
+    resetKeywords,
     removeKeyword,
     searchMusicGpt,
     searchTrack,

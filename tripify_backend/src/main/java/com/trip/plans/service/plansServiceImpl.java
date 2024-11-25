@@ -34,6 +34,11 @@ public class plansServiceImpl implements plansService {
 	}
 	
 	@Override
+	public void modifyPlan(Plans p) throws Exception {
+		mapper.modifyPlan(p);
+	}
+	
+	@Override
 	public void deletePlan(Plans p) throws Exception {
 		mapper.deletePlan(p);
 	}

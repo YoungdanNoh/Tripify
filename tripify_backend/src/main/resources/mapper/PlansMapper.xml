@@ -26,6 +26,15 @@
         values (#{user_id}, #{title}, #{location}, #{start_date}, #{end_date}, #{img})
     </insert>
     
+    <update id="modifyPlan" parameterType="plans">
+    	update plans
+		set start_date = #{start_date},
+			end_date = #{end_date},
+			title = #{title},
+			location = #{location}
+		where plan_id = #{plan_id}
+    </update>
+    
     <delete id="deletePlan" parameterType="plans">
     	delete from plans
     	where plan_id = #{plan_id}

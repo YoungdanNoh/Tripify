@@ -78,6 +78,20 @@ public class plansController {
 		
 	}
 	
+	@PutMapping("/plans/modify")
+	public ResponseEntity<String> modifyPlan(
+			@RequestBody Plans p){
+		
+		try {
+			service.modifyPlan(p);
+			return new ResponseEntity<>("여행 계획 수정 성공", HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("여행 계획 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
 	@DeleteMapping("/plans/delete")
 	public ResponseEntity<String> deletePlan(
 			@RequestBody Plans p){
