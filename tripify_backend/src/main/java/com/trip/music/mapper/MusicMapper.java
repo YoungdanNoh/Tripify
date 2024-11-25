@@ -12,6 +12,7 @@ import com.trip.music.vo.TrackVO;
 public interface MusicMapper {
 	void insertPlaylist(PlaylistStringDTO playlistDTO);
     void insertTrack(int playlistId, String track);
+    int getPlaylistId(int planPlaceId);
     PlaylistVO getPlaylist(int playlistId);
     List<PlaylistVO> getAllPlaylists();
     void deletePlaylist(int playlistId);

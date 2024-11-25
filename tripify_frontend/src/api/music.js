@@ -2,7 +2,7 @@ import axios from "axios";
 
 const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-const isLoading = ref(false);
+//const isLoading = ref(false);
 
 // Access Token 발급 함수
 export const fetchAccessToken = async () => {
@@ -25,34 +25,6 @@ export const fetchAccessToken = async () => {
     throw new Error("Spotify Access Token 발급에 실패했습니다.");
   }
 };
-
-// 요청 인터셉터 추가하기
-axios.interceptors.request.use(
-  function (config) {
-    // 요청이 전달되기 전에 작업 수행
-    isLoading.value = true;
-    return config;
-  },
-  function (error) {
-    // 요청 오류가 있는 작업 수행
-    return Promise.reject(error);
-  }
-);
-
-// 응답 인터셉터 추가하기
-axios.interceptors.response.use(
-  function (response) {
-    // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 데이터가 있는 작업 수행
-    isLoading.value = false;
-    return response;
-  },
-  function (error) {
-    // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 오류가 있는 작업 수행
-    return Promise.reject(error);
-  }
-);
 
 export const searchMusic = async (keywords) => {
   try {
@@ -121,5 +93,20 @@ export const getSimilarTracks = async (trackId) => {
   } catch (error) {
     console.error("추천 트랙 가져오기 실패:", error);
     throw new Error("추천 트랙을 가져오는 데 실패했습니다.");
+  }
+};
+
+export const fetchPlaylistData = async (playlistId) => {
+  const baseUrl = "http://localhost/music/playlist"; // {{baseurl}} 값 대체
+  try {
+    const response = await axios.get(`${baseUrl}/${playlistId}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    const spotifyTrackIds = response.data.trackIds.map((track) => track.spotifyTrackId);
+    console.log("retunred:", spotifyTrackIds);
+    return response.data; // 플레이리스트 데이터 반환
+  } catch (error) {
+    console.error("플레이리스트 데이터 가져오기 실패:", error);
+    throw new Error("플레이리스트 데이터를 가져오는 데 실패했습니다.");
   }
 };

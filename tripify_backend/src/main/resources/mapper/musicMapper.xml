@@ -21,6 +21,10 @@
 		LEFT JOIN playlist_trackid t ON p.playlist_id = t.playlist_id
 		WHERE p.playlist_id = #{playlistId}
 	</select>
+	
+	<select id="getPlaylistId">
+		SELECT playlist_id FROM playlist WHERE plan_place_id = #{plan_place_id}
+	</select>
 
 	<!-- 모든 플레이리스트 가져오기 -->
 	<select id="getAllPlaylists" resultMap="PlaylistResultMap">

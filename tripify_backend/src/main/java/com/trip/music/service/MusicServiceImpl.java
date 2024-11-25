@@ -30,6 +30,13 @@ public class MusicServiceImpl implements MusicService {
     	System.out.println(p.toString());
         return p;
     }
+    
+    @Override
+    public int getPlaylistId(int planPlaceId) {
+    	int p = musicMapper.getPlaylistId(planPlaceId);
+    	System.out.println(p);
+        return p;
+    }
 
     @Override
     public List<PlaylistVO> getAllPlaylists() {

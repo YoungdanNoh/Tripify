@@ -29,9 +29,11 @@ public class MusicController {
         musicService.createPlaylist(playlistDTO);
     }
 
-    @GetMapping("/playlist/{id}")
-    public PlaylistVO getPlaylist(@PathVariable int id) {
-        return musicService.getPlaylist(id);
+    @GetMapping("/playlist/{planPlaceId}")
+    public PlaylistVO getPlaylist(@PathVariable int planPlaceId) {
+    	int playlistId = musicService.getPlaylistId(planPlaceId);
+    	System.out.println("here is,.."+playlistId);
+        return musicService.getPlaylist(playlistId);
     }
 
     @GetMapping("/playlists")

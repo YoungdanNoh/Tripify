@@ -8,6 +8,7 @@ import com.trip.music.vo.PlaylistVO;
 public interface MusicService {
 	void createPlaylist(PlaylistStringDTO playlistDTO);
     PlaylistVO getPlaylist(int playlistId);
+    int getPlaylistId(int planPlaceId);
     List<PlaylistVO> getAllPlaylists();
     void deletePlaylist(int playlistId);
     void addTrackToPlaylist(int playlistId, String trackId);
