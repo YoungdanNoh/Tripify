@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trip.music.mapper.MusicMapper">
+	<!-- 플레이리스트 삽입 -->
+	<insert id="insertPlaylist" useGeneratedKeys="true"
+		keyProperty="playlistId">
+		INSERT INTO playlist (plan_place_id) VALUES (#{planPlaceId})
+	</insert>
+
+	<!-- 트랙 삽입 -->
+	<insert id="insertTrack">
+		INSERT INTO playlist_trackid (playlist_id, spotify_track_id)
+		VALUES (#{playlistId}, #{spotifyTrackId})
+	</insert>
+
+	<!-- 특정 플레이리스트 가져오기 -->
+	<select id="getPlaylist" resultMap="PlaylistResultMap">
+		SELECT p.playlist_id AS playlist_id, p.plan_place_id AS plan_place_id,
+		t.spotify_track_id AS spotify_track_id
+		FROM playlist p
+		LEFT JOIN playlist_trackid t ON p.playlist_id = t.playlist_id
+		WHERE p.playlist_id = #{playlistId}
+	</select>
+
+	<!-- 모든 플레이리스트 가져오기 -->
+	<select id="getAllPlaylists" resultMap="PlaylistResultMap">
+		SELECT p.playlist_id, p.plan_place_id, t.spotify_track_id
+		FROM playlist p
+		LEFT JOIN playlist_trackid t ON p.playlist_id = t.playlist_id
+	</select>
+
+	<!-- 플레이리스트 삭제 -->
+	<delete id="deletePlaylist">
+		DELETE FROM playlist WHERE playlist_id = #{playlistId}
+	</delete>
+
+	<!-- 트랙 삭제 -->
+	<delete id="deleteTrack">
+		DELETE FROM playlist_trackid WHERE playlist_id = #{playlistId} AND
+		spotify_track_id = #{spotifyTrackId}
+	</delete>
+
+	<!-- Result Map -->
+	<resultMap id="PlaylistResultMap"
+		type="com.trip.music.vo.PlaylistVO">
+		<id property="playlistId" column="playlist_id" />
+		<result property="planPlaceId" column="plan_place_id" />
+		<collection property="trackIds" javaType="List"
+			ofType="com.trip.music.vo.TrackVO" >
+			<result property="spotifyTrackId" column="spotify_track_id"/>
+		</collection>
+	</resultMap>
+
+
+</mapper>
