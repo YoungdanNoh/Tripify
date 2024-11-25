@@ -4,8 +4,12 @@
     <div v-if="detail" class="card mb-4 shadow-sm">
       <div class="row g-0">
         <div class="col-md-4">
-          <img :src="detail.img || defaultImage" class="img-fluid rounded-start" alt="여행 이미지"
-            style="object-fit: cover; height: 100%" />
+          <img
+            :src="detail.img || defaultImage"
+            class="img-fluid rounded-start"
+            alt="여행 이미지"
+            style="object-fit: cover; height: 100%"
+          />
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -15,19 +19,56 @@
                 formatDateRange(detail.start_date, detail.end_date)
               }}</small>
             </p>
-            <p class="card-text"><i class="bi bi-geo-alt-fill"></i> {{ detail.location }}</p>
+            <p class="card-text">
+              <i class="bi bi-geo-alt-fill"></i> {{ detail.location }}
+            </p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 플레이리스트 모달 -->
-    <div v-if="isPlaylistModalVisible" class="modal-overlay">
+    <!-- <div
+      v-if="isPlaylistModalVisible"
+      class="modal-overlay"
+      @click.self="closePlaylistModal"
+    >
       <div class="modal-content">
         <button class="close-button" @click="closePlaylistModal">×</button>
         <div class="recommend-container" v-if="playlist.length">
           <h3>추천 음악</h3>
-          <div v-for="(item, index) in playlist" :key="index" class="recommend-item">
+          <div
+            v-for="(item, index) in playlist"
+            :key="index"
+            class="recommend-item"
+          >
+            <img :src="item.albumImage" alt="Album Art" class="album-art" />
+            <div class="track-info">
+              <a :href="item.spotifyUrl" target="_blank" class="track-name">
+                <h4>{{ item.name }}</h4>
+              </a>
+              <p>{{ item.artist }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- 기존 추천 음악 모달 -->
+    <div
+      v-if="isPlaylistModalVisible"
+      class="modal-overlay"
+      @click.self="closePlaylistModal"
+    >
+      <div class="modal-content">
+        <button class="close-button" @click="closePlaylistModal">×</button>
+        <div class="recommend-container" v-if="playlist.length">
+          <h3>추천 음악</h3>
+          <div
+            v-for="(item, index) in playlist"
+            :key="index"
+            class="recommend-item"
+          >
             <img :src="item.albumImage" alt="Album Art" class="album-art" />
             <div class="track-info">
               <a :href="item.spotifyUrl" target="_blank" class="track-name">
@@ -40,73 +81,162 @@
       </div>
     </div>
 
+    <!-- 새로운 음악 생성 모달 -->
+    <div
+      v-if="isMusicCreationModalVisible"
+      class="modal-overlay"
+      @click.self="closeMusicCreationModal"
+    >
+      <div class="modal-content">
+        <h3>음악을 추천받아 보세요!</h3>
+        <p>
+          {{ musicCreationDetails.place_name }}에서 방문한 시간과 장소에 맞는
+          음악을 추천해 드립니다.
+        </p>
+        <div class="modal-buttons">
+          <button
+            class="btn btn-outline-secondary"
+            @click="closeMusicCreationModal"
+          >
+            닫기
+          </button>
+          <button class="btn btn-success" @click="musicRecommend">
+            지금 바로 생성하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <musicRecommendModal v-if="isMusicRecommendModalVisible" :data="recommendationData" @close="closeRecommendationModal"></musicRecommendModal>
+
     <!-- 일정 관리 -->
     <div class="d-flex justify-content-between align-items-center">
       <h3>일정 관리</h3>
       <!-- 일정 추가 버튼 -->
-      <button class="btn btn-outline-success custom-blue-button" @click="addNewActivity(0, null)">
+      <button
+        class="btn btn-outline-success custom-blue-button"
+        @click="addNewActivity(0, null)"
+      >
         + 새 활동 추가
       </button>
     </div>
 
     <!-- 일정 박스들을 가로로 나열 -->
     <div v-if="detail" class="itinerary-container">
-      <div v-for="day in detail.itinerary" :key="day.visit_date" class="card mb-3 shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
+      <div
+        v-for="day in detail.itinerary"
+        :key="day.visit_date"
+        class="card mb-3 shadow-sm"
+      >
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
           <h5>{{ day.visit_date }}</h5>
-          <button class="btn btn-outline-success" @click="addNewActivity(detail.plan_id, day.visit_date)">
+          <button
+            class="btn btn-outline-success"
+            @click="addNewActivity(detail.plan_id, day.visit_date)"
+          >
             + 새 일정 추가
           </button>
         </div>
         <!-- activities 순회 -->
-        <div v-for="activity in day.activities" :key="activity.plan_place_id" class="card-body">
+        <div
+          v-for="activity in day.activities"
+          :key="activity.plan_place_id"
+          class="card-body"
+        >
           <h6 class="card-title">방문지: {{ activity.place_name }}</h6>
           <h6 class="card-title">{{ formatVisitTime(activity.visit_time) }}</h6>
           <p>{{ activity.description }}</p>
           <!-- 수정/삭제 버튼 -->
-          <button class="btn btn-outline-secondary btn-sm mt-2"
-            @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)">
+          <button
+            class="btn btn-outline-secondary btn-sm mt-2"
+            @click="
+              editActivity(
+                day.visit_date,
+                activity.visit_time,
+                detail.plan_id,
+                activity
+              )
+            "
+          >
             수정
           </button>
-          <button class="btn btn-outline-danger btn-sm mt-2" @click="deleteActivity(activity.plan_place_id)">
+          <button
+            class="btn btn-outline-danger btn-sm mt-2"
+            @click="deleteActivity(activity.plan_place_id)"
+          >
             삭제
           </button>
-          <button @click="showPlaylist(activity.plan_place_id)">
-            플레이리스트 보기
-          </button>
+          <!-- 플레이 리스트 버튼 -->
+          <font-awesome-icon
+            class="h-7 w-7 icons"
+            icon="circle-play"
+            @click="showPlaylist(activity)"
+          >
+          </font-awesome-icon>
         </div>
       </div>
     </div>
 
     <!-- 일정 추가/수정 폼 -->
-    <!-- 모달 -->
-    <div v-if="isEditing" class="modal-overlay">
+    <div v-if="isEditing" class="modal-overlay" @click.self="cancelEdit">
       <div class="modal-content">
         <button class="close-button" @click="cancelEdit">×</button>
         <form @submit.prevent="save">
           <h4 v-if="editOrAdd == 1">새 활동 추가</h4>
-          <h4 v-if="editOrAdd == 2">{{ editingActivity.visit_date }} 새 일정 추가</h4>
+          <h4 v-if="editOrAdd == 2">
+            {{ editingActivity.visit_date }} 새 일정 추가
+          </h4>
           <h4 v-if="editOrAdd == 3">활동 수정</h4>
           <div class="mb-3">
             <label for="date" class="form-label">방문 날짜</label>
-            <input id="date" type="date" class="form-control" v-model="editingActivity.visit_date"
-              :readonly="editOrAdd === 2" :class="{ 'bg-light text-muted': editOrAdd === 2 }" required />
+            <input
+              id="date"
+              type="date"
+              class="form-control"
+              v-model="editingActivity.visit_date"
+              :readonly="editOrAdd === 2"
+              :class="{ 'bg-light text-muted': editOrAdd === 2 }"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="time" class="form-label">방문 시각</label>
-            <input id="time" type="time" class="form-control" v-model="editingActivity.visit_time" required />
+            <input
+              id="time"
+              type="time"
+              class="form-control"
+              v-model="editingActivity.visit_time"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">방문지</label>
-            <input id="title" type="text" class="form-control" v-model="editingActivity.place_name" required />
+            <input
+              id="title"
+              type="text"
+              class="form-control"
+              v-model="editingActivity.place_name"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">설명</label>
-            <textarea id="description" class="form-control" v-model="editingActivity.description" required></textarea>
+            <textarea
+              id="description"
+              class="form-control"
+              v-model="editingActivity.description"
+              required
+            ></textarea>
           </div>
           <div class="d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-success">저장</button>
-            <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              @click="cancelEdit"
+            >
               취소
             </button>
           </div>
@@ -124,6 +254,8 @@ import { usePlanStore } from "@/stores/plans";
 import { storeToRefs } from "pinia";
 import { fetchPlaylistData } from "@/api/music";
 
+import musicRecommendModal from "@/components/musicRecommend/musicRecommendModal.vue";
+
 const route = useRoute();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -136,7 +268,6 @@ const playlist = ref([]);
 const isPlaylistModalVisible = ref(false); // 모달 표시 여부
 
 onMounted(async () => {
-  //console.log(route.params.plan_id);
   plan.value = {
     user_id: user.value.userId,
     plan_id: store.getPlanId,
@@ -144,42 +275,61 @@ onMounted(async () => {
   await store.fetchPlanDetail(plan.value); // POST 요청으로 계획 목록 가져오기
 });
 
-// 날짜 포맷 함수
 const formatDateRange = (start, end) => {
-  return `${new Date(start).toLocaleDateString()} → ${new Date(end).toLocaleDateString()}`;
+  return `${new Date(start).toLocaleDateString()} → ${new Date(
+    end
+  ).toLocaleDateString()}`;
 };
-// 시간 포맷 함수
+
 const formatVisitTime = (time) => {
   if (!time) return "";
 
   const [hour, minute] = time.split(":").map((num) => parseInt(num));
-
   const period = hour >= 12 ? "오후" : "오전";
-  const hour12 = hour % 12 || 12; // 24시간제를 12시간제로 변환 (0시 -> 12시, 15시 -> 3시 등)
+  const hour12 = hour % 12 || 12;
 
-  return `${period} ${hour12}:${minute < 10 ? "0" + minute : minute}`; // "오후 3:00" 형식으로 반환
+  return `${period} ${hour12}:${minute < 10 ? "0" + minute : minute}`;
 };
 
-// 플레이리스트 모달 열기
-const showPlaylist = async (plan_place_id) => {
+// const showPlaylist = async (plan_place_id) => {
+//   try {
+//     const data = await fetchPlaylistData(plan_place_id);
+//     playlist.value = data;
+//     isPlaylistModalVisible.value = true;
+//   } catch (error) {
+//     console.error("플레이리스트 가져오기 실패:", error.message);
+//     alert("아직 등록된 음악이 없어요!");
+//   }
+// };
+const showPlaylist = async (activity) => {
+  console.log("why:", activity);
+
+  let plan_place_id = activity.plan_place_id;
   try {
-    console.log("ppid...", plan_place_id);
-    const data = await fetchPlaylistData(plan_place_id); // plan_place_id를 사용하여 플레이리스트 데이터 가져오기
-    playlist.value = data; // 데이터 저장
-    isPlaylistModalVisible.value = true; // 모달 표시
+    const data = await fetchPlaylistData(plan_place_id);
+    if (data.length === 0) {
+      // 음악 데이터가 없으면 음악 생성 모달 표시
+      showMusicCreationModal(activity);
+    } else {
+      playlist.value = data;
+      isPlaylistModalVisible.value = true;
+    }
   } catch (error) {
     console.error("플레이리스트 가져오기 실패:", error.message);
+    showMusicCreationModal(activity);
   }
 };
 
-// 모달 닫기
+const closeRecommendationModal = () => {
+  isMusicRecommendModalVisible.value = false;
+};
+
 const closePlaylistModal = () => {
   isPlaylistModalVisible.value = false;
 };
 
-const isEditing = ref(false); // 수정 모드 여부
-const editOrAdd = ref(0); // 수정할 활동 index
-
+const isEditing = ref(false);
+const editOrAdd = ref(0);
 const editingActivity = ref({
   plan_id: 0,
   plan_place_id: 0,
@@ -187,11 +337,10 @@ const editingActivity = ref({
   visit_time: "",
   place_name: "",
   description: "",
-}); // 수정할 활동 데이터 저장
+});
 
-// 새 활동 추가 버튼 클릭
 const addNewActivity = (plan_id, visit_date) => {
-  isEditing.value = true; // 새 활동 추가
+  isEditing.value = true;
   editingActivity.value = {
     plan_id: 0,
     plan_place_id: 0,
@@ -202,25 +351,18 @@ const addNewActivity = (plan_id, visit_date) => {
   };
 
   if (plan_id === 0) {
-    //아예 새로운 활동을 추가
-    //order_in_day + 1을 전송한다.
     editOrAdd.value = 1;
     editingActivity.value.plan_id = detail.value.plan_id;
   } else {
-    //기존 활동 사이에 새로운 활동 추가
-    //order_in_day + 1을 전송한다.
     editOrAdd.value = 2;
-
     editingActivity.value.plan_id = detail.value.plan_id;
     editingActivity.value.visit_date = visit_date;
   }
 };
 
-// 수정 버튼 클릭
 const editActivity = (visit_date, visit_time, plan_id, activity) => {
-  isEditing.value = true; // 수정 모드
+  isEditing.value = true;
   editOrAdd.value = 3;
-  console.log("editActivity", plan_id);
   editingActivity.value = {
     plan_id: plan_id,
     plan_place_id: activity.plan_place_id,
@@ -231,42 +373,88 @@ const editActivity = (visit_date, visit_time, plan_id, activity) => {
   };
 };
 
-// 저장 버튼 클릭
-// 수정 또는 새 활동 추가 후 저장 -> DB에 반영
 const save = async () => {
-  //console.log(editingActivityId.value);
   if (editOrAdd.value == 1) {
-    // 아예 새로운 활동을 추가한다.
-    // 전송할 데이터: editingActivity
-    console.log("아예 새로운 활동을 추가한다.");
-
-    await store.addDetail(editingActivity.value, plan.value); // POST 요청으로 활동 추가
+    await store.addDetail(editingActivity.value, plan.value);
     isEditing.value = false;
   } else if (editOrAdd.value == 2) {
-    // 기존 날짜에 새로운 활동을 추가한다.
-    console.log("기존 날짜에 새로운 활동을 추가한다.");
-
-    await store.addActivity(editingActivity.value, plan.value); // POST 요청으로 활동 추가
+    await store.addActivity(editingActivity.value, plan.value);
     isEditing.value = false;
   } else {
-    // 기존 활동을 수정한다.
-    console.log("기존 활동을 수정한다.");
-
-    await store.updateDetail(editingActivity.value, plan.value); // POST 요청으로 활동 추가
+    await store.updateDetail(editingActivity.value, plan.value);
     isEditing.value = false;
   }
 };
 
-// 수정 취소
 const cancelEdit = () => {
   isEditing.value = false;
 };
 
 const deleteActivity = async (plan_place_id) => {
-  //plan_place_id에 해당되는 활동을 삭제한다.
   editingActivity.value.plan_place_id = plan_place_id;
+  await store.deleteDetail(editingActivity.value, plan.value);
+};
 
-  await store.deleteDetail(editingActivity.value, plan.value); // 활동 삭제
+// 음악 생성 모달 표시 여부
+const isMusicCreationModalVisible = ref(false);
+
+// 추천 모달 표시 여부
+const isMusicRecommendModalVisible = ref(false);
+
+const musicCreationDetails = ref({
+  location: "",
+  visit_time: "",
+  place_name: "",
+});
+
+// 음악 생성 모달 표시 함수
+const showMusicCreationModal = (activity) => {
+  console.log("activity", activity);
+
+  // plan_place_id에 맞는 데이터를 불러와 사용 가능 (여기서는 더미 값 사용)
+  musicCreationDetails.value = {
+    location: detail.value.title,
+    visit_time: activity.visit_time,
+    place_name: activity.place_name,
+    plan_place_id : activity.plan_place_id
+  };
+  isMusicCreationModalVisible.value = true;
+  console.log("truned to true :", musicCreationDetails.value);
+};
+
+// 음악 생성 모달 닫기
+const closeMusicCreationModal = () => {
+  isMusicCreationModalVisible.value = false;
+};
+
+const recommendationData = ref({});
+
+// 노래 추천 실행
+const musicRecommend = () => {
+  const { location, visit_time, place_name, plan_place_id } = musicCreationDetails.value;
+  console.log(location, visit_time, place_name, plan_place_id);
+
+  const hour = parseInt(visit_time.split(":")[0]);
+
+  let mood;
+  if (hour >= 0 && hour < 7) {
+    mood = "새벽감성";
+  } else if (hour >= 7 && hour < 10) {
+    mood = "이른아침";
+  } else if (hour >= 10 && hour < 12) {
+    mood = "점심";
+  } else if (hour >= 12 && hour < 17) {
+    mood = "활기찬 오후";
+  } else if (hour >= 17 && hour < 21) {
+    mood = "저녁감성";
+  } else {
+    mood = "늦은 저녁";
+  }
+
+  // 추천된 음악 데이터를 생성 모달로 표시
+  recommendationData.value = { location, mood, place_name, plan_place_id }; // 이 데이터를 추천 컴포넌트에 전달 가능
+  isMusicCreationModalVisible.value = false; // 생성 모달 닫기
+  isMusicRecommendModalVisible.value = true;
 };
 </script>
 
@@ -483,5 +671,10 @@ const deleteActivity = async (plan_place_id) => {
 .track-name:hover {
   color: #1db954;
   text-decoration: underline;
+}
+
+.icons {
+  width: 25px;
+  height: auto;
 }
 </style>
