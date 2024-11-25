@@ -6,12 +6,12 @@ export const useMusicStore = defineStore("music", () => {
   // 1. data
   const trackId = ref(null); // 현재 검색된 트랙 ID
   const similarTracks = ref([]); // 추천된 비슷한 트랙들
-  const loading = ref(false); // 로딩 상태
+  const loading = ref(true); // 로딩 상태
   const error = ref(null); // 오류 메시지
   const keywords = ref([]); // 검색 키워드 목록
   const results = ref([]); // 검색 결과
   const accessToken = ref(fetchAccessToken()); // Access Token
-  const gptRecommends = ref([]); //
+  const gptRecommends = ref([]);
 
   // 2. getters
   const getTrackId = computed(() => trackId.value);
@@ -37,27 +37,47 @@ export const useMusicStore = defineStore("music", () => {
     keywords.value.splice(index, 1);
   };
 
-  const searchMusicGpt = () => {
-    searchMusic(keywords.value).then((data) => {
-      if (data && data.music) {
-        // 제목과 아티스트를 모두 포함한 배열 생성
-        const musics = data.music.map((track) => {
-          return {
-            title: track.title,
-            artist: track.artist,
-          };
-        });
+  // const searchMusicGpt = () => {
+  //   searchMusic(keywords.value).then((data) => {
+  //     if (data && data.music) {
+  //       // 제목과 아티스트를 모두 포함한 배열 생성
+  //       const musics = data.music.map((track) => {
+  //         return {
+  //           title: track.title,
+  //           artist: track.artist,
+  //         };
+  //       });
 
-        console.log(musics); // [{ title, artist }, ...] 출력
-        gptRecommends.value = musics; // 제목과 아티스트 배열 저장
+  //       console.log(musics); // [{ title, artist }, ...] 출력
+  //       gptRecommends.value = musics; // 제목과 아티스트 배열 저장
+  //     } else {
+  //       console.warn("검색 결과에 음악 데이터가 없습니다.");
+  //     }
+  //   });
+  // };
+
+  const searchMusicGpt = async () => {
+    loading.value = true; // 로딩 시작
+    try {
+      const data = await searchMusic(keywords.value); // API 호출
+      if (data && data.music) {
+        const musics = data.music.map((track) => ({
+          title: track.title,
+          artist: track.artist,
+        }));
+        gptRecommends.value = musics; // 결과 저장
       } else {
         console.warn("검색 결과에 음악 데이터가 없습니다.");
       }
-    });
+    } catch (err) {
+      console.error("검색 실패:", err);
+    } finally {
+      loading.value = false; // 로딩 종료
+    }
   };
 
   const searchTrack = async (trackName, artistName) => {
-    loading.value = true;
+    //loading.value = true;
     error.value = null;
 
     try {
@@ -74,7 +94,7 @@ export const useMusicStore = defineStore("music", () => {
     } catch (err) {
       error.value = err.message;
     } finally {
-      loading.value = false;
+      //loading.value = false;
     }
   };
 
