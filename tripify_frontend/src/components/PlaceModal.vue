@@ -52,13 +52,13 @@ async function handleCommentSubmit(content) {
   try {
     await commentStore.addComment(
       "place",
-      props.place.place_id,
+      place.value.placeId, //props 사용하면 안됨
       userStore.user.userId,
       userStore.user.userName,
       content
     );
     alert("댓글이 성공적으로 추가되었습니다.");
-    commentStore.fetchComments("place", props.place.place_id); // 새로고침
+    commentStore.fetchComments("place", place.value.placeId); // 새로고침
   } catch (error) {
     console.error("댓글 추가 실패:", error);
     alert(commentStore.error || "댓글 추가에 실패했습니다.");

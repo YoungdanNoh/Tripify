@@ -4,12 +4,8 @@
     <div v-if="detail" class="card mb-4 shadow-sm">
       <div class="row g-0">
         <div class="col-md-4">
-          <img
-            :src="detail.img || defaultImage"
-            class="img-fluid rounded-start"
-            alt="여행 이미지"
-            style="object-fit: cover; height: 100%"
-          />
+          <img :src="detail.img || defaultImage" class="img-fluid rounded-start" alt="여행 이미지"
+            style="object-fit: cover; height: 100%" />
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -20,6 +16,25 @@
               }}</small>
             </p>
             <p class="card-text"><i class="bi bi-geo-alt-fill"></i> {{ detail.location }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 플레이리스트 모달 -->
+    <div v-if="isPlaylistModalVisible" class="modal-overlay">
+      <div class="modal-content">
+        <button class="close-button" @click="closePlaylistModal">×</button>
+        <div class="recommend-container" v-if="playlist.length">
+          <h3>추천 음악</h3>
+          <div v-for="(item, index) in playlist" :key="index" class="recommend-item">
+            <img :src="item.albumImage" alt="Album Art" class="album-art" />
+            <div class="track-info">
+              <a :href="item.spotifyUrl" target="_blank" class="track-name">
+                <h4>{{ item.name }}</h4>
+              </a>
+              <p>{{ item.artist }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -39,10 +54,7 @@
       <div v-for="day in detail.itinerary" :key="day.visit_date" class="card mb-3 shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5>{{ day.visit_date }}</h5>
-          <button
-            class="btn btn-outline-success"
-            @click="addNewActivity(detail.plan_id, day.visit_date)"
-          >
+          <button class="btn btn-outline-success" @click="addNewActivity(detail.plan_id, day.visit_date)">
             + 새 일정 추가
           </button>
         </div>
@@ -52,17 +64,15 @@
           <h6 class="card-title">{{ formatVisitTime(activity.visit_time) }}</h6>
           <p>{{ activity.description }}</p>
           <!-- 수정/삭제 버튼 -->
-          <button
-            class="btn btn-outline-secondary btn-sm mt-2"
-            @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)"
-          >
+          <button class="btn btn-outline-secondary btn-sm mt-2"
+            @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)">
             수정
           </button>
-          <button
-            class="btn btn-outline-danger btn-sm mt-2"
-            @click="deleteActivity(activity.plan_place_id)"
-          >
+          <button class="btn btn-outline-danger btn-sm mt-2" @click="deleteActivity(activity.plan_place_id)">
             삭제
+          </button>
+          <button @click="showPlaylist(activity.plan_place_id)">
+            플레이리스트 보기
           </button>
         </div>
       </div>
@@ -79,44 +89,20 @@
           <h4 v-if="editOrAdd == 3">활동 수정</h4>
           <div class="mb-3">
             <label for="date" class="form-label">방문 날짜</label>
-            <input
-              id="date"
-              type="date"
-              class="form-control"
-              v-model="editingActivity.visit_date"
-              :readonly="editOrAdd === 2"
-              :class="{ 'bg-light text-muted': editOrAdd === 2 }"
-              required
-            />
+            <input id="date" type="date" class="form-control" v-model="editingActivity.visit_date"
+              :readonly="editOrAdd === 2" :class="{ 'bg-light text-muted': editOrAdd === 2 }" required />
           </div>
           <div class="mb-3">
             <label for="time" class="form-label">방문 시각</label>
-            <input
-              id="time"
-              type="time"
-              class="form-control"
-              v-model="editingActivity.visit_time"
-              required
-            />
+            <input id="time" type="time" class="form-control" v-model="editingActivity.visit_time" required />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">방문지</label>
-            <input
-              id="title"
-              type="text"
-              class="form-control"
-              v-model="editingActivity.place_name"
-              required
-            />
+            <input id="title" type="text" class="form-control" v-model="editingActivity.place_name" required />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">설명</label>
-            <textarea
-              id="description"
-              class="form-control"
-              v-model="editingActivity.description"
-              required
-            ></textarea>
+            <textarea id="description" class="form-control" v-model="editingActivity.description" required></textarea>
           </div>
           <div class="d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-success">저장</button>
@@ -136,6 +122,7 @@ import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { usePlanStore } from "@/stores/plans";
 import { storeToRefs } from "pinia";
+import { fetchPlaylistData } from "@/api/music";
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -145,6 +132,8 @@ const store = usePlanStore();
 const { getPlanDetailList: detail } = storeToRefs(store);
 
 const plan = ref(null);
+const playlist = ref([]);
+const isPlaylistModalVisible = ref(false); // 모달 표시 여부
 
 onMounted(async () => {
   //console.log(route.params.plan_id);
@@ -169,6 +158,23 @@ const formatVisitTime = (time) => {
   const hour12 = hour % 12 || 12; // 24시간제를 12시간제로 변환 (0시 -> 12시, 15시 -> 3시 등)
 
   return `${period} ${hour12}:${minute < 10 ? "0" + minute : minute}`; // "오후 3:00" 형식으로 반환
+};
+
+// 플레이리스트 모달 열기
+const showPlaylist = async (plan_place_id) => {
+  try {
+    console.log("ppid...", plan_place_id);
+    const data = await fetchPlaylistData(plan_place_id); // plan_place_id를 사용하여 플레이리스트 데이터 가져오기
+    playlist.value = data; // 데이터 저장
+    isPlaylistModalVisible.value = true; // 모달 표시
+  } catch (error) {
+    console.error("플레이리스트 가져오기 실패:", error.message);
+  }
+};
+
+// 모달 닫기
+const closePlaylistModal = () => {
+  isPlaylistModalVisible.value = false;
 };
 
 const isEditing = ref(false); // 수정 모드 여부
@@ -267,13 +273,17 @@ const deleteActivity = async (plan_place_id) => {
 <style scoped>
 /* 특정 버튼만 파란색으로 변경 */
 .custom-blue-button {
-  color: #007bff !important; /* 텍스트 색상: 파란색 */
-  border-color: #007bff !important; /* 테두리 색상: 파란색 */
+  color: #007bff !important;
+  /* 텍스트 색상: 파란색 */
+  border-color: #007bff !important;
+  /* 테두리 색상: 파란색 */
 }
 
 .custom-blue-button:hover {
-  background-color: #007bff !important; /* 호버 시 배경색: 파란색 */
-  color: #fff !important; /* 호버 시 텍스트 색상: 흰색 */
+  background-color: #007bff !important;
+  /* 호버 시 배경색: 파란색 */
+  color: #fff !important;
+  /* 호버 시 텍스트 색상: 흰색 */
 }
 
 /* 모달 스타일 */
@@ -314,70 +324,164 @@ const deleteActivity = async (plan_place_id) => {
 }
 
 .card {
-  display: block; /* 카드가 콘텐츠 크기에 맞게 조정되도록 설정 */
-  height: auto; /* 기본 높이는 콘텐츠에 맞춤 */
-  max-height: 500px; /* 최대 높이를 설정 (일정 4개 기준, 필요 시 조정 가능) */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
-  margin: 0; /* 불필요한 외부 여백 제거 */
-  padding: 0; /* 불필요한 내부 여백 제거 */
-  border-radius: 5px; /* 모서리를 둥글게 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+  display: block;
+  /* 카드가 콘텐츠 크기에 맞게 조정되도록 설정 */
+  height: auto;
+  /* 기본 높이는 콘텐츠에 맞춤 */
+  max-height: 500px;
+  /* 최대 높이를 설정 (일정 4개 기준, 필요 시 조정 가능) */
+  overflow-y: auto;
+  /* 세로 스크롤 활성화 */
+  margin: 0;
+  /* 불필요한 외부 여백 제거 */
+  padding: 0;
+  /* 불필요한 내부 여백 제거 */
+  border-radius: 5px;
+  /* 모서리를 둥글게 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* 약간의 그림자 추가 */
 }
 
 /* 스크롤바 스타일 */
 .card::-webkit-scrollbar {
-  width: 5px; /* 스크롤바 너비 설정 */
+  width: 5px;
+  /* 스크롤바 너비 설정 */
 }
 
 .card::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2); /* 스크롤바 색상 */
-  border-radius: 10px; /* 스크롤바 모서리를 둥글게 */
+  background-color: rgba(0, 0, 0, 0.2);
+  /* 스크롤바 색상 */
+  border-radius: 10px;
+  /* 스크롤바 모서리를 둥글게 */
 }
 
 .card::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.4); /* 스크롤바 hover 시 색상 */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* 스크롤바 hover 시 색상 */
 }
 
 .card::-webkit-scrollbar-track {
-  background: transparent; /* 스크롤 트랙 (배경) 투명하게 */
+  background: transparent;
+  /* 스크롤 트랙 (배경) 투명하게 */
 }
 
 .card-body {
-  margin: 0; /* 불필요한 간격 제거 */
-  padding: 10px; /* 콘텐츠 여백 유지 */
-  border-bottom: 1px solid #ddd; /* 일정 간 가독성을 위한 구분선 */
-  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  margin: 0;
+  /* 불필요한 간격 제거 */
+  padding: 10px;
+  /* 콘텐츠 여백 유지 */
+  border-bottom: 1px solid #ddd;
+  /* 일정 간 가독성을 위한 구분선 */
+  box-sizing: border-box;
+  /* 패딩 포함 크기 계산 */
 }
 
 .card-body:last-child {
-  border-bottom: none; /* 마지막 요소 구분선 제거 */
+  border-bottom: none;
+  /* 마지막 요소 구분선 제거 */
 }
 
 .itinerary-container {
   display: flex;
-  flex-wrap: nowrap; /* 한 줄에 카드가 모두 배치되도록 설정 */
-  overflow-x: auto; /* 가로 스크롤 가능하도록 설정 */
-  gap: 15px; /* 카드들 간의 간격 */
+  flex-wrap: nowrap;
+  /* 한 줄에 카드가 모두 배치되도록 설정 */
+  overflow-x: auto;
+  /* 가로 스크롤 가능하도록 설정 */
+  gap: 15px;
+  /* 카드들 간의 간격 */
   padding-bottom: 15px;
 }
 
 .itinerary-container::-webkit-scrollbar {
-  height: 8px; /* 스크롤바 높이 */
+  height: 8px;
+  /* 스크롤바 높이 */
 }
 
 .itinerary-container::-webkit-scrollbar-thumb {
-  background-color: #888; /* 스크롤 thumb 색상 */
+  background-color: #888;
+  /* 스크롤 thumb 색상 */
   border-radius: 10px;
 }
 
 .itinerary-container::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* hover 시 색상 */
+  background-color: #555;
+  /* hover 시 색상 */
 }
 
 .card.mb-3.shadow-sm {
-  flex: 0 0 calc(33.33% - 10px); /* 한 창에 3개씩 보이도록 너비 설정 */
-  min-width: calc(33.33% - 10px); /* 동일한 너비 */
-  max-width: calc(33.33% - 10px); /* 동일한 너비 */
-  box-sizing: border-box; /* padding, border 포함 */
+  flex: 0 0 calc(33.33% - 10px);
+  /* 한 창에 3개씩 보이도록 너비 설정 */
+  min-width: calc(33.33% - 10px);
+  /* 동일한 너비 */
+  max-width: calc(33.33% - 10px);
+  /* 동일한 너비 */
+  box-sizing: border-box;
+  /* padding, border 포함 */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.recommend-container {
+  margin-top: 20px;
+}
+
+.recommend-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.album-art {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  border-radius: 8px;
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-name {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.track-name:hover {
+  color: #1db954;
+  text-decoration: underline;
 }
 </style>

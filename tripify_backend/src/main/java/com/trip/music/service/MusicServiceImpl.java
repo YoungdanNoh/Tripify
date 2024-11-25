@@ -3,8 +3,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trip.music.mapper.MusicMapper;
+import com.trip.music.vo.PlaylistStringDTO;
 import com.trip.music.vo.PlaylistVO;
 import com.trip.music.vo.TrackVO;
 
@@ -13,11 +15,12 @@ public class MusicServiceImpl implements MusicService {
     @Autowired
     private MusicMapper musicMapper;
 
+    @Transactional
     @Override
-    public void createPlaylist(PlaylistVO playlistVO) {
-        musicMapper.insertPlaylist(playlistVO);
-        for (TrackVO track : playlistVO.getTrackIds()) {
-            musicMapper.insertTrack(track);
+    public void createPlaylist(PlaylistStringDTO playlistDTO) {
+        musicMapper.insertPlaylist(playlistDTO);
+        for (String track : playlistDTO.getTrackIds()) {
+            musicMapper.insertTrack(playlistDTO.getPlaylistId(), track);
         }
     }
 
@@ -25,6 +28,13 @@ public class MusicServiceImpl implements MusicService {
     public PlaylistVO getPlaylist(int playlistId) {
     	PlaylistVO p = musicMapper.getPlaylist(playlistId);
     	System.out.println(p.toString());
+        return p;
+    }
+    
+    @Override
+    public int getPlaylistId(int planPlaceId) {
+    	int p = musicMapper.getPlaylistId(planPlaceId);
+    	System.out.println(p);
         return p;
     }
 
