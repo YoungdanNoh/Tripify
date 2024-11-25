@@ -21,6 +21,10 @@
           <td>{{ schedule.location }}</td>
           <td>{{ formatVisitTime(schedule.visit_time) }}</td>
           <td>{{ schedule.place_name }}</td>
+          <td>
+            <font-awesome-icon class="h-7 w-7 icons" icon="music"
+              @click="musicRecommend(schedule.location, schedule.visit_time, schedule.place_name)"></font-awesome-icon>
+          </td>
         </tr>
       </table>
       <div v-else>오늘의 일정이 없습니다.</div>
@@ -79,19 +83,20 @@ const formatVisitTime = (time) => {
 </script>
 
 <style scoped>
-
 .schedule-title {
   text-align: left;
-  margin-left: 10px; /* 오른쪽 정렬된 텍스트의 위치를 조정할 수 있습니다. */
+  margin-left: 10px;
+  /* 오른쪽 정렬된 텍스트의 위치를 조정할 수 있습니다. */
 }
+
 .icons {
   width: 28px;
   height: 28px;
 }
 
 .profile-image {
-    width: 70px;
-    height: 70px;
+  width: 70px;
+  height: 70px;
 }
 
 .profile-card {
@@ -99,10 +104,11 @@ const formatVisitTime = (time) => {
   color: black;
   border-radius: 10px;
   padding: 20px;
-  width: 300px;
+  width: 380px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin: 20px auto; /* 중앙 정렬을 위한 auto */
+  margin: 20px auto;
+  /* 중앙 정렬을 위한 auto */
   min-width: 284px;
   max-height: 380px;
 }
@@ -134,7 +140,8 @@ const formatVisitTime = (time) => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: 20px; /* 텍스트 섹션과 이미지 섹션 사이의 간격 */
+  margin-left: 20px;
+  /* 텍스트 섹션과 이미지 섹션 사이의 간격 */
 }
 
 .text-section h5,
@@ -144,29 +151,36 @@ const formatVisitTime = (time) => {
 
 .table-box {
   max-height: 190px;
-  overflow: hidden; /* 초기 상태에서는 스크롤바 숨기기 */
+  overflow: hidden;
+  /* 초기 상태에서는 스크롤바 숨기기 */
   position: relative;
 }
 
 .table-box:hover {
-  overflow-y: auto; /* 마우스 오버 시 스크롤 활성화 */
+  overflow-y: auto;
+  /* 마우스 오버 시 스크롤 활성화 */
 }
 
 .schedule-table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  padding-right: 10px; /* 스크롤바와 콘텐츠 사이에 공간을 둠 */
+  padding-right: 10px;
+  /* 스크롤바와 콘텐츠 사이에 공간을 둠 */
 }
 
 .schedule-table::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 폭 설정 */
-  background-color: rgba(0, 0, 0, 0.1); /* 스크롤바 배경색 */
+  width: 8px;
+  /* 스크롤바 폭 설정 */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* 스크롤바 배경색 */
 }
 
 .schedule-table::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5); /* 스크롤바 색상 설정 */
-  border-radius: 4px; /* 스크롤바 모서리 둥글게 */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 스크롤바 색상 설정 */
+  border-radius: 4px;
+  /* 스크롤바 모서리 둥글게 */
 }
 
 .schedule-table td {
