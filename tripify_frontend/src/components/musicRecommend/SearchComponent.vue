@@ -22,7 +22,7 @@
     </div>
 
     <!-- 검색 결과 -->
-    <div>
+    <div v-show="loadingState" class="loading-spinner">
       <VueSpinnerAudio size="50" color="green" />
     </div>
     <div v-if="gptRecommends.length" class="gptRecommends">
@@ -46,10 +46,13 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useMusicStore } from "@/stores/music"; // Pinia store import
+//import { isLoading } from "@/api/music"; // 로�� 상태 관리
 import { VueSpinnerAudio } from "vue3-spinners";
 
 import { storeToRefs } from "pinia";
 const store = useMusicStore(); // Pinia store instance
+
+//const { getLoading } = store; // loading 포함
 
 // 상태 관리
 const inputKeyword = ref("");
@@ -58,6 +61,8 @@ const gptRecommends = computed(() => store.gptRecommends);
 const similarTracks = computed(() => store.similarTracks);
 
 const route = useRoute(); //경로정보 이용 표시
+
+const loadingState = computed(() => store.getLoading);
 
 // 키워드 추가
 const addKeyword = () => {
@@ -72,10 +77,12 @@ const removeKeyword = (index) => {
 
 // 음악 검색
 const searchMusic = async () => {
+  //console.log("검색 시작 전 상태:", getLoading); // 시작 전 상태 확인
   if (!store.accessToken) {
     await store.getAccessToken(); // 액세스 토큰이 없다면 발급
   }
   await store.searchMusicGpt(); // 검색 실행
+  //console.log("검색 종료 후 상태:", getLoading); // 실행 후 상태 확인
 };
 
 const startPlayList = async (item) => {
@@ -249,5 +256,11 @@ button {
 button:hover {
   background-color: #1ed760;
   /* 호버 시 색상 */
+}
+
+.loading-spinner {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center; /* 로딩 스피너를 중앙 정렬 */
 }
 </style>

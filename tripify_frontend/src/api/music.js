@@ -1,8 +1,9 @@
 import axios from "axios";
+import { ref } from "vue";
 
 const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-//const isLoading = ref(false);
+//export const isLoading = ref(false);
 
 // Access Token 발급 함수
 export const fetchAccessToken = async () => {

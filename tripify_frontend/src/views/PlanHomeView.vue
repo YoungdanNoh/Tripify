@@ -1,8 +1,8 @@
 <template>
   <div class="container my-5">
+    <h2>내 여행</h2>
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>내 여행</h2>
-      <button class="btn btn-primary" @click="createNewPlan">+ 새 여행 만들기</button>
+      <button class="btn custom-btn w-100 btn-lg" @click="createNewPlan">+ 새 여행 만들기</button>
     </div>
 
     <!-- 여행 추가 모달 -->
@@ -169,5 +169,31 @@ const deletePlan = async (plan_id) => {
 
 .modal-body {
   padding: 1rem;
+}
+
+/* 버튼을 전체 너비로 확장 */
+.w-100 {
+  width: 100% !important;
+}
+
+/* 버튼 높이를 120px로 설정 */
+.btn-lg {
+  height: 100px; /* 버튼의 높이를 두 배로 설정 */
+  font-size: 1.5rem; /* 글자 크기 적당히 증가 */
+}
+
+.custom-btn {
+  background-color: transparent; /* 배경색 투명 */
+  border: 2px solid #888; /* 회색 테두리 */
+  color: #888; /* 글자색 회색 */
+  box-shadow: none; /* 그림자 제거 */
+  transition: all 0.3s ease; /* 배경색과 테두리 색상에 대한 전환 효과 */
+}
+
+/* 버튼에 hover 효과 추가 */
+.custom-btn:hover {
+  background-color: #f5f5f5; /* 마우스 오버 시 배경색을 밝은 회색으로 */
+  border-color: #444; /* 테두리 색상 어두운 회색으로 변경 */
+  color: #444; /* 글자색을 어두운 회색으로 변경 */
 }
 </style>

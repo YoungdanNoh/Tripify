@@ -4,7 +4,7 @@
       <div class="row g-0">
         <div class="col-md-4">
           <img
-            :src="plan.img"
+            :src="plan.img || noImage"
             class="img-fluid rounded-start"
             alt="여행 이미지"
             style="object-fit: cover; height: 100%"
@@ -50,6 +50,7 @@
 </template>
 
 <script setup>
+import noImage from "@/assets/noImage.png"; // 기본 이미지 가져오기
 const props = defineProps({
   plans: {
     type: Array,
