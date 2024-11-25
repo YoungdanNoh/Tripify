@@ -10,7 +10,7 @@
 	<!-- 트랙 삽입 -->
 	<insert id="insertTrack">
 		INSERT INTO playlist_trackid (playlist_id, spotify_track_id)
-		VALUES (#{playlistId}, #{spotifyTrackId})
+		VALUES (#{playlistId}, #{track})
 	</insert>
 
 	<!-- 특정 플레이리스트 가져오기 -->

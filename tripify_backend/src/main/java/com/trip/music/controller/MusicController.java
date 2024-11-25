@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trip.music.service.MusicService;
+import com.trip.music.vo.PlaylistStringDTO;
 import com.trip.music.vo.PlaylistVO;
 
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
@@ -23,8 +24,9 @@ public class MusicController {
     private MusicService musicService;
 
     @PostMapping("/playlist")
-    public void createPlaylist(@RequestBody PlaylistVO playlistVO) {
-        musicService.createPlaylist(playlistVO);
+    public void createPlaylist(@RequestBody PlaylistStringDTO playlistDTO) {
+    	System.out.println("controller:"+playlistDTO);
+        musicService.createPlaylist(playlistDTO);
     }
 
     @GetMapping("/playlist/{id}")

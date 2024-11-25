@@ -20,6 +20,11 @@ public class TrackVO {
     public void setSpotifyTrackId(String spotifyTrackId) {
         this.spotifyTrackId = spotifyTrackId;
     }
+    
+ // 문자열을 받아 spotifyTrackId로 설정하는 생성자 추가
+    public TrackVO(String spotifyTrackId) {
+        this.spotifyTrackId = spotifyTrackId;
+    }
 
 	public TrackVO(int playlistId, String spotifyTrackId) {
 		super();
