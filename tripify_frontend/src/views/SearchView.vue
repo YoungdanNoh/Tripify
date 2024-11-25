@@ -9,52 +9,38 @@
 
     <section class="main-content">
       <div v-if="getPlaces.length === 0" class="no-places">검색해주세요</div>
-      <PlaceList @load-more="loadMorePlaces" />
-
-      <MapContainer />
+      <PlaceList @load-more="loadMorePlaces" @select-place="showPlaceDetails" />
+      <MapContainer @select-place="showPlaceDetails"/>
     </section>
+    
+    <PlaceModal v-if="selectedPlace" :place="selectedPlace" @close="closeModal" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import SearchFilter from '../components/SearchFilter.vue';
 import PlaceList from '../components/PlaceList.vue';
 import MapContainer from '../components/MapContainer.vue';
+import PlaceModal from '../components/PlaceModal.vue';
 
 import { usePlaceStore } from '@/stores/place';
 import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/user';
 
 const store = usePlaceStore();
+const userStore = useUserStore();
 const { getPlaces } = storeToRefs(store);
 const { listPlaces, resetPlaces } = store;
-
-// 컴포넌트 등록
-const selectedCity = ref('');
-const selectedDistrict = ref('');
-const selectedType = ref('');
-const searchQuery = ref('');
-const places = ref([]);
-const page = ref(1);
-const loading = ref(false);
+const selectedPlace = computed(()=>store.selectedPlace)
 
 const sido = ref('');
 const gugun = ref('');
 const type = ref('');
 const keyword = ref('');
 const pgno = ref(1);
+const loading = ref(false);
 
-// 검색 처리 함수
-function handleSearch() {
-  page.value = 1;
-  places.value = [];
-  pgno.value = 0;
-  console.log('Search Keyword:', getPlaces.value);
-  resetPlaces();
-  loadMorePlaces();
-}
-
-// 장소 불러오기 함수
 function loadMorePlaces() {
   if (loading.value) return;
   loading.value = true;
@@ -68,44 +54,43 @@ function loadMorePlaces() {
       type: type.value,
       word: keyword.value,
       pgno: pgno.value,
+      userId: userStore.getUserId(),
     };
 
     listPlaces(location);
-
     loading.value = false;
   }, 1000);
-
-  //console.log(getPlaces.value);
 }
 
-/*
-// 컴포넌트가 마운트되었을 때 첫 장소 로드
-onMounted(() => {
-  loadMorePlaces();
-}); */
+function showPlaceDetails(placeId) {
+  store.setSelectedPlace(placeId);
+}
+
+function closeModal() {
+  store.clearSelectedPlace();
+}
 
 function updateSelectedSido(Sido) {
-  //시도 코드를 가져온다.
   sido.value = Sido;
-  //console.log('Selected Sido:', Sido);
 }
 
 function updateSelectedGugun(Gugun) {
-  //구군 코드를 가져온다.
   gugun.value = Gugun;
-  //console.log('Selected Gugun:', Gugun);
 }
 
 function updateSelectedType(Type) {
-  //관광지 타입 코드를 가져온다.
   type.value = Type;
-  //console.log('Selected Type:', Type);
 }
 
 function searchKeyword(Keyword) {
   keyword.value = Keyword;
-  //console.log('Search Keyword:', keyword);
   handleSearch();
+}
+
+function handleSearch() {
+  pgno.value = 0;
+  resetPlaces();
+  loadMorePlaces();
 }
 </script>
 
@@ -114,11 +99,9 @@ function searchKeyword(Keyword) {
   display: flex;
   flex-direction: column;
 }
-
 .main-content {
   display: flex;
 }
-
 .no-places {
   white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
 }

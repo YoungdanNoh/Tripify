@@ -19,13 +19,13 @@ public interface placeService {
 	List<SidoGugunCode> getSido() throws Exception;
 	List<SidoGugunCode> getGugunInSido(String sido) throws Exception;
 	
-	public List<Places> listAttr(Search search) throws Exception;
+	public List<PlaceWithLikeStatus> listAttr(Search search) throws Exception;
 	public PageNavigation makePageNavigation(Search search) throws Exception;
 	
 	// 여행지 댓글 가져오기
     List<PlaceCommentWithUserName> getCommentsByPlaceId(Integer placeId);
 
-	public Places getPlaceById(Integer placeId);
+	public PlaceWithLikeStatus getPlaceById(Integer placeId);
 	
 	// 여행지 댓글 작성
     Integer addPlaceComment(PlaceComment placeComment);
@@ -41,7 +41,7 @@ public interface placeService {
     // 좋아요 개수 조회
     int getLikeCount(int placeId);
 
-	List<PlaceWithLikeStatus> getPlaceListWithLikeStatus(Search search, Integer userId);
+//	List<PlaceWithLikeStatus> getPlaceListWithLikeStatus(Search search, Integer userId);
 	
 	List<PlaceWithLikeStatus> getLikedPlaces(int userId);
 }

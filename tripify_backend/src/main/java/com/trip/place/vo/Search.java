@@ -7,6 +7,7 @@ public class Search {
 	String gugun; //구군
 	String type; //어트랙션 종류
 	String word; //검색어
+	Integer userId; // 기본 null 
 	
 	public String getPgno() {
 		return pgno;
@@ -38,5 +39,12 @@ public class Search {
 	public void setWord(String word) {
 		this.word = word;
 	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	
 	
 }

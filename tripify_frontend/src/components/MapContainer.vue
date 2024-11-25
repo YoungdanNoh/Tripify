@@ -4,17 +4,24 @@ import { usePlaceStore } from "@/stores/place";
 import { storeToRefs } from "pinia";
 
 const store = usePlaceStore();
-const { getPlaces, pgno } = storeToRefs(store);
+const { getPlaces, highlightedPlaceId } = storeToRefs(store);
 
 let map;
 const markers = ref([]);
-
-const props = defineProps({ stations: Array, selectStation: Object });
+const highlightedMarker = ref(null); // 현재 강조된 마커
 
 // getPlaces 값이 변경될 때마다 loadMarkers 호출
 watch(getPlaces, (newPlaces) => {
   if (newPlaces && newPlaces.length > 0) {
     loadMarkers(newPlaces);
+  }
+});
+
+watch(highlightedPlaceId, (newPlaceId) => {
+  if (newPlaceId) {
+    highlightMarker(newPlaceId);
+  } else {
+    resetMarkers();
   }
 });
 
@@ -26,7 +33,6 @@ onMounted(() => {
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${
       import.meta.env.VITE_KAKAO_MAP_SERVICE_KEY
     }&libraries=services,clusterer`;
-    /* global kakao */
     script.onload = () => kakao.maps.load(() => initMap());
     document.head.appendChild(script);
   }
@@ -47,41 +53,71 @@ const initMap = () => {
 };
 
 const loadMarkers = (places) => {
-  // 현재 표시되어 있는 marker들이 있다면 map에 등록된 marker를 제거한다.
-  deleteMarkers();
-
-  // 마커를 생성합니다
+  //deleteMarkers();
   markers.value = [];
+
   places.forEach((place) => {
-    //console.log(place.title, place.latitude, place.longitude);
     const position = new kakao.maps.LatLng(place.latitude, place.longitude);
     const marker = new kakao.maps.Marker({
-      map: map, // 마커를 표시할 지도
-      position: position, // 마커를 표시할 위치
-      title: place.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
-      clickable: true, // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+      map: map,
+      position: position,
+      title: place.title,
+      clickable: true,
     });
-    markers.value.push(marker);
+
+    kakao.maps.event.addListener(marker, "click", async () => {
+      console.log("is..",place.place_id);
+      
+      await store.setSelectedPlace(place.place_id); // 장소 정보 로드
+      console.log("are...",store.selectedPlace);
+      
+    });
+
+    markers.value.push({ marker, placeId: place.place_id });
   });
 
-  // LatLngBounds 객체 명시적으로 생성
   const bounds = new kakao.maps.LatLngBounds();
-
-  // 마커들의 위치를 bounds에 추가
-  markers.value.forEach((marker) => {
-    bounds.extend(marker.getPosition());
-  });
-
-  // 지도 영역을 자동으로 맞추고, 해당 영역을 중심으로 이동
+  markers.value.forEach(({ marker }) => bounds.extend(marker.getPosition()));
   map.setBounds(bounds);
 };
 
-const deleteMarkers = () => {
-  if (markers.value.length > 0) {
-    markers.value.forEach((marker) => marker.setMap(null));
+// 특정 마커 강조
+const highlightMarker = (placeId) => {
+  resetMarkers(); // 다른 마커 리셋
+
+  const target = markers.value.find((m) => m.placeId === placeId);
+
+  if (target) {
+    const { marker } = target;
+
+    // 강조 스타일 설정
+    const highlightImage = new kakao.maps.MarkerImage(
+      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+      new kakao.maps.Size(35, 50), // 이미지 크기
+      { offset: new kakao.maps.Point(14, 50) } // 중심 좌표
+    );
+    marker.setImage(highlightImage); // 강조 이미지 설정
+    marker.setZIndex(1); // zIndex를 높여서 위로 표시
+
+    highlightedMarker.value = marker; // 강조된 마커 저장
+  }
+};
+
+// 모든 마커 리셋
+const resetMarkers = () => {
+  if (highlightedMarker.value) {
+    const defaultImage = new kakao.maps.MarkerImage(
+      "https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png",
+      new kakao.maps.Size(26, 37),
+      { offset: new kakao.maps.Point(14, 37) }
+    );
+    highlightedMarker.value.setImage(defaultImage); // 기본 이미지로 변경
+    highlightedMarker.value.setZIndex(0); // zIndex 기본값으로 변경
+    highlightedMarker.value = null;
   }
 };
 </script>
+
 
 <template>
   <div id="map"></div>

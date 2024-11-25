@@ -30,6 +30,38 @@ public class AIController {
 		this.promptLoader = promptLoader;
 	}
 
+//	@GetMapping("/music/{keyword}")
+//    public ResponseEntity<String> getMusic(@PathVariable("keyword") String keyword) {
+//        try {
+//            // 유저 프롬프트 템플릿 로드 및 변수 설정
+//            String userPromptTemplate = promptLoader.loadUserPrompt();
+//            PromptTemplate userTemplate = new PromptTemplate(userPromptTemplate);
+//            userTemplate.add("keyword", keyword);
+//            String userCommand = userTemplate.render();
+//
+//            // 시스템 프롬프트 로드
+//            String systemPromptTemplate = promptLoader.loadSystemPrompt();
+//            PromptTemplate systemTemplate = new PromptTemplate(systemPromptTemplate);
+//            String systemCommand = systemTemplate.render();
+//            
+//            // 메시지 생성
+//            Message userMessage = new UserMessage(userCommand);
+//            Message systemMessage = new SystemMessage(systemCommand);
+//            
+//            // API 호출
+//            String response = chatModel.call(userMessage, systemMessage);
+//            //System.out.println(response);
+//            log.info("Generated response for music: {}", keyword);
+//            
+//            return ResponseEntity.ok(response);
+//            
+//        } catch (Exception e) {
+//            log.error("Error processing music request: " + keyword, e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body("Error processing request: " + e.getMessage());
+//        }
+//    }
+	
 	@GetMapping("/music/{keyword}")
     public ResponseEntity<String> getMusic(@PathVariable("keyword") String keyword) {
         try {

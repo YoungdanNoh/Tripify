@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.trip.place.mapper.placeMapper;
 import com.trip.place.util.PageNavigation;
@@ -41,7 +42,7 @@ public class placeServiceImpl implements placeService {
 	}
 
 	@Override
-	public List<Places> listAttr(Search search) throws Exception {
+	public List listAttr(Search search) throws Exception {
 		Map<String, Object> param = new HashMap<>();
 
 		// 검색 조건 설정
@@ -49,11 +50,13 @@ public class placeServiceImpl implements placeService {
 		String gugun = search.getGugun();
 		String type = search.getType();
 		String word = search.getWord();
+		Integer userId = search.getUserId();
 
 		param.put("sido", sido == null ? "" : sido);
 		param.put("gugun", gugun == null ? "" : gugun);
 		param.put("type", type == null ? "" : type);
 		param.put("word", word == null ? "" : word);
+		param.put("userId", userId == null ? "" : userId);
 
 		// 페이지네이션 계산
 		int pgNo = Integer.parseInt(search.getPgno() == null ? "1" : search.getPgno());
@@ -61,7 +64,8 @@ public class placeServiceImpl implements placeService {
 		param.put("start", start);
 		param.put("listSize", SizeConstant.LIST_SIZE);
 
-		return mapper.listAttr(param);
+		//return mapper.listAttr(param);
+		return mapper.listAttrWithOptionalLikeStatus(param);
 	}
 
 	@Override
@@ -80,11 +84,13 @@ public class placeServiceImpl implements placeService {
 		String gugun = search.getGugun();
 		String type = search.getType();
 		String word = search.getWord();
+		Integer userId = search.getUserId();
 
 		param.put("sido", sido == null ? "" : sido);
 		param.put("gugun", gugun == null ? "" : gugun);
 		param.put("type", type == null ? "" : type);
 		param.put("word", word == null ? "" : word);
+		param.put("userId", userId == null ? "" : userId);
 
 		// 총 항목 수 계산
 		int totalCount = mapper.getTotalAttrCount(param);
@@ -107,7 +113,7 @@ public class placeServiceImpl implements placeService {
 	}
 
 	@Override
-	public Places getPlaceById(Integer placeId) {
+	public PlaceWithLikeStatus getPlaceById(Integer placeId) {
 		return mapper.selectPlaceById(placeId);
 	}
 
@@ -124,32 +130,33 @@ public class placeServiceImpl implements placeService {
 		}
 	}
 
-	@Override
-	public List<PlaceWithLikeStatus> getPlaceListWithLikeStatus(Search search, Integer userId) {
+//	@Override
+//	public List<PlaceWithLikeStatus> getPlaceListWithLikeStatus(Search search, Integer userId) {
+//
+//		Map<String, Object> param = new HashMap<>();
+//
+//		// 검색 조건 설정
+//		String sido = search.getSido();
+//		String gugun = search.getGugun();
+//		String type = search.getType();
+//		String word = search.getWord();
+//
+//		param.put("sido", sido == null ? "" : sido);
+//		param.put("gugun", gugun == null ? "" : gugun);
+//		param.put("type", type == null ? "" : type);
+//		param.put("word", word == null ? "" : word);
+//		param.put("userId", userId);
+//
+//		// 페이지네이션 계산
+//		int pgNo = Integer.parseInt(search.getPgno() == null ? "1" : search.getPgno());
+//		int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
+//		param.put("start", start);
+//		param.put("listSize", SizeConstant.LIST_SIZE);
+//
+//		return mapper.getPlacesWithOptionalLikeStatus(param);
+//	}
 
-		Map<String, Object> param = new HashMap<>();
-
-		// 검색 조건 설정
-		String sido = search.getSido();
-		String gugun = search.getGugun();
-		String type = search.getType();
-		String word = search.getWord();
-
-		param.put("sido", sido == null ? "" : sido);
-		param.put("gugun", gugun == null ? "" : gugun);
-		param.put("type", type == null ? "" : type);
-		param.put("word", word == null ? "" : word);
-		param.put("userId", userId);
-
-		// 페이지네이션 계산
-		int pgNo = Integer.parseInt(search.getPgno() == null ? "1" : search.getPgno());
-		int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
-		param.put("start", start);
-		param.put("listSize", SizeConstant.LIST_SIZE);
-
-		return mapper.getPlacesWithOptionalLikeStatus(param);
-	}
-
+	@Transactional
 	@Override
 	public void addLike(int userId, int placeId) {
 		Map<String, Object> params = new HashMap<>();
@@ -163,6 +170,7 @@ public class placeServiceImpl implements placeService {
 		mapper.updateLikeCount(placeId);
 	}
 
+	@Transactional
 	@Override
 	public void removeLike(int userId, int placeId) {
 		Map<String, Object> params = new HashMap<>();

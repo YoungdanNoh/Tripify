@@ -46,7 +46,6 @@
   <style scoped>
   .popular-destinations {
     padding: 50px 0;
-    background-color: #f8f9fa;
   }
   .destination-card img {
     height: 200px;

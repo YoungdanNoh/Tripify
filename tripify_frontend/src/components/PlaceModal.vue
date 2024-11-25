@@ -4,9 +4,11 @@
       <button class="close-button" @click="close">X</button>
       <div class="info-section">
         <h3>{{ place.title }}</h3>
-        <img :src="place.first_image1 || defaultImage" alt="Place Image" />
+        <img :src="place.firstImage1 || defaultImage" alt="Place Image" />
         <p><strong>주소:</strong> {{ place.addr1 }} {{ place.addr2 }}</p>
-        <p><strong>설명:</strong> {{ place.description || "설명이 없습니다." }}</p>
+        <p>
+          <strong>설명:</strong> {{ place.description || "설명이 없습니다." }}
+        </p>
       </div>
 
       <div class="comments-section">
@@ -15,27 +17,31 @@
           <CommentForm @submit="handleCommentSubmit" />
         </div>
         <!-- 댓글 리스트 -->
-        <CommentList :itemId="place.place_id" :type="'place'" />
+        <CommentList :itemId="place.placeId" :type="'place'" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted, ref } from "vue";
+import { defineProps, defineEmits, onMounted, ref, computed } from "vue";
 import { useCommentStore } from "@/stores/comment";
 import { useUserStore } from "@/stores/user";
+import { usePlaceStore } from "@/stores/place";
 import defaultImage from "@/assets/noImage.png";
 import CommentForm from "./common/CommentForm.vue";
 import CommentList from "./common/CommentList.vue";
 
-const props = defineProps({
-  place: Object,
-});
-
 const emit = defineEmits(["close"]);
 const commentStore = useCommentStore();
 const userStore = useUserStore();
+const placeStore = usePlaceStore();
+
+const place = computed(() => {
+  console.log("hi", placeStore.selectedPlace);
+
+  return placeStore.selectedPlace;
+});
 
 // 댓글 로드 및 에러 상태
 const loading = ref(false);
@@ -44,9 +50,15 @@ const error = ref(null);
 // 댓글 추가 핸들러
 async function handleCommentSubmit(content) {
   try {
-    await commentStore.addComment('place', props.place.place_id, userStore.user.userId, userStore.user.userName, content);
+    await commentStore.addComment(
+      "place",
+      props.place.place_id,
+      userStore.user.userId,
+      userStore.user.userName,
+      content
+    );
     alert("댓글이 성공적으로 추가되었습니다.");
-    commentStore.fetchComments('place', props.place.place_id); // 새로고침
+    commentStore.fetchComments("place", props.place.place_id); // 새로고침
   } catch (error) {
     console.error("댓글 추가 실패:", error);
     alert(commentStore.error || "댓글 추가에 실패했습니다.");
@@ -58,7 +70,6 @@ function close() {
   emit("close");
 }
 </script>
-
 
 <style scoped>
 .modal-backdrop1 {

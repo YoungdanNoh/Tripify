@@ -65,11 +65,9 @@ const searchMusic = async () => {
         await store.getAccessToken(); // 액세스 토큰이 없다면 발급
     }
     await store.searchMusicGpt(); // 검색 실행
-    console.log("log here", store.gptRecommends.music);
 };
 
 const startPlayList = async (item) => {
-    console.log(item);
     store.searchTrack(item.title, item.artist);
 };
 
