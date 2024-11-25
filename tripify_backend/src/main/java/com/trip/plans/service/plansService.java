@@ -13,6 +13,7 @@ public interface plansService {
 	public List<Today> todaySchedule(Plans p) throws Exception;
 	public ArrayList<Plans> plansSelect(int userId) throws Exception;
 	public void addPlan(Plans p) throws Exception;
+	public void modifyPlan(Plans p) throws Exception;
 	public void deletePlan(Plans p) throws Exception;
 	public ArrayList<PlanDetail> getPlanDetails(Map<String, Object> params) throws Exception;
 	public void addDetailPlan(PlanDetail p)  throws Exception;

@@ -23,6 +23,21 @@
               <button class="btn btn-outline-primary btn-sm" @click="$emit('view', plan.plan_id)">
                 보기
               </button>
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                @click="
+                  $emit(
+                    'modify',
+                    plan.plan_id,
+                    plan.start_date,
+                    plan.end_date,
+                    plan.title,
+                    plan.location
+                  )
+                "
+              >
+                수정
+              </button>
               <button class="btn btn-outline-danger btn-sm" @click="$emit('delete', plan.plan_id)">
                 삭제
               </button>
