@@ -16,14 +16,22 @@
     <hr />
     <h5 class="schedule-title">오늘의 일정</h5>
     <div class="table-box">
-      <table v-if="getTodayS.length > 0" class="schedule-table" @mouseover="showScrollbar" @mouseout="hideScrollbar">
+      <table
+        v-if="getTodayS.length > 0"
+        class="schedule-table"
+        @mouseover="showScrollbar"
+        @mouseout="hideScrollbar"
+      >
         <tr v-for="(schedule, index) in getTodayS" :key="index">
           <td>{{ schedule.location }}</td>
           <td>{{ formatVisitTime(schedule.visit_time) }}</td>
           <td>{{ schedule.place_name }}</td>
           <td>
-            <font-awesome-icon class="h-7 w-7 icons" icon="circle-play"
-              @click="musicRecommend(schedule.location, schedule.visit_time, schedule.place_name)"></font-awesome-icon>
+            <font-awesome-icon
+              class="h-7 w-7 icons"
+              icon="circle-play"
+              @click="musicRecommend(schedule.location, schedule.visit_time, schedule.place_name)"
+            ></font-awesome-icon>
           </td>
         </tr>
       </table>
