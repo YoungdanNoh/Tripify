@@ -15,9 +15,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ detail.title }}</h5>
             <p class="card-text">
-              <small class="text-muted">{{
-                formatDateRange(detail.start_date, detail.end_date)
-              }}</small>
+              <small class="text-muted">{{ formatDateRange(detail.start_date, detail.end_date) }}</small>
             </p>
             <p class="card-text">
               <i class="bi bi-geo-alt-fill"></i> {{ detail.location }}
@@ -122,59 +120,43 @@
     </div>
 
     <!-- 일정 박스들을 가로로 나열 -->
-    <div v-if="detail" class="itinerary-container">
-      <div
-        v-for="day in detail.itinerary"
-        :key="day.visit_date"
-        class="card mb-3 shadow-sm"
-      >
-        <div
-          class="card-header d-flex justify-content-between align-items-center"
-        >
+    <div
+      v-if="detail"
+      class="itinerary-container"
+      @mousedown="startDrag"
+      @mousemove="onDrag"
+      @mouseup="stopDrag"
+      @mouseleave="stopDrag"
+    >
+      <div v-for="day in detail.itinerary" :key="day.visit_date" class="card day-card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
           <h5>{{ day.visit_date }}</h5>
-          <button
-            class="btn btn-outline-success"
-            @click="addNewActivity(detail.plan_id, day.visit_date)"
-          >
-            + 새 일정 추가
-          </button>
         </div>
-        <!-- activities 순회 -->
-        <div
-          v-for="activity in day.activities"
-          :key="activity.plan_place_id"
-          class="card-body"
-        >
-          <h6 class="card-title">방문지: {{ activity.place_name }}</h6>
-          <h6 class="card-title">{{ formatVisitTime(activity.visit_time) }}</h6>
-          <p>{{ activity.description }}</p>
-          <!-- 수정/삭제 버튼 -->
-          <button
-            class="btn btn-outline-secondary btn-sm mt-2"
-            @click="
-              editActivity(
-                day.visit_date,
-                activity.visit_time,
-                detail.plan_id,
-                activity
-              )
-            "
-          >
-            수정
-          </button>
-          <button
-            class="btn btn-outline-danger btn-sm mt-2"
-            @click="deleteActivity(activity.plan_place_id)"
-          >
-            삭제
-          </button>
-          <!-- 플레이 리스트 버튼 -->
-          <font-awesome-icon
-            class="h-7 w-7 icons"
-            icon="circle-play"
-            @click="showPlaylist(activity)"
-          >
-          </font-awesome-icon>
+        <div class="card-body">
+          <div class="timeline">
+            <div v-for="activity in day.activities" :key="activity.plan_place_id" class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <h6 class="time">{{ formatVisitTime(activity.visit_time) }}</h6>
+                <h6 class="place-name">방문지: {{ activity.place_name }}</h6>
+                <p>{{ activity.description }}</p>
+                <div class="action-buttons">
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)"
+                  >
+                    수정
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" @click="deleteActivity(activity.plan_place_id)">
+                    삭제
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline-success" @click="addNewActivity(detail.plan_id, day.visit_date)">
+              + 새 일정 추가
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -203,42 +185,19 @@
           </div>
           <div class="mb-3">
             <label for="time" class="form-label">방문 시각</label>
-            <input
-              id="time"
-              type="time"
-              class="form-control"
-              v-model="editingActivity.visit_time"
-              required
-            />
+            <input id="time" type="time" class="form-control" v-model="editingActivity.visit_time" required />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">방문지</label>
-            <input
-              id="title"
-              type="text"
-              class="form-control"
-              v-model="editingActivity.place_name"
-              required
-            />
+            <input id="title" type="text" class="form-control" v-model="editingActivity.place_name" required />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">설명</label>
-            <textarea
-              id="description"
-              class="form-control"
-              v-model="editingActivity.description"
-              required
-            ></textarea>
+            <textarea id="description" class="form-control" v-model="editingActivity.description" required></textarea>
           </div>
           <div class="d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-success">저장</button>
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              @click="cancelEdit"
-            >
-              취소
-            </button>
+            <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">취소</button>
           </div>
         </form>
       </div>
@@ -282,13 +241,14 @@ const formatDateRange = (start, end) => {
 };
 
 const formatVisitTime = (time) => {
-  if (!time) return "";
+  if (!time) return '';
 
-  const [hour, minute] = time.split(":").map((num) => parseInt(num));
-  const period = hour >= 12 ? "오후" : "오전";
-  const hour12 = hour % 12 || 12;
+  const [hour, minute] = time.split(':').map((num) => parseInt(num));
 
-  return `${period} ${hour12}:${minute < 10 ? "0" + minute : minute}`;
+  const period = hour >= 12 ? '오후' : '오전';
+  const hour12 = hour % 12 || 12; // 24시간제를 12시간제로 변환 (0시 -> 12시, 15시 -> 3시 등)
+
+  return `${period} ${hour12}:${minute < 10 ? '0' + minute : minute}`; // "오후 3:00" 형식으로 반환
 };
 
 // const showPlaylist = async (plan_place_id) => {
@@ -333,21 +293,21 @@ const editOrAdd = ref(0);
 const editingActivity = ref({
   plan_id: 0,
   plan_place_id: 0,
-  visit_date: "",
-  visit_time: "",
-  place_name: "",
-  description: "",
-});
+  visit_date: '',
+  visit_time: '',
+  place_name: '',
+  description: '',
+}); // 수정할 활동 데이터 저장
 
 const addNewActivity = (plan_id, visit_date) => {
   isEditing.value = true;
   editingActivity.value = {
     plan_id: 0,
     plan_place_id: 0,
-    visit_date: "",
-    visit_time: "",
-    place_name: "",
-    description: "",
+    visit_date: '',
+    visit_time: '',
+    place_name: '',
+    description: '',
   };
 
   if (plan_id === 0) {
@@ -456,6 +416,30 @@ const musicRecommend = () => {
   isMusicCreationModalVisible.value = false; // 생성 모달 닫기
   isMusicRecommendModalVisible.value = true;
 };
+
+/*마우스 드래그로 가로 스크롤 작동시키기*/
+// 드래그 상태와 위치를 추적하기 위한 변수
+const isDragging = ref(false);
+const startX = ref(0);
+const scrollLeft = ref(0);
+
+const startDrag = (e) => {
+  isDragging.value = true; // 드래그 시작
+  startX.value = e.pageX - e.currentTarget.offsetLeft; // 클릭 위치 저장
+  scrollLeft.value = e.currentTarget.scrollLeft; // 현재 스크롤 위치 저장
+};
+
+const onDrag = (e) => {
+  if (!isDragging.value) return; // 드래그 중이 아니면 무시
+  e.preventDefault(); // 선택 방지
+  const x = e.pageX - e.currentTarget.offsetLeft; // 현재 마우스 위치
+  const walk = x - startX.value; // 이동 거리 계산
+  e.currentTarget.scrollLeft = scrollLeft.value - walk; // 스크롤 이동
+};
+
+const stopDrag = () => {
+  isDragging.value = false; // 드래그 종료
+};
 </script>
 
 <style scoped>
@@ -511,65 +495,35 @@ const musicRecommend = () => {
   margin-bottom: 20px;
 }
 
-.card {
-  display: block;
-  /* 카드가 콘텐츠 크기에 맞게 조정되도록 설정 */
-  height: auto;
-  /* 기본 높이는 콘텐츠에 맞춤 */
-  max-height: 500px;
-  /* 최대 높이를 설정 (일정 4개 기준, 필요 시 조정 가능) */
-  overflow-y: auto;
-  /* 세로 스크롤 활성화 */
-  margin: 0;
-  /* 불필요한 외부 여백 제거 */
-  padding: 0;
-  /* 불필요한 내부 여백 제거 */
-  border-radius: 5px;
-  /* 모서리를 둥글게 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  /* 약간의 그림자 추가 */
+.card-body {
+  padding: 10px; /* 카드 내부 콘텐츠 여백 */
+  border-bottom: 1px solid #ddd; /* 카드 내부 구분선 */
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  max-height: 400px; /* 세로 스크롤 높이 제한 */
+  overflow-y: auto; /* 세로 스크롤 활성화 */
 }
 
 /* 스크롤바 스타일 */
-.card::-webkit-scrollbar {
-  width: 5px;
-  /* 스크롤바 너비 설정 */
+.card-body::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
 }
 
-.card::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  /* 스크롤바 색상 */
-  border-radius: 10px;
-  /* 스크롤바 모서리를 둥글게 */
+.card-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 둥근 모양 */
 }
 
-.card::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.4);
-  /* 스크롤바 hover 시 색상 */
+.card-body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4); /* hover 시 색상 */
 }
 
-.card::-webkit-scrollbar-track {
-  background: transparent;
-  /* 스크롤 트랙 (배경) 투명하게 */
-}
-
-.card-body {
-  margin: 0;
-  /* 불필요한 간격 제거 */
-  padding: 10px;
-  /* 콘텐츠 여백 유지 */
-  border-bottom: 1px solid #ddd;
-  /* 일정 간 가독성을 위한 구분선 */
-  box-sizing: border-box;
-  /* 패딩 포함 크기 계산 */
-}
-
-.card-body:last-child {
-  border-bottom: none;
-  /* 마지막 요소 구분선 제거 */
+.card-body::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤 트랙 투명하게 */
 }
 
 .itinerary-container {
+  max-height: 600px;
+  overflow-y: auto;
   display: flex;
   flex-wrap: nowrap;
   /* 한 줄에 카드가 모두 배치되도록 설정 */
@@ -578,6 +532,81 @@ const musicRecommend = () => {
   gap: 15px;
   /* 카드들 간의 간격 */
   padding-bottom: 15px;
+  cursor: grab; /* 기본 커서 스타일 */
+}
+
+.itinerary-container:active {
+  cursor: grabbing; /* 드래그 중 커서 스타일 */
+}
+
+.day-card {
+  flex: 0 0 300px;
+  min-width: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.day-card .card-header {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+}
+
+.timeline {
+  position: relative;
+  padding: 15px 20px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 30px; /* 점 아래쪽에서 선이 시작되도록 조정 */
+  left: 8px; /* 선이 점의 중앙을 지나도록 설정 */
+  width: 2px;
+  height: calc(100% - 20px); /* 선 길이를 점과 점 사이로 제한 */
+  background-color: #6c757d;
+}
+
+.timeline-dot {
+  width: 21px;
+  height: 21px;
+  background-color: #343a40;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  margin-left: -1px; /* 점이 선의 가운데 정렬되도록 설정 */
+}
+
+.timeline-content {
+  margin-left: 20px; /* 점과 콘텐츠 간의 간격 */
+  position: relative;
+}
+
+.timeline-content .time {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.timeline-content .place-name {
+  font-weight: bold;
+}
+
+.timeline-content .action-buttons {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.timeline-content p {
+  margin: 5px 0;
 }
 
 .itinerary-container::-webkit-scrollbar {
