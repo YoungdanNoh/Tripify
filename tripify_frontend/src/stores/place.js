@@ -45,13 +45,12 @@ export const usePlaceStore = defineStore("place", () => {
         placeId,
         (response) => {
           console.log("loadig...");
-          
+
           console.log("successfully fetched place details");
           console.log(response.data);
-          
+
           selectedPlace.value = response.data;
           console.log(selectedPlace.value);
-          
         },
         () => {
           console.log("err");
