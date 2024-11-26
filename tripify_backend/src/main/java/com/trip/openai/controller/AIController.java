@@ -21,16 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
 public class AIController {
 
-	private final ChatModel chatModel;
-	private final PromptTemplateLoader promptLoader;
+    private final ChatModel chatModel;
+    private final PromptTemplateLoader promptLoader;
 
-	public AIController(ChatModel chatModel, PromptTemplateLoader promptLoader) {
-		super();
-		this.chatModel = chatModel;
-		this.promptLoader = promptLoader;
-	}
+    public AIController(ChatModel chatModel, PromptTemplateLoader promptLoader) {
+        super();
+        this.chatModel = chatModel;
+        this.promptLoader = promptLoader;
+    }
 
-	@GetMapping("/music/{keyword}")
+    @GetMapping("/music/{keyword}")
     public ResponseEntity<String> getMusic(@PathVariable("keyword") String keyword) {
         try {
             // 유저 프롬프트 템플릿 로드 및 변수 설정
@@ -61,41 +61,41 @@ public class AIController {
                 .body("Error processing request: " + e.getMessage());
         }
     }
-	
-//	@GetMapping("/music/{keyword}")
-//	public ResponseEntity<String> getMusic(@PathVariable("keyword") String keyword) {
-//		try {
-//			
-//			return ResponseEntity.ok("{\r\n"
-//					+ "    \"music\": [\r\n"
-//					+ "        {\r\n"
-//					+ "            \"title\": \"APT\",\r\n"
-//					+ "            \"artist\" : \"ROSÉ & Bruno Mars\"\r\n"
-//					+ "        },\r\n"
-//					+ "        {\r\n"
-//					+ "            \"title\": \"Good Day\",\r\n"
-//					+ "            \"artist\" : \"Surfaces\"\r\n"
-//					+ "        },\r\n"
-//					+ "        {\r\n"
-//					+ "            \"title\": \"for him\",\r\n"
-//					+ "            \"artist\" : \"Troye Sivan\"\r\n"
-//					+ "        },\r\n"
-//					+ "        {\r\n"
-//					+ "            \"title\": \"Love Lies\",\r\n"
-//					+ "            \"artist\" : \"Khalid & Normani\"\r\n"
-//					+ "        },\r\n"
-//					+ "        {\r\n"
-//					+ "            \"title\": \"Sorry/의도치않게 이 문구가 보인다면 백엔드 AI컨트롤러를 확인해, gpt 문제로 정적데이터 사용중\",\r\n"
-//					+ "            \"artist\" : \"Justin Bieber\"\r\n"
-//					+ "        }\r\n"
-//					+ "    ]\r\n"
-//					+ "}");
-//			
-//		} catch (Exception e) {
-//			log.error("Error processing music request: " + keyword, e);
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body("Error processing request: " + e.getMessage());
-//		}
-//	}
-	
+    
+//    @GetMapping("/music/{keyword}")
+//    public ResponseEntity<String> getMusic(@PathVariable("keyword") String keyword) {
+//        try {
+//            
+//            return ResponseEntity.ok("{\r\n"
+//                    + "    \"music\": [\r\n"
+//                    + "        {\r\n"
+//                    + "            \"title\": \"APT\",\r\n"
+//                    + "            \"artist\" : \"ROSÉ & Bruno Mars\"\r\n"
+//                    + "        },\r\n"
+//                    + "        {\r\n"
+//                    + "            \"title\": \"Good Day\",\r\n"
+//                    + "            \"artist\" : \"Surfaces\"\r\n"
+//                    + "        },\r\n"
+//                    + "        {\r\n"
+//                    + "            \"title\": \"for him\",\r\n"
+//                    + "            \"artist\" : \"Troye Sivan\"\r\n"
+//                    + "        },\r\n"
+//                    + "        {\r\n"
+//                    + "            \"title\": \"Love Lies\",\r\n"
+//                    + "            \"artist\" : \"Khalid & Normani\"\r\n"
+//                    + "        },\r\n"
+//                    + "        {\r\n"
+//                    + "            \"title\": \"Sorry/의도치않게 이 문구가 보인다면 백엔드 AI컨트롤러를 확인해, gpt 문제로 정적데이터 사용중\",\r\n"
+//                    + "            \"artist\" : \"Justin Bieber\"\r\n"
+//                    + "        }\r\n"
+//                    + "    ]\r\n"
+//                    + "}");
+//            
+//        } catch (Exception e) {
+//            log.error("Error processing music request: " + keyword, e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Error processing request: " + e.getMessage());
+//        }
+//    }
+    
 }
