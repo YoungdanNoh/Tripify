@@ -14,33 +14,20 @@
           <div class="card-body">
             <h5 class="card-title">{{ plan.title }}</h5>
             <p class="card-text">
-              <small class="text-muted">{{
-                formatDateRange(plan.start_date, plan.end_date)
-              }}</small>
+              <small class="text-muted">{{ formatDateRange(plan.start_date, plan.end_date) }}</small>
             </p>
             <p class="card-text"><i class="bi bi-geo-alt-fill"></i>여행지: {{ plan.location }}</p>
             <div class="d-flex justify-content-end gap-2">
-              <button class="btn btn-outline-primary btn-sm" @click="$emit('view', plan.plan_id)">
-                보기
-              </button>
+              <button class="btn btn-outline-primary btn-sm" @click="$emit('view', plan.plan_id)">보기</button>
               <button
                 class="btn btn-outline-secondary btn-sm"
                 @click="
-                  $emit(
-                    'modify',
-                    plan.plan_id,
-                    plan.start_date,
-                    plan.end_date,
-                    plan.title,
-                    plan.location
-                  )
+                  $emit('modify', plan.plan_id, plan.start_date, plan.end_date, plan.title, plan.location, plan.img)
                 "
               >
                 수정
               </button>
-              <button class="btn btn-outline-danger btn-sm" @click="$emit('delete', plan.plan_id)">
-                삭제
-              </button>
+              <button class="btn btn-outline-danger btn-sm" @click="$emit('delete', plan.plan_id)">삭제</button>
             </div>
           </div>
         </div>
@@ -50,7 +37,7 @@
 </template>
 
 <script setup>
-import noImage from "@/assets/noImage.png"; // 기본 이미지 가져오기
+import noImage from '@/assets/noImage.png'; // 기본 이미지 가져오기
 const props = defineProps({
   plans: {
     type: Array,

@@ -78,9 +78,9 @@ const viewPlan = (plan_id) => {
 };
 
 // 여행 수정
-const modifyForm = async (plan_id, start_date, end_date, title, location) => {
+const modifyForm = async (plan_id, start_date, end_date, title, location, img) => {
   console.log('Modify Plan:', plan_id);
-  currentPlan.value = { plan_id, start_date, end_date, title, location };
+  currentPlan.value = { plan_id, start_date, end_date, title, location, img };
   showForm.value = true;
 
   // try {
