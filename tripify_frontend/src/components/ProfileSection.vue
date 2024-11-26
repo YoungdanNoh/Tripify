@@ -162,6 +162,7 @@ const musicRecommend = (location, visit_time, place_name) => {
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  margin-left: 20px;
 }
 
 .profile-settings-btn {
