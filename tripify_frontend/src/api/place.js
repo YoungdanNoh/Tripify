@@ -16,6 +16,9 @@ function type(success, fail) {
 }
 
 function place(location, success, fail) {
+  if(location.userId == null) location.userId="";
+  console.log(location);
+  
   myaxios.post("/place/search", JSON.stringify(location)).then(success).catch(fail);
 }
 function addLike(itemAndUserId, success, fail) {

@@ -39,6 +39,7 @@ const router = createRouter({
       path: "/place:keyword?", // 기본 경로를 '/place'로 설정
       name: "place",
       component: SearchView,
+      meta: { requiresAuth: true },
       beforeEnter: () => {
         const placeStore = usePlaceStore();
         placeStore.resetPlaces(); // places 초기화

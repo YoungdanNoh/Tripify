@@ -45,6 +45,11 @@ public class Search {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	@Override
+	public String toString() {
+		return "Search [pgno=" + pgno + ", sido=" + sido + ", gugun=" + gugun + ", type=" + type + ", word=" + word
+				+ ", userId=" + userId + "]";
+	}
 	
 	
 }

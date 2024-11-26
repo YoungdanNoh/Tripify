@@ -23,11 +23,9 @@ import com.trip.place.vo.PlaceComment;
 import com.trip.place.vo.PlaceCommentRequest;
 import com.trip.place.vo.PlaceCommentWithUserName;
 import com.trip.place.vo.PlaceWithLikeStatus;
-import com.trip.place.vo.Places;
 import com.trip.place.vo.Search;
 import com.trip.place.vo.SidoGugunCode;
 import com.trip.place.vo.Type;
-import com.trip.user.vo.User;
 
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80"}, allowCredentials = "true")
 @RestController
@@ -55,7 +53,7 @@ public class placeController {
 	@PostMapping("/place/search")
 	public Map<String, Object> search(@RequestBody Search search) throws Exception{
 		//시도, 구군, 관광지타입, 키워드를 받아 해당 내용으로 DB select 하기
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();		
 		
 		List<PlaceWithLikeStatus> list = service.listAttr(search); //6개씩 페이지 번호에 맞춰서 DB 데이터 가져오기
 		PageNavigation pageNavigation = service.makePageNavigation(search); //페이지 번호 만들기

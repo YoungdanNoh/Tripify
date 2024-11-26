@@ -44,6 +44,8 @@ public class placeServiceImpl implements placeService {
 	@Override
 	public List listAttr(Search search) throws Exception {
 		Map<String, Object> param = new HashMap<>();
+		
+		System.out.println(search);
 
 		// 검색 조건 설정
 		String sido = search.getSido();

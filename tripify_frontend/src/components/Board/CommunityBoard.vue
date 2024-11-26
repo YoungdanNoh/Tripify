@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="post in posts.slice(0, 10)" :key="post.postId || post.tempKey" @click="() => viewPost(post.postId)" class="post-row">
+        <tr v-for="post in posts.slice(0, limit)" :key="post.postId || post.tempKey" @click="() => viewPost(post.postId)" class="post-row">
           <td>{{ post.createdAt ? new Date(post.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : '-' }}</td>
           <td>{{ post.title }}</td>
           <td>{{ post.userName }}</td>
@@ -29,7 +29,7 @@ import { useRouter } from 'vue-router';
 
 const posts = ref([]);
 const currentPage = ref(1);
-const limit = ref(10);
+const limit = ref(7);
 const router = useRouter();
 
 onMounted(async () => {
