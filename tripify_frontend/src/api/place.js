@@ -16,33 +16,34 @@ function type(success, fail) {
 }
 
 function place(location, success, fail) {
-  myaxios
-    .post("/place/search", JSON.stringify(location))
-    .then(success)
-    .catch(fail);
+  myaxios.post("/place/search", JSON.stringify(location)).then(success).catch(fail);
 }
 function addLike(itemAndUserId, success, fail) {
   myaxios.post("/place/like", itemAndUserId).then(success).catch(fail);
 }
 
 function removeLike(itemAndUserId, success, fail) {
-  myaxios
-    .delete("/place/like", { data: itemAndUserId })
-    .then(success)
-    .catch(fail);
+  myaxios.delete("/place/like", { data: itemAndUserId }).then(success).catch(fail);
 }
 
 function getLikeCount(placeId, success, fail) {
   myaxios.get(`/place/likecount/${placeId}`).then(success).catch(fail);
 }
 
-function getLikedPlaces(user, success, fail) {
-  myaxios.get("/place/likedplaces", { data: user }).then(success).catch(fail);
+function getLikedPlaces(userId) {
+  return myaxios
+    .get("/place/likedplaces", { params: { userId: userId } })
+    .then((response) => {
+      console.log("res data:", response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Failed to fetch liked places:", error);
+      throw error; // 오류를 던져서 밖에서 처리할 수 있게 합니다.
+    });
 }
 
 function getPlaceByPlaceId(placeId, success, fail) {
-  console.log("placeid..",placeId);
-  
   myaxios.get(`/place/${placeId}`).then(success).catch(fail);
 }
 
@@ -55,5 +56,5 @@ export {
   removeLike,
   getLikeCount,
   getLikedPlaces,
-  getPlaceByPlaceId
+  getPlaceByPlaceId,
 };

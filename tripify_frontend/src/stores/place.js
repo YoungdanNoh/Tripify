@@ -40,6 +40,7 @@ export const usePlaceStore = defineStore("place", () => {
   };
 
   const setSelectedPlace = (placeId) => {
+    console.log("here!:", placeId);
     try {
       getPlaceByPlaceId(
         placeId,

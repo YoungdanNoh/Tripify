@@ -68,4 +68,9 @@ public class PostServiceImpl implements PostService {
             throw new Exception("해당 댓글을 찾을 수 없습니다.");
         }
     }
+	
+	@Override
+    public List<PostVO> findPostsByUserId(int userId) {
+        return postMapper.findPostsByUserId(userId);
+    }
 }

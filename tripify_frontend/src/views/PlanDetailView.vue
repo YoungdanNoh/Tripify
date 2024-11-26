@@ -4,12 +4,8 @@
     <div v-if="detail" class="card mb-4 shadow-sm">
       <div class="row g-0">
         <div class="col-md-4">
-          <img
-            :src="detail.img || defaultImage"
-            class="img-fluid rounded-start"
-            alt="여행 이미지"
-            style="object-fit: cover; height: 100%"
-          />
+          <img :src="detail.img || defaultImage" class="img-fluid rounded-start" alt="여행 이미지"
+            style="object-fit: cover; height: 100%" />
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -53,20 +49,12 @@
     </div> -->
 
     <!-- 기존 추천 음악 모달 -->
-    <div
-      v-if="isPlaylistModalVisible"
-      class="modal-overlay"
-      @click.self="closePlaylistModal"
-    >
+    <div v-if="isPlaylistModalVisible" class="modal-overlay" @click.self="closePlaylistModal">
       <div class="modal-content">
         <button class="close-button" @click="closePlaylistModal">×</button>
         <div class="recommend-container" v-if="playlist.length">
           <h3>추천 음악</h3>
-          <div
-            v-for="(item, index) in playlist"
-            :key="index"
-            class="recommend-item"
-          >
+          <div v-for="(item, index) in playlist" :key="index" class="recommend-item">
             <img :src="item.albumImage" alt="Album Art" class="album-art" />
             <div class="track-info">
               <a :href="item.spotifyUrl" target="_blank" class="track-name">
@@ -80,11 +68,7 @@
     </div>
 
     <!-- 새로운 음악 생성 모달 -->
-    <div
-      v-if="isMusicCreationModalVisible"
-      class="modal-overlay"
-      @click.self="closeMusicCreationModal"
-    >
+    <div v-if="isMusicCreationModalVisible" class="modal-overlay" @click.self="closeMusicCreationModal">
       <div class="modal-content">
         <h3>음악을 추천받아 보세요!</h3>
         <p>
@@ -92,10 +76,7 @@
           음악을 추천해 드립니다.
         </p>
         <div class="modal-buttons">
-          <button
-            class="btn btn-outline-secondary"
-            @click="closeMusicCreationModal"
-          >
+          <button class="btn btn-outline-secondary" @click="closeMusicCreationModal">
             닫기
           </button>
           <button class="btn btn-success" @click="musicRecommend">
@@ -105,29 +86,21 @@
       </div>
     </div>
 
-    <musicRecommendModal v-if="isMusicRecommendModalVisible" :data="recommendationData" @close="closeRecommendationModal"></musicRecommendModal>
+    <musicRecommendModal v-if="isMusicRecommendModalVisible" :data="recommendationData" @close="closeRecommendationModal">
+    </musicRecommendModal>
 
     <!-- 일정 관리 -->
     <div class="d-flex justify-content-between align-items-center">
       <h3>일정 관리</h3>
       <!-- 일정 추가 버튼 -->
-      <button
-        class="btn btn-outline-success custom-blue-button"
-        @click="addNewActivity(0, null)"
-      >
+      <button class="btn btn-outline-success custom-blue-button" @click="addNewActivity(0, null)">
         + 새 활동 추가
       </button>
     </div>
 
     <!-- 일정 박스들을 가로로 나열 -->
-    <div
-      v-if="detail"
-      class="itinerary-container"
-      @mousedown="startDrag"
-      @mousemove="onDrag"
-      @mouseup="stopDrag"
-      @mouseleave="stopDrag"
-    >
+    <div v-if="detail" class="itinerary-container" @mousedown="startDrag" @mousemove="onDrag" @mouseup="stopDrag"
+      @mouseleave="stopDrag">
       <div v-for="day in detail.itinerary" :key="day.visit_date" class="card day-card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5>{{ day.visit_date }}</h5>
@@ -141,15 +114,16 @@
                 <h6 class="place-name">방문지: {{ activity.place_name }}</h6>
                 <p>{{ activity.description }}</p>
                 <div class="action-buttons">
-                  <button
-                    class="btn btn-outline-secondary btn-sm"
-                    @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)"
-                  >
+                  <button class="btn btn-outline-secondary btn-sm"
+                    @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)">
                     수정
                   </button>
                   <button class="btn btn-outline-danger btn-sm" @click="deleteActivity(activity.plan_place_id)">
                     삭제
                   </button>
+                  <!-- 플레이 리스트 버튼 -->
+                  <font-awesome-icon class="h-7 w-7 icons" icon="circle-play" @click="showPlaylist(activity)">
+                  </font-awesome-icon>
                 </div>
               </div>
             </div>
@@ -173,15 +147,8 @@
           <h4 v-if="editOrAdd == 3">활동 수정</h4>
           <div class="mb-3">
             <label for="date" class="form-label">방문 날짜</label>
-            <input
-              id="date"
-              type="date"
-              class="form-control"
-              v-model="editingActivity.visit_date"
-              :readonly="editOrAdd === 2"
-              :class="{ 'bg-light text-muted': editOrAdd === 2 }"
-              required
-            />
+            <input id="date" type="date" class="form-control" v-model="editingActivity.visit_date"
+              :readonly="editOrAdd === 2" :class="{ 'bg-light text-muted': editOrAdd === 2 }" required />
           </div>
           <div class="mb-3">
             <label for="time" class="form-label">방문 시각</label>
@@ -251,16 +218,6 @@ const formatVisitTime = (time) => {
   return `${period} ${hour12}:${minute < 10 ? '0' + minute : minute}`; // "오후 3:00" 형식으로 반환
 };
 
-// const showPlaylist = async (plan_place_id) => {
-//   try {
-//     const data = await fetchPlaylistData(plan_place_id);
-//     playlist.value = data;
-//     isPlaylistModalVisible.value = true;
-//   } catch (error) {
-//     console.error("플레이리스트 가져오기 실패:", error.message);
-//     alert("아직 등록된 음악이 없어요!");
-//   }
-// };
 const showPlaylist = async (activity) => {
   console.log("why:", activity);
 
@@ -376,7 +333,7 @@ const showMusicCreationModal = (activity) => {
     location: detail.value.title,
     visit_time: activity.visit_time,
     place_name: activity.place_name,
-    plan_place_id : activity.plan_place_id
+    plan_place_id: activity.plan_place_id
   };
   isMusicCreationModalVisible.value = true;
   console.log("truned to true :", musicCreationDetails.value);
@@ -496,29 +453,39 @@ const stopDrag = () => {
 }
 
 .card-body {
-  padding: 10px; /* 카드 내부 콘텐츠 여백 */
-  border-bottom: 1px solid #ddd; /* 카드 내부 구분선 */
-  box-sizing: border-box; /* 패딩 포함 크기 계산 */
-  max-height: 400px; /* 세로 스크롤 높이 제한 */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
+  padding: 10px;
+  /* 카드 내부 콘텐츠 여백 */
+  border-bottom: 1px solid #ddd;
+  /* 카드 내부 구분선 */
+  box-sizing: border-box;
+  /* 패딩 포함 크기 계산 */
+  max-height: 400px;
+  /* 세로 스크롤 높이 제한 */
+  overflow-y: auto;
+  /* 세로 스크롤 활성화 */
 }
 
 /* 스크롤바 스타일 */
 .card-body::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 */
+  width: 8px;
+  /* 스크롤바 너비 */
 }
 
 .card-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2); /* 스크롤바 색상 */
-  border-radius: 10px; /* 스크롤바 둥근 모양 */
+  background-color: rgba(0, 0, 0, 0.2);
+  /* 스크롤바 색상 */
+  border-radius: 10px;
+  /* 스크롤바 둥근 모양 */
 }
 
 .card-body::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.4); /* hover 시 색상 */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* hover 시 색상 */
 }
 
 .card-body::-webkit-scrollbar-track {
-  background: transparent; /* 스크롤 트랙 투명하게 */
+  background: transparent;
+  /* 스크롤 트랙 투명하게 */
 }
 
 .itinerary-container {
@@ -532,11 +499,13 @@ const stopDrag = () => {
   gap: 15px;
   /* 카드들 간의 간격 */
   padding-bottom: 15px;
-  cursor: grab; /* 기본 커서 스타일 */
+  cursor: grab;
+  /* 기본 커서 스타일 */
 }
 
 .itinerary-container:active {
-  cursor: grabbing; /* 드래그 중 커서 스타일 */
+  cursor: grabbing;
+  /* 드래그 중 커서 스타일 */
 }
 
 .day-card {
@@ -568,10 +537,13 @@ const stopDrag = () => {
 .timeline-item:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 30px; /* 점 아래쪽에서 선이 시작되도록 조정 */
-  left: 8px; /* 선이 점의 중앙을 지나도록 설정 */
+  top: 30px;
+  /* 점 아래쪽에서 선이 시작되도록 조정 */
+  left: 8px;
+  /* 선이 점의 중앙을 지나도록 설정 */
   width: 2px;
-  height: calc(100% - 20px); /* 선 길이를 점과 점 사이로 제한 */
+  height: calc(100% - 20px);
+  /* 선 길이를 점과 점 사이로 제한 */
   background-color: #6c757d;
 }
 
@@ -582,11 +554,13 @@ const stopDrag = () => {
   border-radius: 50%;
   position: relative;
   z-index: 1;
-  margin-left: -1px; /* 점이 선의 가운데 정렬되도록 설정 */
+  margin-left: -1px;
+  /* 점이 선의 가운데 정렬되도록 설정 */
 }
 
 .timeline-content {
-  margin-left: 20px; /* 점과 콘텐츠 간의 간격 */
+  margin-left: 20px;
+  /* 점과 콘텐츠 간의 간격 */
   position: relative;
 }
 

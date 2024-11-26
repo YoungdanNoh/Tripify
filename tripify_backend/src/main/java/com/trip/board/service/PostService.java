@@ -28,4 +28,6 @@ public interface PostService {
     int addPostComment(PostComment postComment);
 
 	void deleteComment(int commentId) throws Exception;
+	
+	List<PostVO> findPostsByUserId(int userId);
 }

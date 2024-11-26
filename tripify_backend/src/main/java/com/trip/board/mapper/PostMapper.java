@@ -30,4 +30,6 @@ public interface PostMapper {
     int insertPostComment(PostComment postComment);
 
 	int deleteComment(int commentId);
+	
+	List<PostVO> findPostsByUserId(int userId);
 }

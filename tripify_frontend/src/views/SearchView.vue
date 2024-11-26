@@ -1,18 +1,14 @@
 <template>
   <div class="container">
-    <SearchFilter
-      @selectedSido="updateSelectedSido"
-      @selectedGugun="updateSelectedGugun"
-      @selectedType="updateSelectedType"
-      @emitSearch="searchKeyword"
-    />
+    <SearchFilter @selectedSido="updateSelectedSido" @selectedGugun="updateSelectedGugun"
+      @selectedType="updateSelectedType" @emitSearch="searchKeyword" />
 
     <section class="main-content">
       <div v-if="getPlaces.length === 0" class="no-places">검색해주세요</div>
       <PlaceList @load-more="loadMorePlaces" @select-place="showPlaceDetails" />
-      <MapContainer @select-place="showPlaceDetails"/>
+      <MapContainer @select-place="showPlaceDetails" />
     </section>
-    
+
     <PlaceModal v-if="selectedPlace" :place="selectedPlace" @close="closeModal" />
   </div>
 </template>
@@ -32,7 +28,7 @@ const store = usePlaceStore();
 const userStore = useUserStore();
 const { getPlaces } = storeToRefs(store);
 const { listPlaces, resetPlaces } = store;
-const selectedPlace = computed(()=>store.selectedPlace)
+const selectedPlace = computed(() => store.selectedPlace)
 
 const sido = ref('');
 const gugun = ref('');
@@ -99,10 +95,13 @@ function handleSearch() {
   display: flex;
   flex-direction: column;
 }
+
 .main-content {
   display: flex;
 }
+
 .no-places {
-  white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+  white-space: nowrap;
+  /* 텍스트가 줄바꿈되지 않도록 설정 */
 }
 </style>

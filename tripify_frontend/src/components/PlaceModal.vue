@@ -1,7 +1,7 @@
 <template>
   <div class="modal-backdrop1" @click.self="close">
     <div class="modal-content">
-      <button class="close-button" @click="close">X</button>
+      <font-awesome-icon class="h-7 w-7 icons close close-button" icon="xmark" @click="close"></font-awesome-icon>
       <div class="info-section">
         <h3>{{ place.title }}</h3>
         <img :src="place.firstImage1 || defaultImage" alt="Place Image" />
@@ -124,6 +124,7 @@ function close() {
   border: none;
   font-size: 16px;
   cursor: pointer;
+  color: red;
 }
 
 hr {
@@ -160,5 +161,9 @@ hr {
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
+}
+
+.icons {
+  margin: 10px;
 }
 </style>

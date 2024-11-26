@@ -1,12 +1,8 @@
 <template>
   <div class="places-list" @scroll="handleScroll">
     <ul>
-      <PlaceItem
-        v-for="place in getPlaces"
-        :key="place.place_id"
-        :place="place"
-        @click="showPlaceDetails(place.place_id)"
-      />
+      <PlaceItem v-for="place in getPlaces" :key="place.place_id" :place="place"
+        @click="showPlaceDetails(place.place_id)" />
     </ul>
   </div>
 </template>

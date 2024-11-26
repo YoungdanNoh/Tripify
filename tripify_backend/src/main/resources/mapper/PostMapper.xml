@@ -116,5 +116,17 @@
     <delete id="deleteComment" parameterType="int">
         DELETE FROM post_comments WHERE comment_id = #{commentId}
     </delete>
+    
+    <select id="findPostsByUserId" resultType="PostVO">
+        SELECT
+        post_id AS postId,
+        user_id AS userId,
+        title,
+        content,
+        created_at AS createdAt,
+        updated_at AS updatedAt
+        FROM posts
+        WHERE user_id = #{userId}
+    </select>
 
 </mapper>

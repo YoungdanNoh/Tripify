@@ -191,6 +191,8 @@ public class placeServiceImpl implements placeService {
 
 	@Override
 	public List<PlaceWithLikeStatus> getLikedPlaces(int userId) {
-		return mapper.getLikedPlaces(userId);
+		List<PlaceWithLikeStatus> l = mapper.getLikedPlaces(userId);
+		System.out.println("service.."+l.get(0));
+		return l;
 	}
 }

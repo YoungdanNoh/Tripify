@@ -4,22 +4,35 @@
       <img src="@/assets/zero-Tripify.png" alt="Tripify 로고" />
     </router-link>
     <nav class="main-nav">
-      <router-link to="/musicRecommend" class="nav-link"><font-awesome-icon class="h-7 w-7 icons" icon="music"></font-awesome-icon> <p class="words">음악 찾기</p></router-link>
-      <router-link to="/place" class="nav-link"><font-awesome-icon class="h-7 w-7 icons" icon="map-location-dot"></font-awesome-icon> <p class="words">여행지</p></router-link>
-      <router-link to="/plan" class="nav-link"><font-awesome-icon class="h-7 w-7 icons" icon="book-atlas"></font-awesome-icon><p class="words">여행계획</p></router-link>
-      <router-link to="/community" class="nav-link"><font-awesome-icon class="h-7 w-7 icons" icon="comments"></font-awesome-icon> <p class="words">커뮤니티</p></router-link>
+      <router-link to="/musicRecommend" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
+          icon="music"></font-awesome-icon>
+        <p class="words">음악 찾기</p>
+      </router-link>
+      <router-link to="/place" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
+          icon="map-location-dot"></font-awesome-icon>
+        <p class="words">여행지</p>
+      </router-link>
+      <router-link to="/plan" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
+          icon="book-atlas"></font-awesome-icon>
+        <p class="words">여행계획</p>
+      </router-link>
+      <router-link to="/community" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
+          icon="comments"></font-awesome-icon>
+        <p class="words">커뮤니티</p>
+      </router-link>
     </nav>
     <div class="auth-links">
-      <router-link v-if="!user" to="/login" class="nav-link login-link"><i class="fas fa-sign-in-alt"></i> 로그인</router-link>
+      <router-link v-if="!user" to="/login" class="nav-link login-link"><i class="fas fa-sign-in-alt"></i>
+        로그인</router-link>
       <div class="profile-dropdown" v-if="user">
         <div class="dropdown">
           <span class="dropdown-trigger say-hello"> {{ user.userName }}님 안녕하세요! <i class="fas fa-chevron-down"></i></span>
           <ul class="dropdown-menu">
-            <li><router-link to="/profile"><i class="fas fa-user-cog"></i> 회원정보 수정</router-link></li>
-            <li @click="logout"><i class="fas fa-sign-out-alt"></i>로그아웃</li>
+            <li><router-link to="/mypage">마이페이지</router-link></li>
+            <li @click="logout">로그아웃</li>
           </ul>
         </div>
-        <ProfileImage class="dropdown-trigger dropdown"/>
+        <ProfileImage class="dropdown-trigger dropdown" />
       </div>
     </div>
   </header>
@@ -48,7 +61,7 @@ const logout = () => {
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0 20px;
 }
 
@@ -64,12 +77,15 @@ const logout = () => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  min-width: 160px; /* 로그인/로그아웃 버튼이 위치할 공간을 고정 */
-  justify-content: flex-end; /* 아이템들을 오른쪽으로 정렬 */
+  min-width: 160px;
+  /* 로그인/로그아웃 버튼이 위치할 공간을 고정 */
+  justify-content: flex-end;
+  /* 아이템들을 오른쪽으로 정렬 */
 }
 
 
-.nav-link, .dropdown-menu a {
+.nav-link,
+.dropdown-menu a {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -134,8 +150,10 @@ const logout = () => {
 }
 
 .dropdown-menu a {
-  text-decoration: none; /* 링크에 밑줄 없앰 */
-  color: inherit; /* 부모 요소의 글자색 상속 */
+  text-decoration: none;
+  /* 링크에 밑줄 없앰 */
+  color: inherit;
+  /* 부모 요소의 글자색 상속 */
 }
 
 .icons {
@@ -145,14 +163,17 @@ const logout = () => {
 .words {
   margin-bottom: 0;
 }
+
 @media (max-width: 768px) {
   .icons {
     display: inline;
     padding: 10px;
   }
+
   .words {
     display: none;
   }
+
   .say-hello {
     display: none;
   }

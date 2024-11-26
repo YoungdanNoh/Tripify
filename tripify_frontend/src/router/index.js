@@ -14,6 +14,7 @@ import LoginPage from "@/components/member/LoginPage.vue";
 import SignUpPage from "@/components/member/SignUpPage.vue";
 import PasswordRecoveryPage from "@/components/member/PasswordRecoveryPage.vue";
 import UserProfilePage from "@/components/member/UserProfilePage.vue";
+import MyPageView from "@/views/MyPageView.vue";
 
 //Board 관련 뷰
 import WritePost from "@/components/Board/WritePost.vue";
@@ -116,10 +117,16 @@ const router = createRouter({
         },
       ],
     },
+    // {
+    //   path: "/profile", // '/profile'
+    //   name: "userProfilePage",
+    //   component: UserProfilePage,
+    // },
     {
-      path: "/profile", // '/profile'
-      name: "userProfilePage",
-      component: UserProfilePage,
+      path: "/mypage", // '/mypage'
+      name: "myPageView",
+      component: MyPageView,
+      meta: { requiresAuth: true }, // 로그인 필요 설정
     },
   ],
 });

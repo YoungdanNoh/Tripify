@@ -136,9 +136,10 @@ public class placeController {
     }
 
     // 좋아요한 장소 리스트 조회
-    @GetMapping("place/likedplaces")
-    public ResponseEntity<List<PlaceWithLikeStatus>> getLikedPlaces(@RequestBody User userId) {
-        List<PlaceWithLikeStatus> likedPlaces = service.getLikedPlaces((int) userId.getUserId());
+    @GetMapping("/place/likedplaces")
+    public ResponseEntity<List<PlaceWithLikeStatus>> getLikedPlaces(@RequestParam int userId) {
+        List<PlaceWithLikeStatus> likedPlaces = service.getLikedPlaces(userId);
         return ResponseEntity.ok(likedPlaces);
     }
+
 }

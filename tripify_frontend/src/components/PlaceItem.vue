@@ -1,16 +1,11 @@
 <template>
-  <li class="place-item" @mouseenter="highlightPlace"
-    @mouseleave="unhighlightPlace">
+  <li class="place-item" @mouseenter="highlightPlace" @mouseleave="unhighlightPlace">
     <img :src="imageSrc" alt="place image" />
     <div class="place-info">
       <div class="place-title-container">
         <p class="place-title">{{ place.title }}</p>
         <!-- 좋아요 아이콘 -->
-        <p
-          class="place-heart"
-          :class="{ liked: isLiked }"
-          @click="toggleLike($event)"
-        >
+        <p class="place-heart" :class="{ liked: isLiked }" @click="toggleLike($event)">
           <span v-if="isLiked">♥</span>
           <span v-else>♡</span>
         </p>
@@ -56,21 +51,21 @@ watch(
 );
 
 // 이미지 소스 결정
-const imageSrc = computed(() => props.place.first_image1 || defaultImage);
+const imageSrc = computed(() => props.place.first_image1 || props.place.firstImage1 || defaultImage);
 
 // 좋아요 토글 함수
 const toggleLike = async (event) => {
   event.stopPropagation(); // 이벤트 전파 중단
-  console.log("kkkk",props.place);
-  
+  console.log("kkkk", props.place);
+
   try {
     if (isLiked.value) {
       // 좋아요 해제
-      await placeStore.removeLikePlace(props.place.place_id, userStore.getUserId());
+      await placeStore.removeLikePlace(props.place.place_id || props.place.placeId, userStore.getUserId());
       isLiked.value = false;
     } else {
       // 좋아요 추가
-      await placeStore.addLikePlace(props.place.place_id, userStore.getUserId());
+      await placeStore.addLikePlace(props.place.place_id || props.place.placeId, userStore.getUserId());
       isLiked.value = true;
     }
   } catch (error) {
@@ -79,7 +74,7 @@ const toggleLike = async (event) => {
 };
 
 function highlightPlace() {
-  placeStore.setHighlightedPlaceId(props.place.place_id);
+  placeStore.setHighlightedPlaceId(props.place.place_id || props.place.placeId);
 }
 
 function unhighlightPlace() {
@@ -92,16 +87,20 @@ function unhighlightPlace() {
   display: flex;
   margin: 10px;
   padding: 10px;
-  border: 2px solid #ddd; /* 기본 상태에서도 두꺼운 테두리 */
+  border: 2px solid #ddd;
+  /* 기본 상태에서도 두꺼운 테두리 */
   border-radius: 8px;
-  transition: all 0.3s ease; /* 부드러운 애니메이션 효과 */
+  transition: all 0.3s ease;
+  /* 부드러운 애니메이션 효과 */
   cursor: pointer;
 
 }
 
 .place-item:hover {
-  border-color: #007bff; /* 테두리 색상만 변경 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+  border-color: #007bff;
+  /* 테두리 색상만 변경 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 그림자 효과 추가 */
 }
 
 .place-item img {
@@ -129,18 +128,22 @@ function unhighlightPlace() {
 }
 
 .place-info .place-heart {
-  font-size: 1.3rem; /* 하트 크기 조정 */
+  font-size: 1.3rem;
+  /* 하트 크기 조정 */
   cursor: pointer;
   transition: transform 0.2s ease, color 0.3s ease;
   color: #ddd;
 }
 
 .place-info .place-heart.liked {
-  color: red; /* 좋아요가 눌렸을 때 빨간색 */
-  transform: scale(1.1); /* 눌렀을 때 약간 확대 */
+  color: red;
+  /* 좋아요가 눌렸을 때 빨간색 */
+  transform: scale(1.1);
+  /* 눌렀을 때 약간 확대 */
 }
 
 .place-info .place-heart:hover {
-  color: #ff6b6b; /* 호버 시 연한 빨간색 */
+  color: #ff6b6b;
+  /* 호버 시 연한 빨간색 */
 }
 </style>

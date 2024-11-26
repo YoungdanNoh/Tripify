@@ -118,4 +118,10 @@ public class PostController {
                                  .body("댓글 삭제 중 오류가 발생했습니다.");
         }
     }
+    
+    @GetMapping("/myposts/{userId}")
+    public ResponseEntity<List<PostVO>> getPostsByUserId(@PathVariable int userId) {
+        List<PostVO> posts = postService.findPostsByUserId(userId);
+        return ResponseEntity.ok(posts);
+    }
 }
