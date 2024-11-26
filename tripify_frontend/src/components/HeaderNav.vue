@@ -6,19 +6,19 @@
     <nav class="main-nav">
       <router-link to="/musicRecommend" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="music"></font-awesome-icon>
-        <p class="words">음악 찾기</p>
+        <p class="words gothic-a1-regular">음악 찾기</p>
       </router-link>
       <router-link to="/place" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="map-location-dot"></font-awesome-icon>
-        <p class="words">여행지</p>
+        <p class="words gothic-a1-regular">여행지</p>
       </router-link>
       <router-link to="/plan" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="book-atlas"></font-awesome-icon>
-        <p class="words">여행계획</p>
+        <p class="words gothic-a1-regular">여행계획</p>
       </router-link>
       <router-link to="/community" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="comments"></font-awesome-icon>
-        <p class="words">커뮤니티</p>
+        <p class="words gothic-a1-regular">커뮤니티</p>
       </router-link>
     </nav>
     <div class="auth-links">
@@ -26,10 +26,10 @@
         로그인</router-link>
       <div class="profile-dropdown" v-if="user">
         <div class="dropdown">
-          <span class="dropdown-trigger say-hello"> {{ user.userName }}님 안녕하세요! <i class="fas fa-chevron-down"></i></span>
+          <span class="dropdown-trigger say-hello gothic-a1-regular"> {{ user.userName }}님 안녕하세요! <i class="fas fa-chevron-down"></i></span>
           <ul class="dropdown-menu">
-            <li><router-link to="/mypage">마이페이지</router-link></li>
-            <li @click="logout">로그아웃</li>
+            <li><router-link to="/mypage" class="gothic-a1-regular">마이페이지</router-link></li>
+            <li @click="logout" class="gothic-a1-regular">로그아웃</li>
           </ul>
         </div>
         <ProfileImage class="dropdown-trigger dropdown" />
@@ -60,7 +60,7 @@ const logout = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #79F28B;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0 20px;
 }

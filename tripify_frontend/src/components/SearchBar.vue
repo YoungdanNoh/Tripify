@@ -1,6 +1,6 @@
 <template>
   <div class="banner-content">
-    <h1>당신의 다음 여행을 계획하세요</h1>
+    <h1 >당신의 다음 여행을 계획하세요</h1>
     <div class="search-bar">
       <div class="input-group">
         <input
@@ -46,8 +46,11 @@ const performSearch = () => {
 </script>
 
 <style scoped>
+
+.banner-content{
+  margin: auto;
+}
 .banner-content h1 {
-  margin: 0;
   padding: 0;
   font-size: 2rem; /* 기본 글자 크기 */
   text-align: center;
@@ -56,7 +59,7 @@ const performSearch = () => {
 
 .search-bar {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   margin-top: 20px;
 }
 

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>실시간 커뮤니티</h2>
+  <div class="communityboard col-md-6">
+    <h2 class="do-hyeon-regular">실시간 커뮤니티 📣</h2>
     <table>
       <thead>
         <tr>
@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="post in posts.slice(0, 6)" :key="post.postId || post.tempKey" @click="() => viewPost(post.postId)" class="post-row">
+        <tr v-for="post in posts.slice(0, 10)" :key="post.postId || post.tempKey" @click="() => viewPost(post.postId)" class="post-row">
           <td>{{ post.createdAt ? new Date(post.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : '-' }}</td>
           <td>{{ post.title }}</td>
           <td>{{ post.userName }}</td>
@@ -29,7 +29,7 @@ import { useRouter } from 'vue-router';
 
 const posts = ref([]);
 const currentPage = ref(1);
-const limit = ref(6);
+const limit = ref(10);
 const router = useRouter();
 
 onMounted(async () => {
@@ -37,7 +37,7 @@ onMounted(async () => {
   posts.value = response.data.posts;
   
   // 배열을 6개의 항목으로 채우기
-  while (posts.value.length < 6) {
+  while (posts.value.length < 10) {
     posts.value.push({ 
       postId: null,
       userName: '-', 
@@ -81,5 +81,17 @@ table {
 
 td {
   padding: 8px; /* 각 셀의 내부 여백을 줄임 */
+}
+
+th {
+  background-color: rgb(240, 240, 240);
+  text-align: center;
+}
+
+.most-viewed {
+  padding: 20px 50px 20px;
+}
+.communityboard {
+  padding: 20px 50px 20px;
 }
 </style>

@@ -3,15 +3,15 @@
     <div class="main-banner">
       <div class="background-image" :style="backgroundStyle"></div>
       <!-- 배너 콘텐츠 -->
-      <div class="banner-contentbox">
+      <div class="banner-contentbox container">
         <SearchBar />
         <ProfileSection />
       </div>
     </div>
-    <div class="second-main-container">
+    <div class="second-main-container container">
       <!-- 메인 배너 -->
       <!-- 기타 컴포넌트 -->
-      <div class="second-section">
+      <div class="second-section row">
         <PopularDestinations />
       </div>
       <div class="third-section">
@@ -107,17 +107,21 @@ const backgroundStyle = computed(() => ({
 }
 
 .third-section {
-  padding: 0px 50px;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 30px;
   margin: auto;
 }
 
 .sub-section {
   width: 50%;
+}
+
+.container {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @media (max-width: 768px) {

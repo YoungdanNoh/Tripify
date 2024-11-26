@@ -39,12 +39,11 @@
     </div>
   </div>
   <div class="profile-card" v-else>
+    <h3 class="gothic-a1-regular">방문자님, 환영합니다!</h3>
+    <p class="gothic-a1-regular">여행 계획을 시작하려면 로그인해주세요.</p>
     <div class="profile-image-container">
-      <ProfileImage />
-      <router-link to="/login" class="btn btn-primary"> 로그인 </router-link>
+      <router-link to="/login" class="btn btn-success loginbutton"> 로그인 </router-link>
     </div>
-    <h3>방문자님, 환영합니다!</h3>
-    <p>여행 계획을 시작하려면 로그인해주세요.</p>
   </div>
 </template>
 
@@ -147,7 +146,7 @@ const musicRecommend = (location, visit_time, place_name) => {
   background: white;
   color: black;
   border-radius: 10px;
-  padding: 20px;
+  padding: 40px 0 30px 0;
   width: 380px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -234,6 +233,10 @@ const musicRecommend = (location, visit_time, place_name) => {
 
 .schedule-table tr:last-child td {
   border-bottom: none;
+}
+
+.loginbutton {
+  width: 90%;
 }
 
 @media (max-width: 768px) {

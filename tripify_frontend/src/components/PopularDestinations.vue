@@ -1,7 +1,7 @@
 <template>
   <div class="popular-destinations">
     <div class="container">
-      <h2>인기 관광지</h2>
+      <h2 class="do-hyeon-regular">인기 관광지 TOP 3 ✨</h2>
       <div class="row">
         <div class="col-md-4" v-for="destination in destinations" :key="destination.title">
           <div class="card destination-card">

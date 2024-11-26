@@ -13,6 +13,24 @@ import HeaderNav from "./components/HeaderNav.vue";
 import { useUserStore } from "@/stores/user";
 
 </script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+.do-hyeon-regular {
+  font-family: "Do Hyeon", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+</style>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&display=swap');
+.gothic-a1-regular {
+  font-family: "Gothic A1", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+</style>
 
 <style scoped>
 .full-screen {

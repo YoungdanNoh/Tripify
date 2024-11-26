@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-      <h2>로그인</h2>
+      <h2 class="gothic-a1-regular">로그인</h2>
       <form @submit.prevent="handleLogin">
         <!-- 이메일 입력 -->
         <div class="form-group">
