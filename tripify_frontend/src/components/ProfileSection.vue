@@ -3,7 +3,7 @@
     <div class="upper-section">
       <div class="profile-image-container">
         <ProfileImage />
-        <router-link to="/profile" class="profile-settings-btn">
+        <router-link to="/mypage" class="profile-settings-btn">
           <font-awesome-icon class="icons" icon="gear" />
           <!-- Font Awesome 아이콘 사용 -->
         </router-link>
