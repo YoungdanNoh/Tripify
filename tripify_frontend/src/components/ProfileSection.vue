@@ -128,7 +128,7 @@ const musicRecommend = (location, visit_time, place_name) => {
 <style scoped>
 .schedule-title {
   text-align: left;
-  margin-left: 10px;
+  margin-left: 10%;
   /* 오른쪽 정렬된 텍스트의 위치를 조정할 수 있습니다. */
 }
 

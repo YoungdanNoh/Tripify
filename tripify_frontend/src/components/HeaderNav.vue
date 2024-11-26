@@ -4,10 +4,6 @@
       <img src="@/assets/zero-Tripify.png" alt="Tripify 로고" />
     </router-link>
     <nav class="main-nav">
-      <router-link to="/musicRecommend" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
-          icon="music"></font-awesome-icon>
-        <p class="words gothic-a1-regular">음악 찾기</p>
-      </router-link>
       <router-link to="/place" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="map-location-dot"></font-awesome-icon>
         <p class="words gothic-a1-regular">여행지</p>
@@ -15,6 +11,10 @@
       <router-link to="/plan" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="book-atlas"></font-awesome-icon>
         <p class="words gothic-a1-regular">여행계획</p>
+      </router-link>
+      <router-link to="/musicRecommend" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
+          icon="music"></font-awesome-icon>
+        <p class="words gothic-a1-regular">음악 찾기</p>
       </router-link>
       <router-link to="/community" class="nav-link"><font-awesome-icon class="h-7 w-7 icons"
           icon="comments"></font-awesome-icon>
