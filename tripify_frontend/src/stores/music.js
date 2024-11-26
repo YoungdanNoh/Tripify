@@ -6,7 +6,7 @@ export const useMusicStore = defineStore("music", () => {
   // 1. data
   const trackId = ref(null); // 현재 검색된 트랙 ID
   const similarTracks = ref([]); // 추천된 비슷한 트랙들
-  const loading = ref(true); // 로딩 상태
+  const loading = ref(false); // 로딩 상태
   const error = ref(null); // 오류 메시지
   const keywords = ref([]); // 검색 키워드 목록
   const results = ref([]); // 검색 결과

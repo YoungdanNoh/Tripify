@@ -4,18 +4,22 @@
     <div v-if="detail" class="card mb-4 shadow-sm">
       <div class="row g-0">
         <div class="col-md-4">
-          <img :src="detail.img || defaultImage" class="img-fluid rounded-start" alt="여행 이미지"
-            style="object-fit: cover; height: 100%" />
+          <img
+            :src="detail.img || noImage"
+            class="img-fluid rounded-start"
+            alt="여행 이미지"
+            style="object-fit: cover; height: 100%"
+          />
         </div>
         <div class="col-md-8">
           <div class="card-body">
             <h5 class="card-title">{{ detail.title }}</h5>
             <p class="card-text">
-              <small class="text-muted">{{ formatDateRange(detail.start_date, detail.end_date) }}</small>
+              <small class="text-muted">{{
+                formatDateRange(detail.start_date, detail.end_date)
+              }}</small>
             </p>
-            <p class="card-text">
-              <i class="bi bi-geo-alt-fill"></i> {{ detail.location }}
-            </p>
+            <p class="card-text"><i class="bi bi-geo-alt-fill"></i> {{ detail.location }}</p>
           </div>
         </div>
       </div>
@@ -68,25 +72,29 @@
     </div>
 
     <!-- 새로운 음악 생성 모달 -->
-    <div v-if="isMusicCreationModalVisible" class="modal-overlay" @click.self="closeMusicCreationModal">
+    <div
+      v-if="isMusicCreationModalVisible"
+      class="modal-overlay"
+      @click.self="closeMusicCreationModal"
+    >
       <div class="modal-content">
         <h3>음악을 추천받아 보세요!</h3>
         <p>
-          {{ musicCreationDetails.place_name }}에서 방문한 시간과 장소에 맞는
-          음악을 추천해 드립니다.
+          {{ musicCreationDetails.place_name }}에서 방문한 시간과 장소에 맞는 음악을 추천해
+          드립니다.
         </p>
         <div class="modal-buttons">
-          <button class="btn btn-outline-secondary" @click="closeMusicCreationModal">
-            닫기
-          </button>
-          <button class="btn btn-success" @click="musicRecommend">
-            지금 바로 생성하기
-          </button>
+          <button class="btn btn-outline-secondary" @click="closeMusicCreationModal">닫기</button>
+          <button class="btn btn-success" @click="musicRecommend">지금 바로 생성하기</button>
         </div>
       </div>
     </div>
 
-    <musicRecommendModal v-if="isMusicRecommendModalVisible" :data="recommendationData" @close="closeRecommendationModal">
+    <musicRecommendModal
+      v-if="isMusicRecommendModalVisible"
+      :data="recommendationData"
+      @close="closeRecommendationModal"
+    >
     </musicRecommendModal>
 
     <!-- 일정 관리 -->
@@ -99,35 +107,59 @@
     </div>
 
     <!-- 일정 박스들을 가로로 나열 -->
-    <div v-if="detail" class="itinerary-container" @mousedown="startDrag" @mousemove="onDrag" @mouseup="stopDrag"
-      @mouseleave="stopDrag">
+    <div
+      v-if="detail"
+      class="itinerary-container"
+      @mousedown="startDrag"
+      @mousemove="onDrag"
+      @mouseup="stopDrag"
+      @mouseleave="stopDrag"
+    >
       <div v-for="day in detail.itinerary" :key="day.visit_date" class="card day-card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5>{{ day.visit_date }}</h5>
         </div>
         <div class="card-body">
           <div class="timeline">
-            <div v-for="activity in day.activities" :key="activity.plan_place_id" class="timeline-item">
+            <div
+              v-for="activity in day.activities"
+              :key="activity.plan_place_id"
+              class="timeline-item"
+            >
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <h6 class="time">{{ formatVisitTime(activity.visit_time) }}</h6>
                 <h6 class="place-name">방문지: {{ activity.place_name }}</h6>
                 <p>{{ activity.description }}</p>
                 <div class="action-buttons">
-                  <button class="btn btn-outline-secondary btn-sm"
-                    @click="editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)">
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="
+                      editActivity(day.visit_date, activity.visit_time, detail.plan_id, activity)
+                    "
+                  >
                     수정
                   </button>
-                  <button class="btn btn-outline-danger btn-sm" @click="deleteActivity(activity.plan_place_id)">
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    @click="deleteActivity(activity.plan_place_id)"
+                  >
                     삭제
                   </button>
                   <!-- 플레이 리스트 버튼 -->
-                  <font-awesome-icon class="h-7 w-7 icons" icon="circle-play" @click="showPlaylist(activity)">
+                  <font-awesome-icon
+                    class="h-7 w-7 icons"
+                    icon="circle-play"
+                    @click="showPlaylist(activity)"
+                  >
                   </font-awesome-icon>
                 </div>
               </div>
             </div>
-            <button class="btn btn-outline-success" @click="addNewActivity(detail.plan_id, day.visit_date)">
+            <button
+              class="btn btn-outline-success"
+              @click="addNewActivity(detail.plan_id, day.visit_date)"
+            >
               + 새 일정 추가
             </button>
           </div>
@@ -141,30 +173,54 @@
         <button class="close-button" @click="cancelEdit">×</button>
         <form @submit.prevent="save">
           <h4 v-if="editOrAdd == 1">새 활동 추가</h4>
-          <h4 v-if="editOrAdd == 2">
-            {{ editingActivity.visit_date }} 새 일정 추가
-          </h4>
+          <h4 v-if="editOrAdd == 2">{{ editingActivity.visit_date }} 새 일정 추가</h4>
           <h4 v-if="editOrAdd == 3">활동 수정</h4>
           <div class="mb-3">
             <label for="date" class="form-label">방문 날짜</label>
-            <input id="date" type="date" class="form-control" v-model="editingActivity.visit_date"
-              :readonly="editOrAdd === 2" :class="{ 'bg-light text-muted': editOrAdd === 2 }" required />
+            <input
+              id="date"
+              type="date"
+              class="form-control"
+              v-model="editingActivity.visit_date"
+              :readonly="editOrAdd === 2"
+              :class="{ 'bg-light text-muted': editOrAdd === 2 }"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="time" class="form-label">방문 시각</label>
-            <input id="time" type="time" class="form-control" v-model="editingActivity.visit_time" required />
+            <input
+              id="time"
+              type="time"
+              class="form-control"
+              v-model="editingActivity.visit_time"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">방문지</label>
-            <input id="title" type="text" class="form-control" v-model="editingActivity.place_name" required />
+            <input
+              id="title"
+              type="text"
+              class="form-control"
+              v-model="editingActivity.place_name"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">설명</label>
-            <textarea id="description" class="form-control" v-model="editingActivity.description" required></textarea>
+            <textarea
+              id="description"
+              class="form-control"
+              v-model="editingActivity.description"
+              required
+            ></textarea>
           </div>
           <div class="d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-success">저장</button>
-            <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">취소</button>
+            <button type="button" class="btn btn-outline-secondary" @click="cancelEdit">
+              취소
+            </button>
           </div>
         </form>
       </div>
@@ -173,6 +229,7 @@
 </template>
 
 <script setup>
+import noImage from "@/assets/noImage.png"; // 기본 이미지 가져오기
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
@@ -202,20 +259,18 @@ onMounted(async () => {
 });
 
 const formatDateRange = (start, end) => {
-  return `${new Date(start).toLocaleDateString()} → ${new Date(
-    end
-  ).toLocaleDateString()}`;
+  return `${new Date(start).toLocaleDateString()} → ${new Date(end).toLocaleDateString()}`;
 };
 
 const formatVisitTime = (time) => {
-  if (!time) return '';
+  if (!time) return "";
 
-  const [hour, minute] = time.split(':').map((num) => parseInt(num));
+  const [hour, minute] = time.split(":").map((num) => parseInt(num));
 
-  const period = hour >= 12 ? '오후' : '오전';
+  const period = hour >= 12 ? "오후" : "오전";
   const hour12 = hour % 12 || 12; // 24시간제를 12시간제로 변환 (0시 -> 12시, 15시 -> 3시 등)
 
-  return `${period} ${hour12}:${minute < 10 ? '0' + minute : minute}`; // "오후 3:00" 형식으로 반환
+  return `${period} ${hour12}:${minute < 10 ? "0" + minute : minute}`; // "오후 3:00" 형식으로 반환
 };
 
 const showPlaylist = async (activity) => {
@@ -250,10 +305,10 @@ const editOrAdd = ref(0);
 const editingActivity = ref({
   plan_id: 0,
   plan_place_id: 0,
-  visit_date: '',
-  visit_time: '',
-  place_name: '',
-  description: '',
+  visit_date: "",
+  visit_time: "",
+  place_name: "",
+  description: "",
 }); // 수정할 활동 데이터 저장
 
 const addNewActivity = (plan_id, visit_date) => {
@@ -261,10 +316,10 @@ const addNewActivity = (plan_id, visit_date) => {
   editingActivity.value = {
     plan_id: 0,
     plan_place_id: 0,
-    visit_date: '',
-    visit_time: '',
-    place_name: '',
-    description: '',
+    visit_date: "",
+    visit_time: "",
+    place_name: "",
+    description: "",
   };
 
   if (plan_id === 0) {
@@ -333,7 +388,7 @@ const showMusicCreationModal = (activity) => {
     location: detail.value.title,
     visit_time: activity.visit_time,
     place_name: activity.place_name,
-    plan_place_id: activity.plan_place_id
+    plan_place_id: activity.plan_place_id,
   };
   isMusicCreationModalVisible.value = true;
   console.log("truned to true :", musicCreationDetails.value);
@@ -535,7 +590,7 @@ const stopDrag = () => {
 }
 
 .timeline-item:not(:last-child)::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 30px;
   /* 점 아래쪽에서 선이 시작되도록 조정 */
