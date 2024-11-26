@@ -14,12 +14,7 @@
         </div>
         <div class="modal-body">
           <!-- PlanForm 컴포넌트 -->
-          <PlanForm
-            :plan="currentPlan"
-            @savePlan="addPlan"
-            @modify="modifyPlan"
-            @cancel="showForm = false"
-          />
+          <PlanForm :plan="currentPlan" @savePlan="addPlan" @modify="modifyPlan" @cancel="showForm = false" />
         </div>
       </div>
     </div>
@@ -30,13 +25,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/user";
-import { usePlanStore } from "@/stores/plans";
-import { storeToRefs } from "pinia";
-import PlanList from "@/components/plan/PlanList.vue";
-import PlanForm from "@/components/plan/PlanForm.vue";
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { usePlanStore } from '@/stores/plans';
+import { storeToRefs } from 'pinia';
+import PlanList from '@/components/plan/PlanList.vue';
+import PlanForm from '@/components/plan/PlanForm.vue';
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -68,9 +63,9 @@ const addPlan = async (newPlan) => {
   try {
     // Pinia 스토어의 add 메서드 호출
     await store.add(newPlan);
-    console.log("Plan added successfully");
+    console.log('Plan added successfully');
   } catch (error) {
-    console.error("Failed to add plan:", error);
+    console.error('Failed to add plan:', error);
   }
 
   showForm.value = false;
@@ -79,12 +74,12 @@ const addPlan = async (newPlan) => {
 // 여행 보기 라우팅 처리
 const viewPlan = (plan_id) => {
   store.planId = plan_id;
-  router.push({ name: "PlanDetail", state: { plan_id } });
+  router.push({ name: 'PlanDetail', state: { plan_id } });
 };
 
 // 여행 수정
 const modifyForm = async (plan_id, start_date, end_date, title, location) => {
-  console.log("Modify Plan:", plan_id);
+  console.log('Modify Plan:', plan_id);
   currentPlan.value = { plan_id, start_date, end_date, title, location };
   showForm.value = true;
 
@@ -102,10 +97,11 @@ const modifyForm = async (plan_id, start_date, end_date, title, location) => {
 const modifyPlan = async (newPlan) => {
   try {
     // Pinia 스토어의 add 메서드 호출
+    console.log('New Plan:', newPlan.img);
     await store.modify(newPlan);
-    console.log("Plan modify successfully");
+    console.log('Plan modify successfully');
   } catch (error) {
-    console.error("Failed to modify plan:", error);
+    console.error('Failed to modify plan:', error);
   }
 
   showForm.value = false;

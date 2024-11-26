@@ -31,7 +31,8 @@
 		set start_date = #{start_date},
 			end_date = #{end_date},
 			title = #{title},
-			location = #{location}
+			location = #{location},
+			img = #{img}
 		where plan_id = #{plan_id}
     </update>
     
